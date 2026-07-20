@@ -2,3 +2,4 @@ gateway/.wrangler/cache/wrangler-account.json
 gateway/wrangler.toml
 gateway/wrangler.toml
 gateway/wrangler.toml
+.DS_Store
