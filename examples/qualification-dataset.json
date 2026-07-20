@@ -1,0 +1,14 @@
+[
+  {
+    "widgetId": "alpha",
+    "expectedState": "ready"
+  },
+  {
+    "widgetId": "beta",
+    "expectedState": "paused"
+  },
+  {
+    "widgetId": "gamma",
+    "expectedState": "ready"
+  }
+]

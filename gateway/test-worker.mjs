@@ -23,7 +23,7 @@ const call = (url, init = {}) => worker.fetch(new Request(url, init), env, {});
 const read = async response => ({ response, data: await response.json() });
 
 let result = await read(await call('https://relay.test/api/health'));
-assert(result.response.status === 200 && result.data.version === '1.7.0', 'Health check failed');
+assert(result.response.status === 200 && result.data.version === '2.0.0', 'Health check failed');
 
 result = await read(await call('https://relay.test/api/channels', {
   method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}',

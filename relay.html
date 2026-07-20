@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="dark light" />
-  <title>RELAY — API Test Bench</title>
+  <title>RELAY — API & Webhook Qualification Instrument</title>
   <style>
     :root {
       --bg: #111316;
@@ -290,9 +290,9 @@
 
 
 
-    /* RELAY v1.7 workspaces */
+    /* RELAY v2.0 workspaces */
     .modebar { height: 38px; display:flex; align-items:center; gap:4px; padding:0 12px; border-bottom:1px solid var(--line); background:var(--panel); }
-    .mode-tab { height:30px; padding:0 13px; border:1px solid transparent; border-radius:7px; background:transparent; color:var(--muted); cursor:pointer; font-weight:650; }
+    .mode-tab { flex:0 0 auto; height:30px; padding:0 13px; border:1px solid transparent; border-radius:7px; background:transparent; color:var(--muted); cursor:pointer; font-weight:650; }
     .mode-tab:hover { color:var(--text); background:var(--panel-2); }
     .mode-tab.active { color:var(--text); background:var(--panel-3); border-color:var(--line); }
     .mode-tab .count { margin-left:5px; }
@@ -350,6 +350,57 @@
     .warning-text { color:var(--warning); }
     .gateway-banner { padding:8px 11px; border:1px solid var(--line); border-radius:7px; background:var(--panel-2); color:var(--muted); font-size:11px; line-height:1.45; }
     .gateway-banner strong { color:var(--text); }
+
+
+    /* v2.0 qualification instrument */
+    .qualification-sidebar { width:auto; }
+    .scope-list { display:flex; flex-direction:column; gap:5px; max-height:190px; overflow:auto; padding-right:2px; }
+    .scope-item { display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:7px; align-items:center; padding:7px 8px; border:1px solid var(--line); border-radius:7px; background:var(--panel-2); font-size:11px; }
+    .scope-item strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .scope-item small { color:var(--faint); font:10px var(--mono); }
+    .qual-tabs { display:flex; gap:2px; overflow-x:auto; border-bottom:1px solid var(--line); margin:-4px -4px 12px; padding:0 4px; }
+    .qual-tab { flex:0 0 auto; border:0; border-bottom:2px solid transparent; background:transparent; color:var(--muted); padding:10px 11px; font-weight:700; cursor:pointer; white-space:nowrap; }
+    .qual-tab.active { color:var(--text); border-bottom-color:var(--accent); }
+    .readiness-hero { display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:16px; align-items:center; padding:18px; border:1px solid var(--line-strong); border-radius:12px; background:linear-gradient(135deg,var(--panel),var(--panel-2)); margin-bottom:12px; }
+    .readiness-mark { width:78px; height:78px; display:grid; place-items:center; border-radius:20px; border:1px solid var(--line-strong); background:var(--panel-3); font:900 25px var(--mono); }
+    .readiness-mark.ready { color:var(--success); box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--success) 25%,transparent); }
+    .readiness-mark.conditional { color:var(--warning); box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--warning) 25%,transparent); }
+    .readiness-mark.not-ready { color:var(--danger); box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--danger) 25%,transparent); }
+    .readiness-copy h2 { margin:0 0 4px; font-size:23px; }
+    .readiness-copy p { margin:0; color:var(--muted); line-height:1.45; }
+    .readiness-meta { text-align:right; color:var(--muted); font-size:11px; }
+    .gate-grid { display:grid; grid-template-columns:repeat(4,minmax(145px,1fr)); gap:9px; margin:12px 0; }
+    .gate-card { padding:11px; border:1px solid var(--line); border-radius:9px; background:var(--panel-2); }
+    .gate-card.pass { border-left:4px solid var(--success); }
+    .gate-card.fail { border-left:4px solid var(--danger); }
+    .gate-card.warn { border-left:4px solid var(--warning); }
+    .gate-card strong { display:block; font-size:12px; }
+    .gate-card span { display:block; margin-top:4px; color:var(--muted); font-size:10px; line-height:1.4; }
+    .qual-matrix { width:100%; border-collapse:collapse; font-size:11px; }
+    .qual-matrix th,.qual-matrix td { border:1px solid var(--line); padding:7px 8px; text-align:left; vertical-align:top; }
+    .qual-matrix th { position:sticky; top:0; z-index:2; background:var(--panel-2); color:var(--muted); }
+    .qual-matrix tr.matrix-fail td:first-child { border-left:4px solid var(--danger); }
+    .qual-matrix tr.matrix-pass td:first-child { border-left:4px solid var(--success); }
+    .qual-result-pill { display:inline-block; padding:2px 6px; border-radius:99px; border:1px solid var(--line); font:800 9px var(--mono); }
+    .qual-result-pill.pass { color:var(--success); }
+    .qual-result-pill.fail { color:var(--danger); }
+    .qual-result-pill.warn { color:var(--warning); }
+    .metric-grid { display:grid; grid-template-columns:repeat(4,minmax(130px,1fr)); gap:9px; margin-bottom:12px; }
+    .metric-card { padding:12px; border:1px solid var(--line); border-radius:9px; background:var(--panel-2); }
+    .metric-card strong { display:block; font-size:22px; }
+    .metric-card span { display:block; margin-top:3px; color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:.04em; }
+    .contract-editor { display:grid; grid-template-columns:minmax(260px,.8fr) minmax(320px,1.2fr); gap:12px; }
+    .contract-source { padding:9px; border:1px solid var(--line); border-radius:7px; background:var(--panel-2); color:var(--muted); font-size:11px; line-height:1.5; }
+    .qual-progress { height:8px; border-radius:99px; background:var(--panel-3); overflow:hidden; border:1px solid var(--line); }
+    .qual-progress > span { display:block; height:100%; background:var(--accent); width:0; transition:width .15s; }
+    .run-list { display:flex; flex-direction:column; gap:5px; }
+    .run-item { width:100%; display:grid; grid-template-columns:auto 1fr auto; gap:7px; align-items:center; text-align:left; border:1px solid var(--line); background:var(--panel-2); color:var(--text); border-radius:7px; padding:7px; cursor:pointer; }
+    .run-item.active { border-color:var(--accent); background:var(--panel-3); }
+    .run-item small { display:block; color:var(--faint); margin-top:2px; }
+    .shape-code { font:10px/1.45 var(--mono); word-break:break-all; color:var(--muted); }
+    .qual-actions { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+    @media (max-width:1000px) { .gate-grid,.metric-grid { grid-template-columns:repeat(2,1fr); } .contract-editor { grid-template-columns:1fr; } }
+    @media (max-width:680px) { .readiness-hero { grid-template-columns:1fr; } .readiness-meta { text-align:left; } .gate-grid,.metric-grid { grid-template-columns:1fr; } }
 
     /* v1.6 reports and v1.7 interchange */
     .report-preview { max-width:980px; margin:0 auto; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:24px; box-shadow:var(--shadow); }
@@ -445,6 +496,7 @@
       <button class="mode-tab active" data-workspace-tab="requests">Requests</button>
       <button class="mode-tab" data-workspace-tab="webhooks">Webhooks <span class="count" id="webhookCount">0</span></button>
       <button class="mode-tab" data-workspace-tab="scenarios">Scenarios</button>
+      <button class="mode-tab" data-workspace-tab="qualification">Qualification</button>
       <button class="mode-tab" data-workspace-tab="fixtures">Fixtures</button>
       <button class="mode-tab" data-workspace-tab="reports">Reports</button>
       <button class="mode-tab" data-workspace-tab="interchange">Interchange</button>
@@ -614,6 +666,59 @@
       <main class="feature-main" id="scenarioEditor"></main>
     </section>
 
+
+    <section class="workspace-panel feature-workspace" data-workspace="qualification" id="qualificationWorkspace">
+      <aside class="feature-sidebar qualification-sidebar">
+        <h2 class="feature-title">API Qualification</h2>
+        <p class="feature-subtitle">Exercise endpoints and scenarios across data sets and environments, verify contracts, sample performance, analyze retries, and decide whether a release is ready.</p>
+        <div class="section-card">
+          <div class="section-card-head"><h3>Execution plan</h3></div>
+          <div class="section-card-body stack">
+            <div><label class="mini-label">Qualification mode</label><select id="qualificationModeSelect" class="select qualification-setting" data-qualification-setting="mode" style="width:100%"><option value="requests">Endpoint matrix</option><option value="scenario">Data-driven scenario</option></select></div>
+            <div id="qualificationScenarioWrap"><label class="mini-label">Scenario</label><select id="qualificationScenarioSelect" class="select qualification-setting" data-qualification-setting="scenarioId" style="width:100%"></select></div>
+            <div><label class="mini-label">Data rows as JSON array</label><textarea id="qualificationDatasetInput" class="code-area qualification-setting" data-qualification-setting="datasetText" style="min-height:105px" spellcheck="false">[{}]</textarea></div>
+            <div class="row"><div class="grow"><label class="mini-label">Samples</label><input id="qualificationSamplesInput" type="number" min="1" max="25" class="input qualification-setting" data-qualification-setting="samples" style="width:100%"></div><div class="grow"><label class="mini-label">Retries</label><input id="qualificationRetriesInput" type="number" min="0" max="5" class="input qualification-setting" data-qualification-setting="retries" style="width:100%"></div></div>
+            <div class="row"><div class="grow"><label class="mini-label">Timeout ms</label><input id="qualificationTimeoutInput" type="number" min="250" max="120000" class="input qualification-setting" data-qualification-setting="timeoutMs" style="width:100%"></div><div class="grow"><label class="mini-label">Backoff ms</label><input id="qualificationBackoffInput" type="number" min="0" max="10000" class="input qualification-setting" data-qualification-setting="retryBackoffMs" style="width:100%"></div></div>
+          </div>
+        </div>
+        <div class="section-card" id="qualificationRequestScopeCard">
+          <div class="section-card-head"><h3>Endpoint scope</h3><span class="toolbar-spacer"></span><button id="qualificationSelectAllRequestsBtn" class="btn small">All</button></div>
+          <div class="section-card-body"><div id="qualificationRequestList" class="scope-list"></div></div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-head"><h3>Environment scope</h3><span class="toolbar-spacer"></span><button id="qualificationSelectAllEnvironmentsBtn" class="btn small">All</button></div>
+          <div class="section-card-body"><div id="qualificationEnvironmentList" class="scope-list"></div></div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-head"><h3>Release gates</h3></div>
+          <div class="section-card-body stack">
+            <div class="row"><div class="grow"><label class="mini-label">Minimum success %</label><input id="qualificationSuccessThresholdInput" type="number" min="0" max="100" class="input qualification-setting" data-qualification-setting="successThreshold" style="width:100%"></div><div class="grow"><label class="mini-label">Default p95 ms</label><input id="qualificationP95ThresholdInput" type="number" min="1" max="120000" class="input qualification-setting" data-qualification-setting="p95ThresholdMs" style="width:100%"></div></div>
+            <div id="qualificationEstimate" class="gateway-banner"></div>
+            <div class="qual-progress"><span id="qualificationProgressBar"></span></div>
+            <div id="qualificationProgressText" class="hint">No qualification run is active.</div>
+            <div class="qual-actions"><button id="runQualificationBtn" class="btn primary">Run qualification</button><button id="stopQualificationBtn" class="btn" disabled>Stop</button></div>
+          </div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-head"><h3>Retained runs</h3></div>
+          <div class="section-card-body"><div id="qualificationRunList" class="run-list"></div></div>
+        </div>
+      </aside>
+      <main class="feature-main">
+        <div id="qualificationSummary"></div>
+        <div class="qual-tabs" id="qualificationTabs">
+          <button class="qual-tab active" data-qualification-tab="matrix">Endpoint matrix</button>
+          <button class="qual-tab" data-qualification-tab="contracts">Contracts</button>
+          <button class="qual-tab" data-qualification-tab="performance">Performance</button>
+          <button class="qual-tab" data-qualification-tab="environments">Environments</button>
+          <button class="qual-tab" data-qualification-tab="reliability">Reliability</button>
+          <button class="qual-tab" data-qualification-tab="webhooks">Webhooks</button>
+          <button class="qual-tab" data-qualification-tab="readiness">Release readiness</button>
+        </div>
+        <div id="qualificationContent"></div>
+      </main>
+    </section>
+
     <section class="workspace-panel feature-workspace" data-workspace="fixtures" id="fixturesWorkspace">
       <aside class="feature-sidebar">
         <h2 class="feature-title">Fixtures & Mocks</h2>
@@ -632,7 +737,7 @@
         <div class="section-card">
           <div class="section-card-head"><h3>Report scope</h3></div>
           <div class="section-card-body stack">
-            <div><label class="mini-label">Report type</label><select id="reportTypeSelect" class="select report-setting" data-report-setting="type" style="width:100%"><option value="project">Project test summary</option><option value="request">Request evidence</option><option value="scenario">Scenario run report</option><option value="webhook">Webhook delivery report</option></select></div>
+            <div><label class="mini-label">Report type</label><select id="reportTypeSelect" class="select report-setting" data-report-setting="type" style="width:100%"><option value="project">Project test summary</option><option value="request">Request evidence</option><option value="scenario">Scenario run report</option><option value="webhook">Webhook delivery report</option><option value="qualification">Release-readiness report</option></select></div>
             <div><label class="mini-label">Subject</label><select id="reportSubjectSelect" class="select report-setting" data-report-setting="subjectId" style="width:100%"></select></div>
           </div>
         </div>
@@ -691,7 +796,7 @@
     <footer class="statusbar">
       <span><i id="networkDot" class="status-dot"></i><span id="networkStatus">Browser direct mode</span></span>
       <span id="activeRequestStatus">Unsaved request</span>
-      <span class="right">FI-1XX · RELAY v1.7.0</span>
+      <span class="right">FI-1XX · RELAY v2.0.0</span>
     </footer>
   </div>
 
@@ -760,6 +865,7 @@
   <div class="menu" id="projectMenu">
     <button data-project-action="export">Export project JSON</button>
     <button data-project-action="import">Import project JSON</button>
+    <button data-project-action="qualification">Open qualification</button>
     <button data-project-action="reports">Open reports</button>
     <button data-project-action="interchange">Open interchange</button>
     <hr />
@@ -783,7 +889,7 @@
   (() => {
     'use strict';
 
-    const VERSION = '1.7.0';
+    const VERSION = '2.0.0';
     const STORAGE_KEY = 'relay-fi-v1';
     const HISTORY_LIMIT = 100;
     const uid = (prefix = 'id') => `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
@@ -798,7 +904,7 @@
         id: uid('req'), name, folderId, method: 'GET', url: '',
         params: [blankRow()], headers: [blankRow()],
         auth: { type: 'none', bearer: '', username: '', password: '', apiKeyName: '', apiKeyValue: '', apiKeyLocation: 'header' },
-        body: { mode: 'none', content: '' }, assertions: [], createdAt: nowISO(), updatedAt: nowISO()
+        body: { mode: 'none', content: '' }, assertions: [], contract: null, qualification: { enabled: true, critical: true, expectedStatuses: '200-299', expectedContentTypes: '', maxP95Ms: 1500, responseSchema: '' }, createdAt: nowISO(), updatedAt: nowISO()
       };
     }
 
@@ -820,7 +926,7 @@
         body: { mode: 'json', content: '{\n  "title": "RELAY test",\n  "body": "A sample API request",\n  "userId": 1\n}' }
       });
       return {
-        schemaVersion: 7,
+        schemaVersion: 8,
         appVersion: VERSION,
         project: { id: uid('project'), name: 'RELAY Sample Project', createdAt: nowISO(), updatedAt: nowISO() },
         theme: 'dark',
@@ -847,6 +953,14 @@
         activeFixtureId: 'fixture_demo_ok',
         reports: { type: 'project', subjectId: '', author: '', reviewer: '', disposition: 'Draft', notes: '', includeBodies: true, includeHeaders: true, includeHistory: true, lastGeneratedAt: null },
         interchange: { lastSummary: null },
+        webhookContracts: [],
+        qualification: {
+          mode: 'requests', scenarioId: 'scenario_demo', selectedRequestIds: ['req_demo_get','req_demo_post'], selectedEnvironmentIds: ['env_demo'],
+          datasetText: '[\n  {}\n]', samples: 3, retries: 1, retryBackoffMs: 250, timeoutMs: 10000,
+          successThreshold: 95, p95ThresholdMs: 1500, activeTab: 'matrix', activeProfileRequestId: 'req_demo_get',
+          webhookContractId: 'custom', customWebhookName: 'Webhook payload', customWebhookMethod: 'POST', customWebhookPath: '', customWebhookSchema: '',
+          runs: [], activeRunId: null
+        },
         scenarios: [
           { id: 'scenario_demo', name: 'Request smoke test', steps: [
             { id: uid('step'), type: 'request', requestId: 'req_demo_get', capturePath: '$.id', captureVar: 'todoId', continueOnFail: false }
@@ -871,6 +985,8 @@
     let scenarioAbort = false;
     let scenarioRunLog = [];
     let currentReport = null;
+    let qualificationAbort = false;
+    let qualificationRunning = false;
 
     function loadState() {
       try {
@@ -893,7 +1009,7 @@
         ui: { ...base.ui, ...(input.ui || {}) }
       };
       merged.folders = Array.isArray(input.folders) && input.folders.length ? input.folders : base.folders;
-      merged.requests = Array.isArray(input.requests) ? input.requests : base.requests;
+      merged.requests = (Array.isArray(input.requests) ? input.requests : base.requests).map(normalizeRequest);
       merged.environments = Array.isArray(input.environments) && input.environments.length ? input.environments : base.environments;
       merged.history = Array.isArray(input.history) ? input.history.slice(0, HISTORY_LIMIT) : [];
       merged.gateway = { ...base.gateway, ...(input.gateway || {}) };
@@ -902,6 +1018,14 @@
       merged.webhookVerification = input.webhookVerification && typeof input.webhookVerification === 'object' ? input.webhookVerification : {};
       merged.reports = { ...base.reports, ...(input.reports || {}) };
       merged.interchange = { ...base.interchange, ...(input.interchange || {}) };
+      merged.webhookContracts = Array.isArray(input.webhookContracts) ? input.webhookContracts : base.webhookContracts;
+      merged.qualification = { ...base.qualification, ...(input.qualification || {}) };
+      merged.qualification.selectedRequestIds = (Array.isArray(merged.qualification.selectedRequestIds) ? merged.qualification.selectedRequestIds : []).filter(id => merged.requests.some(r => r.id === id));
+      if (!merged.qualification.selectedRequestIds.length) merged.qualification.selectedRequestIds = merged.requests.filter(r => r.qualification?.enabled !== false).map(r => r.id);
+      merged.qualification.selectedEnvironmentIds = (Array.isArray(merged.qualification.selectedEnvironmentIds) ? merged.qualification.selectedEnvironmentIds : []).filter(id => merged.environments.some(e => e.id === id));
+      if (!merged.qualification.selectedEnvironmentIds.length) merged.qualification.selectedEnvironmentIds = [merged.activeEnvironmentId || merged.environments[0]?.id].filter(Boolean);
+      merged.qualification.runs = Array.isArray(merged.qualification.runs) ? merged.qualification.runs.slice(0, 12) : [];
+      if (!merged.qualification.runs.some(r => r.id === merged.qualification.activeRunId)) merged.qualification.activeRunId = merged.qualification.runs[0]?.id || null;
       merged.fixtures = Array.isArray(input.fixtures) ? input.fixtures : base.fixtures;
       merged.scenarios = Array.isArray(input.scenarios) ? input.scenarios : base.scenarios;
       if (!merged.fixtures.some(f => f.id === merged.activeFixtureId)) merged.activeFixtureId = merged.fixtures[0]?.id || null;
@@ -921,6 +1045,8 @@
       out.params = Array.isArray(req?.params) && req.params.length ? req.params : [blankRow()];
       out.headers = Array.isArray(req?.headers) && req.headers.length ? req.headers : [blankRow()];
       out.assertions = Array.isArray(req?.assertions) ? req.assertions : [];
+      out.qualification = { ...base.qualification, ...(req?.qualification || {}) };
+      out.contract = req?.contract && typeof req.contract === 'object' ? req.contract : null;
       return out;
     }
 
@@ -934,7 +1060,7 @@
     function saveState() {
       try {
         state.project.updatedAt = nowISO();
-        state.schemaVersion = 7;
+        state.schemaVersion = 8;
         state.appVersion = VERSION;
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         $('#autosaveLed').className = 'led';
@@ -975,17 +1101,18 @@
     function getActiveEnvironment() {
       return state.environments.find(e => e.id === state.activeEnvironmentId) || state.environments[0];
     }
+    function getEnvironmentById(id) { return state.environments.find(e => e.id === id) || getActiveEnvironment(); }
 
-    function environmentMap() {
+    function environmentMap(environmentId = state.activeEnvironmentId) {
       const map = {};
-      for (const variable of getActiveEnvironment()?.variables || []) {
+      for (const variable of getEnvironmentById(environmentId)?.variables || []) {
         if (variable.enabled && variable.key) map[variable.key] = variable.value ?? '';
       }
       return map;
     }
 
-    function resolveVariables(value, { maskSecrets = false, extraVariables = {} } = {}) {
-      const env = getActiveEnvironment();
+    function resolveVariables(value, { maskSecrets = false, extraVariables = {}, environmentId = state.activeEnvironmentId } = {}) {
+      const env = getEnvironmentById(environmentId);
       const variables = new Map((env?.variables || []).filter(v => v.enabled && v.key).map(v => [v.key, v]));
       return String(value ?? '').replace(/{{\s*([^{}]+?)\s*}}/g, (whole, key) => {
         if (Object.prototype.hasOwnProperty.call(extraVariables, key)) return extraVariables[key] ?? '';
@@ -996,9 +1123,9 @@
       });
     }
 
-    function unresolvedVariables(value, extraVariables = {}) {
+    function unresolvedVariables(value, extraVariables = {}, environmentId = state.activeEnvironmentId) {
       const names = [];
-      const map = environmentMap();
+      const map = environmentMap(environmentId);
       String(value ?? '').replace(/{{\s*([^{}]+?)\s*}}/g, (_, key) => { if (!(key in map) && !Object.prototype.hasOwnProperty.call(extraVariables, key)) names.push(key); });
       return [...new Set(names)];
     }
@@ -1038,6 +1165,7 @@
       switchWorkspace(state.ui.workspace || 'requests', false);
       renderWebhookWorkspace();
       renderScenarioWorkspace();
+      renderQualificationWorkspace();
       renderFixtureWorkspace();
       renderReportWorkspace();
       renderInterchangeWorkspace();
@@ -1212,38 +1340,38 @@
       return buildRequestFrom(state.draft, { masked, extraVariables });
     }
 
-    function buildRequestFrom(d, { masked = false, extraVariables = {} } = {}) {
-      const missing = [d.url, ...(d.params || []).map(r => r.value), ...(d.headers || []).map(r => r.value), d.body?.content || ''].flatMap(v => unresolvedVariables(v, extraVariables));
+    function buildRequestFrom(d, { masked = false, extraVariables = {}, environmentId = state.activeEnvironmentId } = {}) {
+      const missing = [d.url, ...(d.params || []).map(r => r.value), ...(d.headers || []).map(r => r.value), d.body?.content || ''].flatMap(v => unresolvedVariables(v, extraVariables, environmentId));
       if (missing.length) throw new Error(`Undefined environment variable${missing.length > 1 ? 's' : ''}: ${[...new Set(missing)].join(', ')}`);
-      let resolvedUrl = resolveVariables(d.url, { maskSecrets: masked, extraVariables }).trim();
+      let resolvedUrl = resolveVariables(d.url, { maskSecrets: masked, extraVariables, environmentId }).trim();
       if (!resolvedUrl) throw new Error('Enter a request URL.');
       let url;
       try { url = new URL(resolvedUrl); }
       catch { throw new Error('The request URL is not valid. Include http:// or https://.'); }
-      for (const row of d.params || []) if (row.enabled && row.key) url.searchParams.append(resolveVariables(row.key, { maskSecrets: masked, extraVariables }), resolveVariables(row.value, { maskSecrets: masked, extraVariables }));
+      for (const row of d.params || []) if (row.enabled && row.key) url.searchParams.append(resolveVariables(row.key, { maskSecrets: masked, extraVariables, environmentId }), resolveVariables(row.value, { maskSecrets: masked, extraVariables, environmentId }));
       const headers = new Headers();
-      for (const row of d.headers || []) if (row.enabled && row.key) headers.set(resolveVariables(row.key, { maskSecrets: masked, extraVariables }), resolveVariables(row.value, { maskSecrets: masked, extraVariables }));
+      for (const row of d.headers || []) if (row.enabled && row.key) headers.set(resolveVariables(row.key, { maskSecrets: masked, extraVariables, environmentId }), resolveVariables(row.value, { maskSecrets: masked, extraVariables, environmentId }));
       const auth = d.auth || {};
       if (auth.type === 'bearer' && auth.bearer) {
-        let token = resolveVariables(auth.bearer, { maskSecrets: masked, extraVariables });
+        let token = resolveVariables(auth.bearer, { maskSecrets: masked, extraVariables, environmentId });
         if (masked && !/{{\s*[^{}]+\s*}}/.test(auth.bearer)) token = '••••••••';
         headers.set('Authorization', `Bearer ${token}`);
       }
       if (auth.type === 'basic') {
-        const username = resolveVariables(auth.username, { maskSecrets: masked, extraVariables });
-        const password = resolveVariables(auth.password, { maskSecrets: masked, extraVariables });
+        const username = resolveVariables(auth.username, { maskSecrets: masked, extraVariables, environmentId });
+        const password = resolveVariables(auth.password, { maskSecrets: masked, extraVariables, environmentId });
         if (username || password) headers.set('Authorization', `Basic ${masked ? '••••••••' : btoa(unescape(encodeURIComponent(`${username}:${password}`)))}`);
       }
       if (auth.type === 'apikey' && auth.apiKeyName) {
-        const key = resolveVariables(auth.apiKeyName, { maskSecrets: masked, extraVariables });
-        let value = resolveVariables(auth.apiKeyValue, { maskSecrets: masked, extraVariables });
+        const key = resolveVariables(auth.apiKeyName, { maskSecrets: masked, extraVariables, environmentId });
+        let value = resolveVariables(auth.apiKeyValue, { maskSecrets: masked, extraVariables, environmentId });
         if (masked && auth.apiKeyValue && !/{{\s*[^{}]+\s*}}/.test(auth.apiKeyValue)) value = '••••••••';
         if (auth.apiKeyLocation === 'query') url.searchParams.set(key, value); else headers.set(key, value);
       }
       let body;
       const bodyDef = d.body || { mode:'none', content:'' };
       if (!['GET','HEAD'].includes(d.method) && bodyDef.mode !== 'none') {
-        const content = resolveVariables(bodyDef.content, { maskSecrets: masked, extraVariables });
+        const content = resolveVariables(bodyDef.content, { maskSecrets: masked, extraVariables, environmentId });
         if (bodyDef.mode === 'json') {
           if (content.trim()) { try { JSON.parse(content); } catch (error) { throw new Error(`Request body contains invalid JSON: ${error.message}`); } }
           body = content; if (!headers.has('Content-Type')) headers.set('Content-Type','application/json');
@@ -1597,6 +1725,8 @@
       if (exportState.gateway?.channel) exportState.gateway.channel.token = '';
       if (exportState.webhookSettings) exportState.webhookSettings.secret = '';
       if (exportState.reports) exportState.reports.notes = redactedValue(exportState.reports.notes || '');
+      if (exportState.qualification) exportState.qualification.datasetText = redactedValue(exportState.qualification.datasetText || '[{}]');
+      if (exportState.qualification?.runs) exportState.qualification.runs = exportState.qualification.runs.map(run => ({ ...run, samples: (run.samples || []).map(s => ({ ...s, error: redactedValue(s.error || ''), schemaIssues: (s.schemaIssues || []).map(redactedValue) })) }));
       if (exportState.gateway) exportState.gateway.diagnostic = null;
       const blob = new Blob([JSON.stringify(exportState, null, 2)], { type: 'application/json' });
       downloadBlob(blob, `${safeFilename(state.project.name)}-relay-project.json`);
@@ -1673,7 +1803,7 @@
 
 
     function switchWorkspace(name, persist = true) {
-      const valid = ['requests','webhooks','scenarios','fixtures','reports','interchange'];
+      const valid = ['requests','webhooks','scenarios','qualification','fixtures','reports','interchange'];
       if (!valid.includes(name)) name = 'requests';
       state.ui.workspace = name;
       $$('[data-workspace]').forEach(el => el.classList.toggle('active', el.dataset.workspace === name));
@@ -1682,6 +1812,7 @@
       if (persist) scheduleSave();
       if (name === 'webhooks') renderWebhookWorkspace();
       if (name === 'scenarios') renderScenarioWorkspace();
+      if (name === 'qualification') renderQualificationWorkspace();
       if (name === 'fixtures') renderFixtureWorkspace();
       if (name === 'reports') renderReportWorkspace();
       if (name === 'interchange') renderInterchangeWorkspace();
@@ -1838,6 +1969,200 @@
     const sleep=ms=>new Promise(r=>setTimeout(r,ms));
     async function runScenario(){const s=activeScenario();if(!s||!s.steps.length){toast('Add at least one scenario step.','error');return;}scenarioAbort=false;scenarioRunLog=[];renderScenarioWorkspace();const vars={};let passed=true;const seen=new Set(state.webhookEvents.map(e=>e.id));logScenario(`Starting “${s.name}” with ${s.steps.length} step(s).`);for(let i=0;i<s.steps.length;i++){if(scenarioAbort){passed=false;logScenario('Run stopped by user.','fail');break;}const st=s.steps[i];try{if(st.type==='delay'){logScenario(`Step ${i+1}: waiting ${st.delayMs||1000} ms.`);await sleep(Number(st.delayMs||1000));continue;}if(st.type==='request'){const req=state.requests.find(r=>r.id===st.requestId);if(!req)throw new Error('Saved request not found.');logScenario(`Step ${i+1}: ${req.method} ${req.name}`);const built=buildRequestFrom(req,{extraVariables:vars});const resp=await performBuiltRequest(built);const results=evaluateAssertions(req.assertions||[],resp);const ok=resp.ok&&results.every(r=>r.pass);logScenario(`${resp.status} ${resp.statusText} in ${resp.durationMs} ms; ${results.filter(r=>r.pass).length}/${results.length} assertions passed.`,ok?'pass':'fail');if(st.capturePath&&st.captureVar){const v=jsonPathGet(resp.json,st.capturePath);if(v===undefined)throw new Error(`Capture path ${st.capturePath} was not found.`);vars[st.captureVar]=typeof v==='object'?JSON.stringify(v):v;logScenario(`Captured {{${st.captureVar}}} = ${vars[st.captureVar]}.`);}if(!ok&&!st.continueOnFail){passed=false;break;}}if(st.type==='waitWebhook'){logScenario(`Step ${i+1}: waiting for webhook ${st.matchPath||'$'} = ${st.matchValue||'(any)'}.`);const deadline=Date.now()+Number(st.timeoutSec||30)*1000;let found=null;while(Date.now()<deadline&&!scenarioAbort){await pollWebhookEvents({silent:true});found=state.webhookEvents.find(e=>!seen.has(e.id)&&(()=>{let parsed;try{parsed=JSON.parse(e.body||'')}catch{return false}const v=jsonPathGet(parsed,st.matchPath||'$');return st.matchValue===''||String(v)===String(st.matchValue)})());if(found)break;await sleep(1000);}if(!found)throw new Error('Webhook wait timed out.');seen.add(found.id);logScenario(`Matched webhook ${found.method} ${found.path}.`,'pass');if(st.capturePath&&st.captureVar){let parsed=JSON.parse(found.body||'{}');const v=jsonPathGet(parsed,st.capturePath);if(v===undefined)throw new Error(`Capture path ${st.capturePath} was not found.`);vars[st.captureVar]=typeof v==='object'?JSON.stringify(v):v;logScenario(`Captured {{${st.captureVar}}} = ${vars[st.captureVar]}.`);}}}catch(error){passed=false;logScenario(`Step ${i+1} failed: ${error.message}`,'fail');break;}}s.runs=s.runs||[];s.runs.unshift({id:uid('run'),at:nowISO(),passed,variables:vars,log:clone(scenarioRunLog)});s.runs=s.runs.slice(0,20);scenarioAbort=false;saveState();logScenario(passed?'Scenario passed.':'Scenario failed.',passed?'pass':'fail');toast(passed?'Scenario passed.':'Scenario failed.',passed?'success':'error');}
 
+
+    // v2.0 API qualification
+    function qualificationSettings(){
+      if(!state.qualification) state.qualification=demoState().qualification;
+      return state.qualification;
+    }
+    function activeQualificationRun(){const q=qualificationSettings();return q.runs.find(r=>r.id===q.activeRunId)||q.runs[0]||null;}
+    function parseQualificationDataset(){
+      const raw=qualificationSettings().datasetText?.trim()||'[{}]';
+      let value;try{value=JSON.parse(raw);}catch(error){throw new Error(`Data set is not valid JSON: ${error.message}`);}
+      if(!Array.isArray(value)) value=value?.rows;
+      if(!Array.isArray(value)||!value.length) throw new Error('Data set must be a non-empty JSON array.');
+      if(value.some(row=>!row||typeof row!=='object'||Array.isArray(row))) throw new Error('Every data row must be a JSON object.');
+      return value;
+    }
+    function qualificationSelectedRequests(){const q=qualificationSettings();return state.requests.filter(r=>q.selectedRequestIds.includes(r.id)&&r.qualification?.enabled!==false);}
+    function qualificationSelectedEnvironments(){const q=qualificationSettings();return state.environments.filter(e=>q.selectedEnvironmentIds.includes(e.id));}
+    function qualificationPlanCount(){
+      const q=qualificationSettings();let rows=1;try{rows=parseQualificationDataset().length}catch{}
+      const envs=Math.max(1,qualificationSelectedEnvironments().length),samples=Math.max(1,Number(q.samples)||1);
+      return q.mode==='scenario'?envs*rows*samples:Math.max(1,qualificationSelectedRequests().length)*envs*rows*samples;
+    }
+    function percentile(values,p){if(!values.length)return 0;const a=[...values].sort((x,y)=>x-y),i=Math.min(a.length-1,Math.max(0,Math.ceil((p/100)*a.length)-1));return a[i];}
+    function median(values){return percentile(values,50);}
+    function statusSpecAllows(status,spec){
+      const tokens=String(spec||'200-299').split(',').map(x=>x.trim().toLowerCase()).filter(Boolean);
+      return tokens.some(token=>{if(token==='default'||token==='any')return true;if(/^\dxx$/.test(token))return Math.floor(status/100)===Number(token[0]);if(/^\d{3}-\d{3}$/.test(token)){const[a,b]=token.split('-').map(Number);return status>=a&&status<=b;}return Number(token)===Number(status);});
+    }
+    function contentTypeAllows(actual,spec){const expected=String(spec||'').split(',').map(x=>x.trim().toLowerCase()).filter(Boolean);if(!expected.length)return true;const value=String(actual||'').toLowerCase().split(';')[0].trim();return expected.some(x=>x==='*/*'||x===value||(x.endsWith('/*')&&value.startsWith(x.slice(0,-1))));}
+    function schemaTypeMatches(value,type){if(type==='null')return value===null;if(type==='array')return Array.isArray(value);if(type==='object')return value!==null&&typeof value==='object'&&!Array.isArray(value);if(type==='integer')return Number.isInteger(value);if(type==='number')return typeof value==='number'&&Number.isFinite(value);if(type==='string')return typeof value==='string';if(type==='boolean')return typeof value==='boolean';return true;}
+    function validateJsonSchema(value,schema,path='$',issues=[],depth=0){
+      if(!schema||typeof schema!=='object'||depth>30)return issues;
+      if(schema.nullable&&value===null)return issues;
+      if(Array.isArray(schema.allOf))schema.allOf.forEach(s=>validateJsonSchema(value,s,path,issues,depth+1));
+      if(Array.isArray(schema.anyOf)&&!schema.anyOf.some(s=>validateJsonSchema(value,s,path,[],depth+1).length===0))issues.push(`${path}: does not match any allowed schema.`);
+      if(Array.isArray(schema.oneOf)&&schema.oneOf.filter(s=>validateJsonSchema(value,s,path,[],depth+1).length===0).length!==1)issues.push(`${path}: must match exactly one schema.`);
+      if(schema.not&&validateJsonSchema(value,schema.not,path,[],depth+1).length===0)issues.push(`${path}: matches a forbidden schema.`);
+      const types=Array.isArray(schema.type)?schema.type:schema.type?[schema.type]:[];
+      if(types.length&&!types.some(t=>schemaTypeMatches(value,t))){issues.push(`${path}: expected ${types.join(' or ')}, received ${value===null?'null':Array.isArray(value)?'array':typeof value}.`);return issues;}
+      if(schema.const!==undefined&&JSON.stringify(value)!==JSON.stringify(schema.const))issues.push(`${path}: value does not equal the required constant.`);
+      if(Array.isArray(schema.enum)&&!schema.enum.some(v=>JSON.stringify(v)===JSON.stringify(value)))issues.push(`${path}: value is not in the allowed enumeration.`);
+      if(typeof value==='string'){
+        if(schema.minLength!==undefined&&value.length<schema.minLength)issues.push(`${path}: length is below ${schema.minLength}.`);
+        if(schema.maxLength!==undefined&&value.length>schema.maxLength)issues.push(`${path}: length exceeds ${schema.maxLength}.`);
+        if(schema.pattern){try{if(!new RegExp(schema.pattern).test(value))issues.push(`${path}: does not match pattern ${schema.pattern}.`);}catch{issues.push(`${path}: schema contains an invalid regular expression.`);}}
+        if(schema.format==='date-time'&&Number.isNaN(Date.parse(value)))issues.push(`${path}: is not a valid date-time.`);
+      }
+      if(typeof value==='number'){
+        if(schema.minimum!==undefined&&value<schema.minimum)issues.push(`${path}: is below minimum ${schema.minimum}.`);
+        if(schema.maximum!==undefined&&value>schema.maximum)issues.push(`${path}: exceeds maximum ${schema.maximum}.`);
+        if(schema.exclusiveMinimum!==undefined&&value<=schema.exclusiveMinimum)issues.push(`${path}: must be greater than ${schema.exclusiveMinimum}.`);
+        if(schema.exclusiveMaximum!==undefined&&value>=schema.exclusiveMaximum)issues.push(`${path}: must be less than ${schema.exclusiveMaximum}.`);
+      }
+      if(Array.isArray(value)){
+        if(schema.minItems!==undefined&&value.length<schema.minItems)issues.push(`${path}: has fewer than ${schema.minItems} items.`);
+        if(schema.maxItems!==undefined&&value.length>schema.maxItems)issues.push(`${path}: has more than ${schema.maxItems} items.`);
+        if(schema.uniqueItems){const keys=value.map(v=>JSON.stringify(v));if(new Set(keys).size!==keys.length)issues.push(`${path}: items are not unique.`);}
+        if(schema.items)value.forEach((item,i)=>validateJsonSchema(item,schema.items,`${path}[${i}]`,issues,depth+1));
+      }
+      if(value&&typeof value==='object'&&!Array.isArray(value)){
+        for(const key of schema.required||[])if(!(key in value))issues.push(`${path}.${key}: required property is missing.`);
+        for(const[key,sub]of Object.entries(schema.properties||{}))if(key in value)validateJsonSchema(value[key],sub,`${path}.${key}`,issues,depth+1);
+        if(schema.additionalProperties===false){const allowed=new Set(Object.keys(schema.properties||{}));for(const key of Object.keys(value))if(!allowed.has(key))issues.push(`${path}.${key}: additional property is not allowed.`);}
+      }
+      return issues;
+    }
+    function qualificationSchemaForStatus(req,status){
+      const profile=req.qualification||{};if(profile.responseSchema?.trim()){try{return JSON.parse(profile.responseSchema)}catch(error){return{__parseError:error.message}}}
+      const schemas=req.contract?.responseSchemas||{};return schemas[String(status)]||schemas[`${Math.floor(status/100)}XX`]||schemas.default||null;
+    }
+    function qualificationContentTypesForStatus(req,status){const map=req.contract?.responseContentTypes||{};return map[String(status)]||map[`${Math.floor(status/100)}XX`]||map.default||[];}
+    function evaluateRequestContract(req,response){
+      const profile=req.qualification||{},contract=req.contract||null;
+      const statusSpec=profile.expectedStatuses||Object.keys(contract?.responseSchemas||contract?.responseContentTypes||{}).join(',')||'200-299';
+      const statusPass=statusSpecAllows(response.status,statusSpec);
+      const contractTypes=qualificationContentTypesForStatus(req,response.status);
+      const typeSpec=profile.expectedContentTypes||contractTypes.join(',');
+      const contentTypePass=contentTypeAllows(response.contentType,typeSpec);
+      const schema=qualificationSchemaForStatus(req,response.status);let schemaIssues=[];
+      if(schema?.__parseError)schemaIssues=[`Schema JSON is invalid: ${schema.__parseError}`];
+      else if(schema){if(response.json===null||response.json===undefined)schemaIssues=['Response body is not valid JSON.'];else schemaIssues=validateJsonSchema(response.json,schema);}
+      return{pass:statusPass&&contentTypePass&&!schemaIssues.length,statusPass,contentTypePass,schemaPass:!schemaIssues.length,statusSpec,typeSpec,schemaIssues,hasSchema:!!schema,source:profile.responseSchema?.trim()?'Manual JSON Schema':contract?.sourceTitle||contract?.source||'Profile rules'};
+    }
+    function responseShape(value,depth=0){if(depth>6)return'…';if(value===null)return'null';if(Array.isArray(value))return`[${value.length?responseShape(value[0],depth+1):''}]`;if(typeof value==='object')return`{${Object.keys(value).sort().map(k=>`${k}:${responseShape(value[k],depth+1)}`).join(',')}}`;return typeof value;}
+    async function executeQualificationRequest(req,{environmentId,variables,timeoutMs,retries,retryBackoffMs,capturePath=''}){
+      const attempts=[];let response=null,error=null,built=null;
+      for(let attempt=0;attempt<=retries;attempt++){
+        if(qualificationAbort)throw new Error('Qualification stopped by user.');
+        const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeoutMs);
+        try{
+          built=buildRequestFrom(req,{extraVariables:variables,environmentId});
+          response=await performBuiltRequest(built,controller.signal);error=null;
+          attempts.push({attempt:attempt+1,status:response.status,durationMs:response.durationMs,error:null});
+          const retryable=response.status===429||response.status>=500;
+          if(!retryable||attempt>=retries)break;
+        }catch(err){error=err.name==='AbortError'?`Timed out after ${timeoutMs} ms`:err.message;attempts.push({attempt:attempt+1,status:null,durationMs:timeoutMs,error});if(attempt>=retries)break;}
+        finally{clearTimeout(timer);}
+        if(retryBackoffMs>0)await sleep(retryBackoffMs*Math.pow(2,attempt));
+      }
+      if(!response)return{passed:false,error:error||'Request failed.',status:null,durationMs:attempts.reduce((n,a)=>n+a.durationMs,0),attempts,recovered:false,assertionPass:false,contractPass:false,schemaIssues:[],shape:''};
+      const assertions=evaluateAssertions(req.assertions||[],response),assertionPass=assertions.every(r=>r.pass),contract=evaluateRequestContract(req,response),recovered=attempts.length>1&&response.status<500&&response.status!==429;
+      const captureValue=capturePath?jsonPathGet(response.json,capturePath):undefined;return{passed:response.ok&&assertionPass&&contract.pass,status:response.status,statusText:response.statusText,durationMs:response.durationMs,attempts,recovered,assertionPass,assertionFailures:assertions.filter(r=>!r.pass).map(r=>assertionLabel(r)),contractPass:contract.pass,statusPass:contract.statusPass,contentTypePass:contract.contentTypePass,schemaPass:contract.schemaPass,schemaIssues:contract.schemaIssues,contractSource:contract.source,contentType:response.contentType,shape:response.json!==null&&response.json!==undefined?responseShape(response.json):'',size:response.size||0,error:null,captureValue};
+    }
+    function webhookPathMatches(actual,pattern){if(!pattern)return true;const re='^'+String(pattern).replace(/[.+?^${}()|[\]\\]/g,'\\$&').replace(/\\\{[^}]+\\\}/g,'[^/]+').replace(/\*/g,'.*')+'$';try{return new RegExp(re).test(actual||'')}catch{return actual===pattern}}
+    function activeWebhookContract(){
+      const q=qualificationSettings();if(q.webhookContractId==='custom'){
+        let schema=null,error='';try{schema=q.customWebhookSchema?.trim()?JSON.parse(q.customWebhookSchema):null}catch(e){error=e.message}
+        return{id:'custom',name:q.customWebhookName||'Custom webhook',method:q.customWebhookMethod||'',path:q.customWebhookPath||'',schema,error};
+      }
+      return state.webhookContracts.find(c=>c.id===q.webhookContractId)||null;
+    }
+    function evaluateWebhookCompliance(){
+      const contract=activeWebhookContract();if(!contract||(!contract.schema&&!contract.error))return{configured:false,rows:[],pass:true};
+      const events=state.webhookEvents.filter(e=>(!contract.method||e.method===contract.method)&&webhookPathMatches(e.path||'/',contract.path||''));
+      const rows=events.slice(0,50).map(event=>{let body,issues=[];if(contract.error)issues=[`Schema JSON is invalid: ${contract.error}`];else{try{body=JSON.parse(event.body||'')}catch{issues=['Webhook body is not valid JSON.'];}if(!issues.length&&contract.schema)issues=validateJsonSchema(body,contract.schema);}return{eventId:event.id,receivedAt:event.receivedAt,method:event.method,path:event.path||'/',pass:!issues.length,issues};});
+      return{configured:true,contract,rows,pass:rows.length>0&&rows.every(r=>r.pass),notRun:rows.length===0};
+    }
+    async function executeScenarioQualification(scenario,{environmentId,variables,timeoutMs,retries,retryBackoffMs}){
+      const started=performance.now(),seen=new Set(state.webhookEvents.map(e=>e.id)),steps=[],captures={...variables};let passed=true;
+      for(let i=0;i<scenario.steps.length;i++){
+        if(qualificationAbort)throw new Error('Qualification stopped by user.');const st=scenario.steps[i];
+        try{
+          if(st.type==='delay'){await sleep(Number(st.delayMs||1000));steps.push({type:'delay',pass:true,durationMs:Number(st.delayMs||1000)});continue;}
+          if(st.type==='request'){
+            const req=state.requests.find(r=>r.id===st.requestId);if(!req)throw new Error('Saved request not found.');
+            const result=await executeQualificationRequest(req,{environmentId,variables:captures,timeoutMs,retries,retryBackoffMs,capturePath:st.capturePath||''});const captureValue=result.captureValue;delete result.captureValue;steps.push({type:'request',requestId:req.id,...result});if(!result.passed&&!st.continueOnFail){passed=false;break;}
+            if(st.capturePath&&st.captureVar){if(captureValue===undefined)throw new Error(`Capture path ${st.capturePath} was not found.`);captures[st.captureVar]=typeof captureValue==='object'?JSON.stringify(captureValue):captureValue;}
+          }
+          if(st.type==='waitWebhook'){
+            const deadline=Date.now()+Number(st.timeoutSec||30)*1000;let found=null;
+            while(Date.now()<deadline&&!qualificationAbort){await pollWebhookEvents({silent:true});found=state.webhookEvents.find(e=>!seen.has(e.id)&&(()=>{let parsed;try{parsed=JSON.parse(e.body||'')}catch{return false}const v=jsonPathGet(parsed,st.matchPath||'$');return st.matchValue===''||String(v)===String(resolveVariables(st.matchValue,{extraVariables:captures,environmentId}))})());if(found)break;await sleep(1000);}
+            if(!found)throw new Error('Webhook wait timed out.');seen.add(found.id);steps.push({type:'waitWebhook',pass:true,eventId:found.id});if(st.capturePath&&st.captureVar){const v=jsonPathGet(JSON.parse(found.body||'{}'),st.capturePath);if(v===undefined)throw new Error(`Capture path ${st.capturePath} was not found.`);captures[st.captureVar]=typeof v==='object'?JSON.stringify(v):v;}
+          }
+        }catch(error){passed=false;steps.push({type:st.type,pass:false,error:error.message});break;}
+      }
+      return{passed,durationMs:Math.round(performance.now()-started),steps,captures};
+    }
+    function aggregateQualificationRun(run){
+      const q=qualificationSettings(),groups=new Map();
+      for(const s of run.samples||[]){const key=`${s.requestId||'scenario'}|${s.environmentId}`;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(s);}
+      run.matrix=[...groups.entries()].map(([key,samples])=>{
+        const[requestId,environmentId]=key.split('|'),req=state.requests.find(r=>r.id===requestId),durations=samples.filter(s=>Number.isFinite(s.durationMs)).map(s=>s.durationMs),passed=samples.filter(s=>s.passed).length,total=samples.length,successRate=total?passed/total*100:0,profile=req?.qualification||{},p95=percentile(durations,95),contractFailures=samples.filter(s=>s.contractPass===false).length,assertionFailures=samples.filter(s=>s.assertionPass===false).length,exhausted=samples.filter(s=>s.error||((s.attempts||[]).length>1&&!s.recovered&&!s.passed)).length,recovered=samples.filter(s=>s.recovered).length,shapes=[...new Set(samples.map(s=>s.shape).filter(Boolean))],statuses=[...new Set(samples.map(s=>s.status).filter(v=>v!==null))];
+        const maxP95=Number(profile.maxP95Ms||q.p95ThresholdMs||1500),gates={success:successRate>=Number(q.successThreshold||95),contract:contractFailures===0,assertions:assertionFailures===0,performance:p95<=maxP95,reliability:exhausted===0};
+        return{requestId,environmentId,requestName:req?.name||run.scenarioName||'Scenario',method:req?.method||'FLOW',critical:req?.qualification?.critical!==false,total,passed,successRate,p50:median(durations),p95,max:durations.length?Math.max(...durations):0,contractFailures,assertionFailures,exhausted,recovered,retryAttempts:samples.reduce((n,s)=>n+Math.max(0,(s.attempts?.length||1)-1),0),shapes,statuses,gates,ready:Object.values(gates).every(Boolean)};
+      });
+      run.environmentSummary=state.environments.filter(e=>run.environmentIds.includes(e.id)).map(env=>{const rows=run.matrix.filter(r=>r.environmentId===env.id),samples=(run.samples||[]).filter(s=>s.environmentId===env.id),dur=samples.map(s=>s.durationMs).filter(Number.isFinite),passed=samples.filter(s=>s.passed).length;return{environmentId:env.id,name:env.name,total:samples.length,successRate:samples.length?passed/samples.length*100:0,p95:percentile(dur,95),contractFailures:samples.filter(s=>s.contractPass===false).length,ready:rows.length>0&&rows.every(r=>r.ready)};});
+      const parity=[];for(const requestId of [...new Set(run.matrix.map(r=>r.requestId))]){const rows=run.matrix.filter(r=>r.requestId===requestId),statusSignatures=rows.map(r=>r.statuses.join(',')),shapeSignatures=rows.map(r=>r.shapes.join('|'));parity.push({requestId,requestName:rows[0]?.requestName||'',pass:rows.length<2||(new Set(statusSignatures).size===1&&new Set(shapeSignatures).size===1),statusSignatures,shapeSignatures});}run.environmentParity=parity;
+      run.webhook=evaluateWebhookCompliance();
+      const criticalFailures=run.matrix.filter(r=>r.critical&&!r.ready),allFailures=run.matrix.filter(r=>!r.ready),webhookRequired=run.webhook.configured,webhookFail=webhookRequired&&!run.webhook.notRun&&!run.webhook.pass,gates=[{id:'coverage',label:'Coverage',pass:run.matrix.length>0,detail:`${run.matrix.length} endpoint/environment combination(s) exercised.`},{id:'success',label:'Success rate',pass:run.matrix.length>0&&run.matrix.every(r=>r.gates.success),detail:`Minimum ${q.successThreshold}% required.`},{id:'contract',label:'Contract compliance',pass:run.matrix.length>0&&run.matrix.every(r=>r.gates.contract),detail:`${run.matrix.reduce((n,r)=>n+r.contractFailures,0)} violation(s).`},{id:'assertions',label:'Assertions',pass:run.matrix.length>0&&run.matrix.every(r=>r.gates.assertions),detail:`${run.matrix.reduce((n,r)=>n+r.assertionFailures,0)} failed assertion sample(s).`},{id:'performance',label:'Performance',pass:run.matrix.length>0&&run.matrix.every(r=>r.gates.performance),detail:'Each endpoint uses its configured p95 limit.'},{id:'reliability',label:'Reliability',pass:run.matrix.length>0&&run.matrix.every(r=>r.gates.reliability),detail:`${run.matrix.reduce((n,r)=>n+r.exhausted,0)} exhausted or unrecovered sample(s).`},{id:'parity',label:'Environment parity',pass:parity.every(p=>p.pass),detail:`${parity.filter(p=>!p.pass).length} inconsistent endpoint(s).`},{id:'webhooks',label:'Webhook schema',pass:!webhookRequired||run.webhook.pass,warning:webhookRequired&&run.webhook.notRun,detail:!webhookRequired?'Optional gate not configured.':run.webhook.notRun?'No matching deliveries were available.':`${run.webhook.rows.filter(r=>!r.pass).length} noncompliant delivery(s).`}];
+      run.gates=gates;run.readiness=criticalFailures.length||webhookFail?'NOT READY':allFailures.length||gates.some(g=>!g.pass&&!g.warning)?'CONDITIONAL':gates.some(g=>g.warning)?'CONDITIONAL':'READY';run.gatesPassed=gates.filter(g=>g.pass).length;run.gatesTotal=gates.length;return run;
+    }
+    async function runQualification(){
+      if(qualificationRunning)return;const q=qualificationSettings();let rows,requests,environments,scenario;
+      try{rows=parseQualificationDataset();environments=qualificationSelectedEnvironments();if(!environments.length)throw new Error('Select at least one environment.');if(q.mode==='scenario'){scenario=state.scenarios.find(s=>s.id===q.scenarioId);if(!scenario||!scenario.steps.length)throw new Error('Select a scenario with at least one step.');}else{requests=qualificationSelectedRequests();if(!requests.length)throw new Error('Select at least one endpoint.');}}
+      catch(error){toast(error.message,'error');return;}
+      const planned=qualificationPlanCount();if(planned>200){toast(`The plan contains ${planned} executions. Reduce endpoints, data rows, environments, or samples to 200 or fewer.`,'error');return;}
+      qualificationAbort=false;qualificationRunning=true;renderQualificationWorkspace();const run={id:uid('qualrun'),startedAt:nowISO(),finishedAt:null,status:'running',mode:q.mode,scenarioId:scenario?.id||null,scenarioName:scenario?.name||'',requestIds:(requests||[]).map(r=>r.id),environmentIds:environments.map(e=>e.id),dataRows:rows.length,sampleCount:Number(q.samples)||1,planned,samples:[],matrix:[],environmentSummary:[],environmentParity:[],gates:[],readiness:'RUNNING'};q.runs.unshift(run);q.runs=q.runs.slice(0,12);q.activeRunId=run.id;let completed=0;
+      try{
+        for(const env of environments)for(let rowIndex=0;rowIndex<rows.length;rowIndex++)for(let iteration=0;iteration<Math.max(1,Number(q.samples)||1);iteration++){
+          if(qualificationAbort)break;const variables={...rows[rowIndex],__row:rowIndex+1,__iteration:iteration+1,__environment:env.name};
+          if(q.mode==='scenario'){
+            const result=await executeScenarioQualification(scenario,{environmentId:env.id,variables,timeoutMs:Number(q.timeoutMs)||10000,retries:Number(q.retries)||0,retryBackoffMs:Number(q.retryBackoffMs)||0});run.samples.push({id:uid('qualsample'),requestId:'scenario',environmentId:env.id,dataRow:rowIndex+1,iteration:iteration+1,passed:result.passed,durationMs:result.durationMs,attempts:[{attempt:1,status:result.passed?200:null,durationMs:result.durationMs,error:result.passed?null:'Scenario failed'}],recovered:false,assertionPass:result.passed,contractPass:result.steps.filter(s=>s.type==='request').every(s=>s.contractPass!==false),shape:'scenario',steps:result.steps,error:result.passed?null:'Scenario failed'});
+          }else for(const req of requests){if(qualificationAbort)break;const result=await executeQualificationRequest(req,{environmentId:env.id,variables,timeoutMs:Number(q.timeoutMs)||10000,retries:Number(q.retries)||0,retryBackoffMs:Number(q.retryBackoffMs)||0});run.samples.push({id:uid('qualsample'),requestId:req.id,environmentId:env.id,dataRow:rowIndex+1,iteration:iteration+1,...result});completed++;updateQualificationProgress(completed,planned);}
+          if(q.mode==='scenario'){completed++;updateQualificationProgress(completed,planned);}
+        }
+        run.status=qualificationAbort?'stopped':'complete';run.finishedAt=nowISO();aggregateQualificationRun(run);if(qualificationAbort&&run.readiness==='READY')run.readiness='CONDITIONAL';saveState();toast(`Qualification ${qualificationAbort?'stopped':'completed'}: ${run.readiness}.`,run.readiness==='READY'?'success':run.readiness==='NOT READY'?'error':'');
+      }catch(error){run.status='error';run.error=error.message;run.finishedAt=nowISO();aggregateQualificationRun(run);saveState();toast(`Qualification failed: ${error.message}`,'error');}
+      finally{qualificationRunning=false;qualificationAbort=false;renderQualificationWorkspace();}
+    }
+    function updateQualificationProgress(completed,total){const pct=total?Math.min(100,completed/total*100):0;const bar=$('#qualificationProgressBar'),label=$('#qualificationProgressText');if(bar)bar.style.width=`${pct}%`;if(label)label.textContent=`${completed} of ${total} planned executions complete.`;}
+    function readinessClass(value){return value==='READY'?'ready':value==='NOT READY'?'not-ready':'conditional';}
+    function renderQualificationWorkspace(){
+      const root=$('#qualificationWorkspace');if(!root)return;const q=qualificationSettings();
+      $('#qualificationModeSelect').value=q.mode;$('#qualificationScenarioSelect').innerHTML=state.scenarios.map(s=>`<option value="${escapeHtml(s.id)}">${escapeHtml(s.name)}</option>`).join('');if(!state.scenarios.some(s=>s.id===q.scenarioId))q.scenarioId=state.scenarios[0]?.id||'';$('#qualificationScenarioSelect').value=q.scenarioId;$('#qualificationScenarioWrap').style.display=q.mode==='scenario'?'':'none';$('#qualificationRequestScopeCard').style.display=q.mode==='requests'?'':'none';
+      $('#qualificationDatasetInput').value=q.datasetText||'[{}]';$('#qualificationSamplesInput').value=q.samples;$('#qualificationRetriesInput').value=q.retries;$('#qualificationTimeoutInput').value=q.timeoutMs;$('#qualificationBackoffInput').value=q.retryBackoffMs;$('#qualificationSuccessThresholdInput').value=q.successThreshold;$('#qualificationP95ThresholdInput').value=q.p95ThresholdMs;
+      $('#qualificationRequestList').innerHTML=state.requests.map(r=>`<label class="scope-item"><input type="checkbox" class="check qualification-request-check" data-request-id="${escapeHtml(r.id)}" ${q.selectedRequestIds.includes(r.id)?'checked':''}><strong>${escapeHtml(r.name)}</strong><small>${escapeHtml(r.method)}</small></label>`).join('')||'<div class="side-empty">No saved requests.</div>';
+      $('#qualificationEnvironmentList').innerHTML=state.environments.map(e=>`<label class="scope-item"><input type="checkbox" class="check qualification-environment-check" data-environment-id="${escapeHtml(e.id)}" ${q.selectedEnvironmentIds.includes(e.id)?'checked':''}><strong>${escapeHtml(e.name)}</strong><small>${(e.variables||[]).length} vars</small></label>`).join('');
+      let estimate='';try{estimate=`${qualificationPlanCount()} execution(s) · ${parseQualificationDataset().length} data row(s)`;}catch(error){estimate=error.message;}$('#qualificationEstimate').innerHTML=`<strong>Plan estimate</strong><br>${escapeHtml(estimate)}`;
+      $('#runQualificationBtn').disabled=qualificationRunning;$('#stopQualificationBtn').disabled=!qualificationRunning;const run=activeQualificationRun();if(!qualificationRunning)updateQualificationProgress(run?.planned||0,run?.planned||0);
+      $('#qualificationRunList').innerHTML=q.runs.map(r=>`<button class="run-item ${r.id===q.activeRunId?'active':''}" data-qualification-run-id="${escapeHtml(r.id)}"><span class="qual-result-pill ${r.readiness==='READY'?'pass':r.readiness==='NOT READY'?'fail':'warn'}">${escapeHtml(r.readiness||r.status)}</span><span><strong>${escapeHtml(r.mode==='scenario'?(r.scenarioName||'Scenario qualification'):'Endpoint qualification')}</strong><small>${new Date(r.startedAt).toLocaleString()} · ${r.samples?.length||0}/${r.planned||0}</small></span><span>›</span></button>`).join('')||'<div class="side-empty">No qualification runs yet.</div>';
+      $$('#qualificationTabs .qual-tab').forEach(t=>t.classList.toggle('active',t.dataset.qualificationTab===q.activeTab));renderQualificationSummary(run);renderQualificationContent(run);
+    }
+    function renderQualificationSummary(run){const el=$('#qualificationSummary');if(!run){el.innerHTML='<div class="readiness-hero"><div class="readiness-mark conditional">Q</div><div class="readiness-copy"><h2>No qualification evidence yet</h2><p>Choose endpoints or a scenario, select environments, add data rows, and run the qualification plan.</p></div><div class="readiness-meta">RELAY v2.0</div></div>';return;}const cls=readinessClass(run.readiness),label=run.readiness==='READY'?'GO':run.readiness==='NOT READY'?'NO':'HOLD';el.innerHTML=`<div class="readiness-hero"><div class="readiness-mark ${cls}">${label}</div><div class="readiness-copy"><h2>${escapeHtml(run.readiness)}</h2><p>${run.gatesPassed||0} of ${run.gatesTotal||0} release gates passed across ${run.matrix?.length||0} endpoint/environment combinations and ${run.samples?.length||0} samples.</p></div><div class="readiness-meta">${new Date(run.startedAt).toLocaleString()}<br>${escapeHtml(run.status||'complete')}</div></div><div class="gate-grid">${(run.gates||[]).map(g=>`<div class="gate-card ${g.pass?'pass':g.warning?'warn':'fail'}"><strong>${g.pass?'✓':g.warning?'!':'×'} ${escapeHtml(g.label)}</strong><span>${escapeHtml(g.detail)}</span></div>`).join('')}</div>`;}
+    function qualTable(headers,rows,rowClass=()=>'' ){return `<div style="overflow:auto"><table class="qual-matrix"><thead><tr>${headers.map(h=>`<th>${escapeHtml(h)}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.map((row,i)=>`<tr class="${rowClass(row,i)}">${row.map(v=>`<td>${v??''}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${headers.length}">No evidence available.</td></tr>`}</tbody></table></div>`;}
+    function renderQualificationContent(run){const q=qualificationSettings(),el=$('#qualificationContent');if(!el)return;if(q.activeTab==='contracts'){renderQualificationContracts(el);return;}if(q.activeTab==='webhooks'){renderQualificationWebhooks(el,run);return;}if(!run){el.innerHTML='<div class="empty-feature">Run a qualification plan to populate this workspace.</div>';return;}if(q.activeTab==='matrix')renderQualificationMatrix(el,run);if(q.activeTab==='performance')renderQualificationPerformance(el,run);if(q.activeTab==='environments')renderQualificationEnvironments(el,run);if(q.activeTab==='reliability')renderQualificationReliability(el,run);if(q.activeTab==='readiness')renderQualificationReadiness(el,run);}
+    function renderQualificationMatrix(el,run){el.innerHTML=`<div class="section-card"><div class="section-card-head"><h3>Endpoint qualification matrix</h3></div><div class="section-card-body">${qualTable(['Endpoint','Environment','Samples','Success','Statuses','Assertions','Contract','p95','Retries','Disposition'],run.matrix.map(r=>{const env=getEnvironmentById(r.environmentId);return[`${escapeHtml(r.method)} <strong>${escapeHtml(r.requestName)}</strong>`,escapeHtml(env?.name||r.environmentId),`${r.passed}/${r.total}`,`${r.successRate.toFixed(1)}%`,escapeHtml(r.statuses.join(', ')||'—'),r.assertionFailures?`<span class="qual-result-pill fail">${r.assertionFailures} fail</span>`:'<span class="qual-result-pill pass">PASS</span>',r.contractFailures?`<span class="qual-result-pill fail">${r.contractFailures} fail</span>`:'<span class="qual-result-pill pass">PASS</span>',`${r.p95} ms`,`${r.retryAttempts} / ${r.recovered} recovered`,`<span class="qual-result-pill ${r.ready?'pass':'fail'}">${r.ready?'READY':'HOLD'}</span>`]}),r=>r[9].includes('READY')?'matrix-pass':'matrix-fail')}</div></div>`;}
+    function renderQualificationContracts(el){const q=qualificationSettings();if(!state.requests.some(r=>r.id===q.activeProfileRequestId))q.activeProfileRequestId=state.requests[0]?.id||'';const req=state.requests.find(r=>r.id===q.activeProfileRequestId);if(!req){el.innerHTML='<div class="empty-feature">Save a request to define qualification rules.</div>';return;}const p=req.qualification||{};el.innerHTML=`<div class="contract-editor"><div class="stack"><div class="section-card"><div class="section-card-head"><h3>Endpoint profile</h3></div><div class="section-card-body stack"><div><label class="mini-label">Request</label><select id="qualificationProfileRequestSelect" class="select" style="width:100%">${state.requests.map(r=>`<option value="${escapeHtml(r.id)}" ${r.id===req.id?'selected':''}>${escapeHtml(r.method)} · ${escapeHtml(r.name)}</option>`).join('')}</select></div><label class="toggle-line"><span>Critical release gate</span><input type="checkbox" class="check qualification-profile-field" data-profile-field="critical" ${p.critical!==false?'checked':''}></label><label class="toggle-line"><span>Include in qualification</span><input type="checkbox" class="check qualification-profile-field" data-profile-field="enabled" ${p.enabled!==false?'checked':''}></label><div><label class="mini-label">Allowed status codes</label><input class="input qualification-profile-field" data-profile-field="expectedStatuses" value="${escapeHtml(p.expectedStatuses||'200-299')}" style="width:100%"><div class="hint">Examples: 200, 200-204, 2xx</div></div><div><label class="mini-label">Allowed content types</label><input class="input qualification-profile-field" data-profile-field="expectedContentTypes" value="${escapeHtml(p.expectedContentTypes||'')}" style="width:100%" placeholder="application/json"><div class="hint">Comma-separated; blank uses the imported contract.</div></div><div><label class="mini-label">Maximum p95 latency ms</label><input type="number" class="input qualification-profile-field" data-profile-field="maxP95Ms" value="${escapeHtml(p.maxP95Ms||q.p95ThresholdMs)}" style="width:100%"></div></div></div><div class="section-card"><div class="section-card-head"><h3>Contract provenance</h3></div><div class="section-card-body"><div class="contract-source">${req.contract?`<strong>${escapeHtml(req.contract.sourceTitle||'Imported OpenAPI')}</strong><br>${escapeHtml(req.contract.method||req.method)} ${escapeHtml(req.contract.path||req.url)}<br>Operation: ${escapeHtml(req.contract.operationId||'not named')}<br>Responses: ${escapeHtml(Object.keys(req.contract.responseSchemas||req.contract.responseContentTypes||{}).join(', ')||'not declared')}`:'No OpenAPI response contract is attached. Manual rules and JSON Schema still apply.'}</div></div></div></div><div class="section-card"><div class="section-card-head"><h3>Response JSON Schema</h3><span class="toolbar-spacer"></span><button id="useImportedSchemaBtn" class="btn small" ${req.contract?'':'disabled'}>Load imported schema</button></div><div class="section-card-body stack"><textarea id="qualificationResponseSchemaInput" class="code-area qualification-profile-field" data-profile-field="responseSchema" style="min-height:430px" spellcheck="false" placeholder="{\n  &quot;type&quot;: &quot;object&quot;,\n  &quot;required&quot;: [&quot;id&quot;]\n}">${escapeHtml(p.responseSchema||'')}</textarea><div class="gateway-banner"><strong>Supported:</strong> type, required, properties, items, enum, const, numeric/string/array limits, pattern, additionalProperties, allOf, anyOf, oneOf, and not.</div></div></div></div>`;}
+    function renderQualificationPerformance(el,run){const all=run.samples.map(s=>s.durationMs).filter(Number.isFinite);el.innerHTML=`<div class="metric-grid"><div class="metric-card"><strong>${median(all)} ms</strong><span>Median</span></div><div class="metric-card"><strong>${percentile(all,95)} ms</strong><span>Overall p95</span></div><div class="metric-card"><strong>${all.length?Math.max(...all):0} ms</strong><span>Slowest</span></div><div class="metric-card"><strong>${formatBytes(run.samples.reduce((n,s)=>n+(s.size||0),0))}</strong><span>Payload observed</span></div></div><div class="section-card"><div class="section-card-head"><h3>Latency by endpoint and environment</h3></div><div class="section-card-body">${qualTable(['Endpoint','Environment','p50','p95','Max','Limit','Gate'],run.matrix.map(r=>{const req=state.requests.find(x=>x.id===r.requestId),limit=req?.qualification?.maxP95Ms||qualificationSettings().p95ThresholdMs;return[escapeHtml(r.requestName),escapeHtml(getEnvironmentById(r.environmentId)?.name||''),`${r.p50} ms`,`${r.p95} ms`,`${r.max} ms`,`${limit} ms`,`<span class="qual-result-pill ${r.gates.performance?'pass':'fail'}">${r.gates.performance?'PASS':'FAIL'}</span>`]}))}</div></div>`;}
+    function renderQualificationEnvironments(el,run){el.innerHTML=`<div class="section-card"><div class="section-card-head"><h3>Environment comparison</h3></div><div class="section-card-body">${qualTable(['Environment','Samples','Success','p95','Contract failures','Disposition'],run.environmentSummary.map(e=>[escapeHtml(e.name),e.total,`${e.successRate.toFixed(1)}%`,`${e.p95} ms`,e.contractFailures,`<span class="qual-result-pill ${e.ready?'pass':'fail'}">${e.ready?'READY':'HOLD'}</span>`]))}</div></div><div class="section-card" style="margin-top:12px"><div class="section-card-head"><h3>Response parity</h3></div><div class="section-card-body">${qualTable(['Endpoint','Parity','Observed signatures'],run.environmentParity.map(p=>[escapeHtml(p.requestName),`<span class="qual-result-pill ${p.pass?'pass':'warn'}">${p.pass?'CONSISTENT':'DIFFERS'}</span>`,`<div class="shape-code">Statuses: ${escapeHtml(p.statusSignatures.join(' / '))}<br>Shapes: ${escapeHtml(p.shapeSignatures.join(' / ')||'No JSON shapes')}</div>`]))}</div></div>`;}
+    function renderQualificationReliability(el,run){const attempts=run.samples.reduce((n,s)=>n+(s.attempts?.length||1),0),retries=run.samples.reduce((n,s)=>n+Math.max(0,(s.attempts?.length||1)-1),0),recovered=run.samples.filter(s=>s.recovered).length,errors=run.samples.filter(s=>s.error).length;el.innerHTML=`<div class="metric-grid"><div class="metric-card"><strong>${attempts}</strong><span>Total attempts</span></div><div class="metric-card"><strong>${retries}</strong><span>Retry attempts</span></div><div class="metric-card"><strong>${recovered}</strong><span>Recovered samples</span></div><div class="metric-card"><strong>${errors}</strong><span>Network/timeouts</span></div></div><div class="section-card"><div class="section-card-head"><h3>Retry and reliability analysis</h3></div><div class="section-card-body">${qualTable(['Endpoint','Environment','Retries','Recovered','Exhausted','Reliability gate'],run.matrix.map(r=>[escapeHtml(r.requestName),escapeHtml(getEnvironmentById(r.environmentId)?.name||''),r.retryAttempts,r.recovered,r.exhausted,`<span class="qual-result-pill ${r.gates.reliability?'pass':'fail'}">${r.gates.reliability?'PASS':'FAIL'}</span>`]))}</div></div>`;}
+    function renderQualificationWebhooks(el,run){const q=qualificationSettings(),contracts=[{id:'custom',name:'Custom JSON Schema'},...state.webhookContracts],active=activeWebhookContract(),evaluation=run?.webhook||evaluateWebhookCompliance();el.innerHTML=`<div class="contract-editor"><div class="section-card"><div class="section-card-head"><h3>Webhook contract</h3></div><div class="section-card-body stack"><div><label class="mini-label">Contract</label><select id="qualificationWebhookContractSelect" class="select qualification-setting" data-qualification-setting="webhookContractId" style="width:100%">${contracts.map(c=>`<option value="${escapeHtml(c.id)}" ${c.id===q.webhookContractId?'selected':''}>${escapeHtml(c.name)}</option>`).join('')}</select></div><div id="customWebhookFields" style="display:${q.webhookContractId==='custom'?'block':'none'}"><div class="stack"><div><label class="mini-label">Name</label><input class="input qualification-setting" data-qualification-setting="customWebhookName" value="${escapeHtml(q.customWebhookName||'')}" style="width:100%"></div><div class="row"><div class="grow"><label class="mini-label">Method</label><select class="select qualification-setting" data-qualification-setting="customWebhookMethod" style="width:100%">${['','POST','PUT','PATCH','GET'].map(m=>`<option ${m===q.customWebhookMethod?'selected':''}>${m||'Any'}</option>`).join('')}</select></div><div class="grow"><label class="mini-label">Path pattern</label><input class="input qualification-setting" data-qualification-setting="customWebhookPath" value="${escapeHtml(q.customWebhookPath||'')}" style="width:100%" placeholder="/orders/{id}"></div></div><textarea class="code-area qualification-setting" data-qualification-setting="customWebhookSchema" style="min-height:310px">${escapeHtml(q.customWebhookSchema||'')}</textarea></div></div>${q.webhookContractId!=='custom'&&active?`<div class="contract-source"><strong>${escapeHtml(active.name)}</strong><br>${escapeHtml(active.method||'ANY')} ${escapeHtml(active.path||'')}<br>Imported from ${escapeHtml(active.sourceTitle||'OpenAPI')}</div>`:''}</div></div><div class="section-card"><div class="section-card-head"><h3>Stored delivery compliance</h3></div><div class="section-card-body">${!evaluation.configured?'<div class="empty-feature">Configure a webhook JSON Schema to evaluate stored deliveries.</div>':evaluation.notRun?'<div class="empty-feature">No stored webhook deliveries match this contract.</div>':qualTable(['Received','Delivery','Result','Issues'],evaluation.rows.map(r=>[escapeHtml(new Date(r.receivedAt).toLocaleString()),`${escapeHtml(r.method)} ${escapeHtml(r.path)}`,`<span class="qual-result-pill ${r.pass?'pass':'fail'}">${r.pass?'PASS':'FAIL'}</span>`,escapeHtml(r.issues.join(' ')||'None')]))}</div></div></div>`;}
+    function renderQualificationReadiness(el,run){const failures=run.matrix.filter(r=>!r.ready),unresolved=[...failures.map(r=>`${r.requestName} in ${getEnvironmentById(r.environmentId)?.name||r.environmentId} failed ${Object.entries(r.gates).filter(([,v])=>!v).map(([k])=>k).join(', ')}.`),...(run.environmentParity||[]).filter(p=>!p.pass).map(p=>`${p.requestName} differs across environments.`),...(run.webhook?.rows||[]).filter(r=>!r.pass).map(r=>`Webhook ${r.method} ${r.path} violates schema.`)];el.innerHTML=`<div class="section-card"><div class="section-card-head"><h3>Release decision rationale</h3><span class="toolbar-spacer"></span><button id="openQualificationReportBtn" class="btn primary">Open readiness report</button><button id="exportQualificationJsonBtn" class="btn">Export evidence JSON</button></div><div class="section-card-body"><p><strong>${escapeHtml(run.readiness)}</strong> — ${run.gatesPassed} of ${run.gatesTotal} gates passed. ${failures.filter(r=>r.critical).length} critical endpoint/environment combination(s) are unresolved.</p><h4>Unresolved obligations</h4>${unresolved.length?`<ul>${unresolved.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul>`:'<p>No unresolved qualification findings remain in this run.</p>'}<h4>Qualification basis</h4>${qualTable(['Gate','Result','Basis'],run.gates.map(g=>[escapeHtml(g.label),`<span class="qual-result-pill ${g.pass?'pass':g.warning?'warn':'fail'}">${g.pass?'PASS':g.warning?'NOT RUN':'FAIL'}</span>`,escapeHtml(g.detail)]))}</div></div>`;}
+    function exportQualificationRun(){const run=activeQualificationRun();if(!run){toast('Run a qualification first.','error');return;}const safe=clone(run);safe.samples=(safe.samples||[]).map(s=>({...s,error:redactedValue(s.error||''),schemaIssues:(s.schemaIssues||[]).map(redactedValue)}));downloadBlob(new Blob([JSON.stringify({format:'RELAY Qualification Evidence',schemaVersion:1,relayVersion:VERSION,project:{id:state.project.id,name:state.project.name},generatedAt:nowISO(),run:safe},null,2)],{type:'application/json'}),`${safeFilename(state.project.name)}-qualification-${safeFilename(run.readiness)}.json`);}
+
     function blankFixture(type='response'){return{id:uid('fixture'),name:type==='webhook'?'Webhook fixture':'Response fixture',type,method:'GET',route:`fixture-${Date.now().toString(36)}`,status:200,contentType:'application/json',headersText:'{}',body:'{\n  "status": "ok"\n}',delayMs:0,failureMode:'none',enabled:true};}
     function activeFixture(){return state.fixtures.find(f=>f.id===state.activeFixtureId);}
     function renderFixtureWorkspace(){const list=$('#fixtureList');if(!list)return;list.innerHTML=state.fixtures.map(f=>`<button class="entity-item ${f.id===state.activeFixtureId?'active':''}" data-fixture-id="${escapeHtml(f.id)}"><span>${f.type==='webhook'?'↘':'◫'}</span><span><strong>${escapeHtml(f.name)}</strong><small>${escapeHtml(f.type)} · ${escapeHtml(f.failureMode||'none')}</small></span><span>${f.syncedAt?'✓':''}</span></button>`).join('')||'<div class="side-empty">No fixtures.</div>';const f=activeFixture(),ed=$('#fixtureEditor');if(!f){ed.innerHTML='<div class="empty-feature">Create a fixture to begin.</div>';return;}const mockUrl=state.gateway.channel?.id&&state.gateway.baseUrl?`${cleanBase(state.gateway.baseUrl)}/mock/${state.gateway.channel.id}/${f.id}`:'';ed.innerHTML=`<div class="row wrap" style="margin-bottom:12px"><input id="fixtureNameInput" class="input feature-title grow fixture-field" data-fixture-field="name" value="${escapeHtml(f.name)}"><button id="deleteFixtureBtn" class="btn">Delete</button><button id="duplicateFixtureBtn" class="btn">Duplicate</button><button id="syncFixtureBtn" class="btn primary">Sync to gateway</button></div><div class="detail-grid"><div><div class="section-card"><div class="section-card-head"><h3>Fixture definition</h3></div><div class="section-card-body stack"><div class="row"><div class="grow"><label class="mini-label">Type</label><select class="select fixture-field" data-fixture-field="type" style="width:100%"><option value="response" ${f.type==='response'?'selected':''}>Mock response / baseline</option><option value="webhook" ${f.type==='webhook'?'selected':''}>Webhook payload</option></select></div><div class="grow"><label class="mini-label">Failure simulation</label><select class="select fixture-field" data-fixture-field="failureMode" style="width:100%"><option value="none" ${f.failureMode==='none'?'selected':''}>None</option><option value="error" ${f.failureMode==='error'?'selected':''}>Server error</option><option value="rate-limit" ${f.failureMode==='rate-limit'?'selected':''}>Rate limit</option><option value="timeout" ${f.failureMode==='timeout'?'selected':''}>Timeout / long delay</option><option value="duplicate" ${f.failureMode==='duplicate'?'selected':''}>Duplicate webhook</option></select></div></div><div class="row"><div style="width:110px"><label class="mini-label">Method</label><select class="select fixture-field" data-fixture-field="method" style="width:100%">${['GET','POST','PUT','PATCH','DELETE'].map(m=>`<option ${m===f.method?'selected':''}>${m}</option>`).join('')}</select></div><div class="grow"><label class="mini-label">Public route label</label><input class="input fixture-field" data-fixture-field="route" value="${escapeHtml(f.route||'')}"></div><div style="width:100px"><label class="mini-label">Status</label><input type="number" class="input fixture-field" data-fixture-field="status" value="${escapeHtml(f.status)}"></div><div style="width:120px"><label class="mini-label">Delay ms</label><input type="number" class="input fixture-field" data-fixture-field="delayMs" value="${escapeHtml(f.delayMs||0)}"></div></div><div><label class="mini-label">Content type</label><input class="input fixture-field" data-fixture-field="contentType" value="${escapeHtml(f.contentType||'application/json')}" style="width:100%"></div><div><label class="mini-label">Headers as JSON object</label><textarea class="code-area fixture-field" data-fixture-field="headersText" style="min-height:90px">${escapeHtml(f.headersText||'{}')}</textarea></div><div><label class="mini-label">Body</label><textarea class="code-area fixture-field" data-fixture-field="body">${escapeHtml(f.body||'')}</textarea></div></div></div></div><div><div class="section-card"><div class="section-card-head"><h3>${f.type==='webhook'?'Webhook emission':'Mock endpoint'}</h3></div><div class="section-card-body stack"><div class="endpoint-box">${escapeHtml(mockUrl||'Create a gateway channel to publish this fixture.')}</div><div class="row"><button id="copyMockUrlBtn" class="btn grow" ${mockUrl?'':'disabled'}>Copy endpoint</button>${f.type==='webhook'?'<button id="emitWebhookFixtureBtn" class="btn primary grow">Emit to inbox</button>':'<button id="testMockFixtureBtn" class="btn primary grow">Test mock</button>'}</div>${f.syncedAt?`<div class="gateway-banner"><strong>Synced</strong> ${escapeHtml(new Date(f.syncedAt).toLocaleString())}</div>`:''}</div></div><div class="section-card"><div class="section-card-head"><h3>Preview</h3></div><div class="section-card-body"><div class="fixture-preview">${escapeHtml(f.body||'')}</div></div></div></div></div>`;}
@@ -1864,6 +2189,7 @@
       if(type==='request')return state.requests.map(r=>({id:r.id,label:`${r.method} · ${r.name}`}));
       if(type==='scenario')return state.scenarios.map(x=>({id:x.id,label:x.name}));
       if(type==='webhook')return state.webhookEvents.map(e=>({id:e.id,label:`${e.method} ${e.path||'/'} · ${new Date(e.receivedAt).toLocaleString()}`}));
+      if(type==='qualification')return qualificationSettings().runs.map(r=>({id:r.id,label:`${r.readiness} · ${new Date(r.startedAt).toLocaleString()}`}));
       return [{id:'project',label:state.project.name||'Project'}];
     }
     function renderReportWorkspace(){
@@ -1910,9 +2236,16 @@
       const body=`${reportHeader(`Webhook ${ev.method} ${ev.path||'/'}`,'Inbound delivery inspection and signature evidence')}${reportStats([[ev.method,'Method'],[formatBytes(byteSize(ev.body||'')),'Payload size'],[verify?verify.ok?'VALID':'INVALID':'NOT CHECKED','Signature'],[ev.sourceIp||'—','Source address']])}<section class="report-section"><h2>Delivery metadata</h2>${reportTable(['Field','Value'],[['Received',new Date(ev.receivedAt).toLocaleString()],['Path',ev.path||'/'],['Query',JSON.stringify(ev.query||{})],['Event ID',ev.id],['Signature result',verify?.message||'Not verified']])}</section>${cfg.includeHeaders?`<section class="report-section"><h2>Headers</h2>${reportTable(['Header','Value'],headers)}</section>`:''}${cfg.includeBodies?`<section class="report-section"><h2>Payload</h2><pre class="report-code">${escapeHtml(pretty)}</pre></section>`:''}`;
       return {title:`Webhook ${ev.method} ${ev.path||'/'}`,body,data:{type:'webhook',event:{...ev,headers:cfg.includeHeaders?headers:[],body:cfg.includeBodies?pretty:'[OMITTED]',sourceIp:ev.sourceIp||''},verification:verify||null}};
     }
+
+    function buildQualificationReport(){
+      const cfg=reportSettings(),run=qualificationSettings().runs.find(r=>r.id===cfg.subjectId)||activeQualificationRun();if(!run)return{title:'Release Readiness Report',body:`${reportHeader('Release Readiness Report','No qualification run is available')}<p>Run API qualification before generating this report.</p>`,data:{type:'qualification'}};
+      const failures=run.matrix.filter(r=>!r.ready),webhookFailures=(run.webhook?.rows||[]).filter(r=>!r.pass);
+      const body=`${reportHeader(`${state.project.name} — Release Readiness`,`${run.readiness} based on ${run.samples.length} qualification samples`)}${reportStats([[run.readiness,'Disposition'],[`${run.gatesPassed}/${run.gatesTotal}`,'Gates passed'],[run.matrix.length,'Endpoint/environment rows'],[run.samples.length,'Samples']])}<section class="report-section"><h2>Executive determination</h2><p>${run.readiness==='READY'?'The retained evidence satisfies every configured release gate.':run.readiness==='NOT READY'?'One or more critical qualification gates failed. Release is not supported by the retained evidence.':'No critical gate forced a rejection, but unresolved or incomplete evidence remains.'}</p></section><section class="report-section"><h2>Release gates</h2>${reportTable(['Gate','Result','Basis'],run.gates.map(g=>[g.label,g.pass?'Passed':g.warning?'Not run':'Failed',g.detail]))}</section><section class="report-section"><h2>Endpoint qualification matrix</h2>${reportTable(['Endpoint','Environment','Samples','Success','p95','Contract failures','Retry recovery','Result'],run.matrix.map(r=>[`${r.method} ${r.requestName}`,getEnvironmentById(r.environmentId)?.name||r.environmentId,`${r.passed}/${r.total}`,`${r.successRate.toFixed(1)}%`,`${r.p95} ms`,r.contractFailures,`${r.recovered}/${r.retryAttempts}`,r.ready?'Ready':'Hold']))}</section><section class="report-section"><h2>Environment comparison</h2>${reportTable(['Environment','Samples','Success','p95','Result'],run.environmentSummary.map(e=>[e.name,e.total,`${e.successRate.toFixed(1)}%`,`${e.p95} ms`,e.ready?'Ready':'Hold']))}</section><section class="report-section"><h2>Unresolved findings</h2>${failures.length||webhookFailures.length?`<ul>${failures.map(r=>`<li>${escapeHtml(r.requestName)} in ${escapeHtml(getEnvironmentById(r.environmentId)?.name||r.environmentId)} failed ${escapeHtml(Object.entries(r.gates).filter(([,v])=>!v).map(([k])=>k).join(', '))}.</li>`).join('')}${webhookFailures.map(r=>`<li>Webhook ${escapeHtml(r.method)} ${escapeHtml(r.path)}: ${escapeHtml(r.issues.join(' '))}</li>`).join('')}</ul>`:'<p>No unresolved qualification findings remain.</p>'}</section>`;
+      return{title:`${state.project.name} Release Readiness`,body,data:{type:'qualification',run:clone(run)}};
+    }
     function reportSignoffHtml(){const cfg=reportSettings();return `<section class="report-section"><h2>Review and sign-off</h2><div class="report-signoff"><div><span class="mini-label">Prepared by</span><strong>${escapeHtml(cfg.author||'Not specified')}</strong></div><div><span class="mini-label">Reviewed by</span><strong>${escapeHtml(cfg.reviewer||'Not specified')}</strong></div><div><span class="mini-label">Disposition</span><strong>${escapeHtml(cfg.disposition||'Draft')}</strong></div></div>${cfg.notes?`<div style="margin-top:10px"><span class="mini-label">Notes / unresolved items</span><p>${escapeHtml(cfg.notes).replace(/\n/g,'<br>')}</p></div>`:''}</section>`;}
     function generateReport(){
-      const cfg=reportSettings(); let built=cfg.type==='request'?buildRequestReport():cfg.type==='scenario'?buildScenarioReport():cfg.type==='webhook'?buildWebhookReport():buildProjectReport();
+      const cfg=reportSettings(); let built=cfg.type==='request'?buildRequestReport():cfg.type==='scenario'?buildScenarioReport():cfg.type==='webhook'?buildWebhookReport():cfg.type==='qualification'?buildQualificationReport():buildProjectReport();
       cfg.lastGeneratedAt=nowISO(); built.bodyHtml=built.body+reportSignoffHtml()+`<p style="margin-top:24px;color:var(--faint);font-size:10px">Generated by FI-1XX RELAY v${VERSION}. Secret environment values and common sensitive headers were redacted.</p>`;
       built.markdown=reportMarkdown(built); built.documentHtml=reportDocument(built); currentReport=built; scheduleSave(); renderReportWorkspace(); toast('Report generated.','success'); return built;
     }
@@ -1949,13 +2282,33 @@
     function parsePostman(obj){const requests=[],variables=(obj.variable||[]).map(v=>({key:v.key||v.id||'',value:v.value||'',secret:/secret|token|password|key/i.test(v.key||'')}));function walk(items,path=[]){for(const item of items||[]){if(item.request)requests.push(requestFromPostman(item,item.name,path.join(' / ')||obj.info?.name||'Postman Import'));if(item.item)walk(item.item,[...path,item.name||'Folder']);}}walk(obj.item||[]);return{requests,variables,label:obj.info?.name||'Postman Import',warnings:[]};}
     function sampleFromSchema(schema,depth=0){if(!schema||depth>5)return null;if(schema.example!==undefined)return schema.example;if(schema.default!==undefined)return schema.default;if(schema.enum?.length)return schema.enum[0];if(schema.type==='array')return[sampleFromSchema(schema.items,depth+1)];if(schema.type==='object'||schema.properties){const o={};for(const[k,v]of Object.entries(schema.properties||{}))o[k]=sampleFromSchema(v,depth+1);return o;}if(schema.type==='integer'||schema.type==='number')return 0;if(schema.type==='boolean')return false;return schema.format==='date-time'?new Date(0).toISOString():'string';}
     function openApiBase(obj,variables=[]){if(obj.servers?.[0]?.url){const server=obj.servers[0];return String(server.url).replace(/\{([^}]+)\}/g,(_,k)=>{const value=server.variables?.[k]?.default??'';if(!variables.some(v=>v.key===k))variables.push({key:k,value:String(value),secret:false});return `{{${k}}}`;});}const scheme=obj.schemes?.[0]||'https',host=obj.host||'api.example.com',base=obj.basePath||'';return `${scheme}://${host}${base}`;}
-    function parseOpenApiObject(obj){const requests=[],variables=[],base=openApiBase(obj,variables).replace(/\/$/,'');for(const[path,pi]of Object.entries(obj.paths||{})){for(const method of ['get','post','put','patch','delete','head','options']){const op=pi?.[method];if(!op)continue;const tags=op.tags?.length?op.tags:['OpenAPI'];const r=blankRequest(op.summary||op.operationId||`${method.toUpperCase()} ${path}`);r.method=method.toUpperCase();r.url=base+path.replace(/\{([^}]+)\}/g,(_,k)=>{if(!variables.some(v=>v.key===k))variables.push({key:k,value:'',secret:false});return `{{${k}}}`;});const params=[...(pi.parameters||[]),...(op.parameters||[])];r.params=[];r.headers=[];for(const prm of params){const val=prm.example??prm.schema?.example??prm.schema?.default??'';if(prm.in==='query')r.params.push({id:uid('row'),enabled:true,key:prm.name,value:String(val),description:prm.description||''});if(prm.in==='header')r.headers.push({id:uid('row'),enabled:true,key:prm.name,value:String(val),description:prm.description||''});}if(!r.params.length)r.params=[blankRow()];if(!r.headers.length)r.headers=[blankRow()];const rb=op.requestBody?.content;const json=rb?.['application/json']||rb?.[Object.keys(rb||{})[0]];if(json){const example=json.example??Object.values(json.examples||{})[0]?.value??sampleFromSchema(json.schema);if(example!==undefined&&example!==null)r.body={mode:'json',content:JSON.stringify(example,null,2)};}else{const bp=params.filter(x=>x.in==='body')[0];if(bp?.schema)r.body={mode:'json',content:JSON.stringify(sampleFromSchema(bp.schema),null,2)};}r._folderName=tags[0];requests.push(r);}}return{requests,variables,label:obj.info?.title||'OpenAPI Import',warnings:[]};}
-    function parseOpenApiYaml(text){const requests=[],variables=[],warnings=['YAML import used operation discovery mode; examples and complex schemas may require JSON.'];const lines=String(text).replace(/\t/g,'  ').split(/\r?\n/);let base='',pathsIndent=-1,currentPath='',pathIndent=-1;for(const raw of lines){const line=raw.replace(/\s+#.*$/,'');if(!line.trim())continue;const ind=line.match(/^\s*/)[0].length,trim=line.trim();if(/^\-?\s*url:\s*/.test(trim)&&!base)base=trim.replace(/^\-?\s*url:\s*/,'').replace(/^['"]|['"]$/g,'');if(/^host:\s*/.test(trim)&&!base)base='https://'+trim.slice(5).trim();if(trim==='paths:'){pathsIndent=ind;continue;}if(pathsIndent>=0&&ind>pathsIndent&&/^\/[^:]+:\s*$/.test(trim)){currentPath=trim.slice(0,-1);pathIndent=ind;continue;}const mm=trim.match(/^(get|post|put|patch|delete|head|options):\s*$/i);if(currentPath&&mm&&ind>pathIndent){const r=blankRequest(`${mm[1].toUpperCase()} ${currentPath}`);r.method=mm[1].toUpperCase();r.url=(base||'https://api.example.com').replace(/\/$/,'')+currentPath.replace(/\{([^}]+)\}/g,(_,k)=>{if(!variables.some(v=>v.key===k))variables.push({key:k,value:'',secret:false});return `{{${k}}}`;});r._folderName='OpenAPI';requests.push(r);}}return{requests,variables,label:'OpenAPI YAML Import',warnings};}
+    function dereferenceSchema(schema,doc,seen=new Set(),depth=0){if(!schema||typeof schema!=='object'||depth>20)return schema;if(schema.$ref&&String(schema.$ref).startsWith('#/')){if(seen.has(schema.$ref))return{};seen.add(schema.$ref);const target=String(schema.$ref).slice(2).split('/').reduce((o,k)=>o?.[k.replace(/~1/g,'/').replace(/~0/g,'~')],doc);return dereferenceSchema(target,doc,seen,depth+1)||{};}if(Array.isArray(schema))return schema.map(x=>dereferenceSchema(x,doc,new Set(seen),depth+1));const out={};for(const[k,v]of Object.entries(schema))out[k]=dereferenceSchema(v,doc,new Set(seen),depth+1);return out;}
+    function openApiResponseContract(op,doc){const responseSchemas={},responseContentTypes={};for(const[code,res]of Object.entries(op.responses||{})){const content=res?.content||{};const types=Object.keys(content);if(types.length)responseContentTypes[code]=types;const preferred=content['application/json']||content['application/problem+json']||content[types.find(t=>/json/i.test(t))]||content[types[0]];let schema=preferred?.schema||res?.schema;if(schema)responseSchemas[code]=dereferenceSchema(schema,doc);if(!types.length&&Array.isArray(doc.produces))responseContentTypes[code]=doc.produces;}return{responseSchemas,responseContentTypes};}
+    function parseOpenApiWebhooks(obj){const out=[];for(const[name,pathItem]of Object.entries(obj.webhooks||{})){for(const method of ['post','put','patch','get','delete']){const op=pathItem?.[method];if(!op)continue;const content=op.requestBody?.content||{},types=Object.keys(content),preferred=content['application/json']||content[types.find(t=>/json/i.test(t))]||content[types[0]],schema=preferred?.schema?dereferenceSchema(preferred.schema,obj):null;out.push({id:uid('whcontract'),name:op.summary||op.operationId||name,method:method.toUpperCase(),path:name,schema,contentTypes:types,sourceTitle:obj.info?.title||'OpenAPI'});}}return out;}
+    function parseOpenApiObject(obj){
+      const requests=[],variables=[],base=openApiBase(obj,variables).replace(/\/$/,'');
+      for(const[pathName,pi]of Object.entries(obj.paths||{}))for(const method of ['get','post','put','patch','delete','head','options']){
+        const op=pi?.[method];if(!op)continue;const tags=op.tags?.length?op.tags:['OpenAPI'];const r=blankRequest(op.summary||op.operationId||`${method.toUpperCase()} ${pathName}`);r.method=method.toUpperCase();r.url=base+pathName.replace(/\{([^}]+)\}/g,(_,k)=>{if(!variables.some(v=>v.key===k))variables.push({key:k,value:'',secret:false});return `{{${k}}}`;});
+        const params=[...(pi.parameters||[]),...(op.parameters||[])];r.params=[];r.headers=[];for(const prm of params){const val=prm.example??prm.schema?.example??prm.schema?.default??'';if(prm.in==='query')r.params.push({id:uid('row'),enabled:prm.required!==false,key:prm.name,value:String(val),description:prm.description||''});if(prm.in==='header')r.headers.push({id:uid('row'),enabled:prm.required!==false,key:prm.name,value:String(val),description:prm.description||''});}if(!r.params.length)r.params=[blankRow()];if(!r.headers.length)r.headers=[blankRow()];
+        const rb=op.requestBody?.content,json=rb?.['application/json']||rb?.[Object.keys(rb||{})[0]];if(json){const example=json.example??Object.values(json.examples||{})[0]?.value??sampleFromSchema(dereferenceSchema(json.schema,obj));if(example!==undefined&&example!==null)r.body={mode:'json',content:JSON.stringify(example,null,2)};}else{const bp=params.find(x=>x.in==='body');if(bp?.schema)r.body={mode:'json',content:JSON.stringify(sampleFromSchema(dereferenceSchema(bp.schema,obj)),null,2)};}
+        const contract=openApiResponseContract(op,obj);r.contract={source:'OpenAPI',sourceTitle:obj.info?.title||'OpenAPI',operationId:op.operationId||'',path:pathName,method:r.method,...contract};const codes=[...new Set([...Object.keys(contract.responseSchemas),...Object.keys(contract.responseContentTypes)])];if(codes.length)r.qualification.expectedStatuses=codes.join(',');const firstTypes=contract.responseContentTypes[codes.find(c=>/^2/.test(c))]||contract.responseContentTypes[codes[0]]||[];if(firstTypes.length)r.qualification.expectedContentTypes=firstTypes.join(',');const firstSchema=contract.responseSchemas[codes.find(c=>/^2/.test(c))]||contract.responseSchemas[codes[0]];if(firstSchema)r.qualification.responseSchema='';r._folderName=tags[0];requests.push(r);
+      }
+      return{requests,variables,webhookContracts:parseOpenApiWebhooks(obj),label:obj.info?.title||'OpenAPI Import',warnings:[]};
+    }
+    function parseOpenApiYaml(text){const requests=[],variables=[],warnings=['YAML import used operation discovery mode; examples and complex schemas may require JSON.'];const lines=String(text).replace(/\t/g,'  ').split(/\r?\n/);let base='',pathsIndent=-1,currentPath='',pathIndent=-1;for(const raw of lines){const line=raw.replace(/\s+#.*$/,'');if(!line.trim())continue;const ind=line.match(/^\s*/)[0].length,trim=line.trim();if(/^\-?\s*url:\s*/.test(trim)&&!base)base=trim.replace(/^\-?\s*url:\s*/,'').replace(/^['"]|['"]$/g,'');if(/^host:\s*/.test(trim)&&!base)base='https://'+trim.slice(5).trim();if(trim==='paths:'){pathsIndent=ind;continue;}if(pathsIndent>=0&&ind>pathsIndent&&/^\/[^:]+:\s*$/.test(trim)){currentPath=trim.slice(0,-1);pathIndent=ind;continue;}const mm=trim.match(/^(get|post|put|patch|delete|head|options):\s*$/i);if(currentPath&&mm&&ind>pathIndent){const r=blankRequest(`${mm[1].toUpperCase()} ${currentPath}`);r.method=mm[1].toUpperCase();r.url=(base||'https://api.example.com').replace(/\/$/,'')+currentPath.replace(/\{([^}]+)\}/g,(_,k)=>{if(!variables.some(v=>v.key===k))variables.push({key:k,value:'',secret:false});return `{{${k}}}`;});r._folderName='OpenAPI';requests.push(r);}}return{requests,variables,webhookContracts:[],label:'OpenAPI YAML Import',warnings};}
     function requestFromHarEntry(entry){const q=entry.request||{},r=blankRequest(`${q.method||'GET'} ${(()=>{try{return new URL(q.url).pathname}catch{return q.url||'request'}})()}`);r.method=(q.method||'GET').toUpperCase();r.url=q.url||'';if(q.queryString?.length){try{const u=new URL(r.url);u.search='';r.url=u.toString()}catch{}}r.headers=(q.headers||[]).map(h=>({id:uid('row'),enabled:true,key:h.name||'',value:h.value||'',description:'HAR import'}));if(!r.headers.length)r.headers=[blankRow()];r.params=(q.queryString||[]).map(x=>({id:uid('row'),enabled:true,key:x.name||'',value:x.value||'',description:'HAR import'}));if(!r.params.length)r.params=[blankRow()];if(q.postData?.text!==undefined){let mode=/json/i.test(q.postData.mimeType||'')?'json':/x-www-form-urlencoded/i.test(q.postData.mimeType||'')?'urlencoded':'text';r.body={mode,content:q.postData.text};}r._folderName='HAR Import';return r;}
     function parseHar(obj){const entries=obj.log?.entries||[];return{requests:entries.map(requestFromHarEntry),variables:[],label:'HAR Import',warnings:[]};}
     function detectInterchange(text,selected,filename=''){if(selected!=='auto')return selected;const t=String(text).trim();if(/^curl\s/i.test(t))return'curl';if(/\.ya?ml$/i.test(filename)||/^\s*(openapi|swagger):/m.test(t))return'openapi';try{const o=JSON.parse(t);if(o.log?.entries)return'har';if(o.info?.schema||o.item)return'postman';if(o.openapi||o.swagger||o.paths)return'openapi';}catch{}throw new Error('Could not detect the source format. Choose a format explicitly.');}
     function ensureImportFolder(name){let f=state.folders.find(x=>x.name===name);if(!f){f={id:uid('folder'),name};state.folders.push(f);}return f.id;}
-    function applyImported(result,createFolders=true){if(!result.requests?.length)throw new Error('No API operations or requests were found.');const created=[];for(const req of result.requests){const folderName=createFolders?(req._folderName||result.label||'Imported'):'General';req.folderId=ensureImportFolder(folderName);delete req._folderName;req.id=uid('req');req.createdAt=req.updatedAt=nowISO();state.requests.push(normalizeRequest(req));created.push(req.id);}if(result.variables?.length){const env=getActiveEnvironment();for(const v of result.variables){if(!v.key||env.variables.some(x=>x.key===v.key))continue;env.variables.push({id:uid('var'),enabled:true,key:v.key,value:String(v.value??''),secret:!!v.secret});}}state.activeRequestId=created[0];state.draft=clone(state.requests.find(r=>r.id===created[0]));state.interchange.lastSummary={title:`Imported ${created.length} request${created.length===1?'':'s'}`,detail:`${result.label||'Interchange source'}${result.warnings?.length?' · '+result.warnings.join(' '):''}`};saveState();renderAll();switchWorkspace('interchange');toast(`${created.length} request${created.length===1?'':'s'} imported.`,'success');}
+    function applyImported(result,createFolders=true){
+      const hasRequests=!!result.requests?.length,hasWebhooks=!!result.webhookContracts?.length;if(!hasRequests&&!hasWebhooks)throw new Error('No API operations, requests, or webhook contracts were found.');const created=[];
+      for(const req of result.requests||[]){const folderName=createFolders?(req._folderName||result.label||'Imported'):'General';req.folderId=ensureImportFolder(folderName);delete req._folderName;req.id=uid('req');req.createdAt=req.updatedAt=nowISO();state.requests.push(normalizeRequest(req));created.push(req.id);}
+      for(const contract of result.webhookContracts||[]){contract.id=contract.id||uid('whcontract');state.webhookContracts.push(contract);}
+      if(result.variables?.length){const env=getActiveEnvironment();for(const v of result.variables){if(!v.key||env.variables.some(x=>x.key===v.key))continue;env.variables.push({id:uid('var'),enabled:true,key:v.key,value:String(v.value??''),secret:!!v.secret});}}
+      if(created.length){state.activeRequestId=created[0];state.draft=clone(state.requests.find(r=>r.id===created[0]));qualificationSettings().selectedRequestIds=[...new Set([...qualificationSettings().selectedRequestIds,...created])];}
+      if(result.webhookContracts?.length&&qualificationSettings().webhookContractId==='custom')qualificationSettings().webhookContractId=result.webhookContracts[0].id;
+      state.interchange.lastSummary={title:`Imported ${created.length} request${created.length===1?'':'s'}${result.webhookContracts?.length?` and ${result.webhookContracts.length} webhook contract${result.webhookContracts.length===1?'':'s'}`:''}`,detail:`${result.label||'Interchange source'}${result.warnings?.length?' · '+result.warnings.join(' '):''}`};saveState();renderAll();switchWorkspace('interchange');toast(state.interchange.lastSummary.title+'.','success');
+    }
     async function runInterchangeImport(){try{const file=$('#interchangeFile').files[0],text=$('#interchangeText').value.trim()||(file?await file.text():'');if(!text)throw new Error('Choose a file or paste source content first.');const format=detectInterchange(text,$('#interchangeFormat').value,file?.name||'');let result;if(format==='curl')result={requests:[requestFromCurl(text)],variables:[],label:'cURL Import',warnings:[]};else{if(format==='openapi'&&!/^\s*[\[{]/.test(text))result=parseOpenApiYaml(text);else{const obj=JSON.parse(text);result=format==='postman'?parsePostman(obj):format==='har'?parseHar(obj):parseOpenApiObject(obj);}}applyImported(result,$('#interchangeFoldersToggle').checked);}catch(error){toast(`Import failed: ${error.message}`,'error');state.interchange.lastSummary={title:'Import failed',detail:error.message};scheduleSave();renderInterchangeWorkspace();}}
     function copyWebhookAsRequest(){const ev=state.webhookEvents.find(e=>e.id===state.selectedWebhookEventId);if(!ev){toast('Select a webhook event first.','error');return;}const r=blankRequest(`Replay webhook ${ev.method} ${ev.path||'/'}`,ensureImportFolder('Webhook Replays'));r.method=ev.method||'POST';const base=state.gateway.channel?.hookUrl||'https://example.invalid/webhook';const u=new URL(base);for(const[k,v]of Object.entries(ev.query||{}))u.searchParams.set(k,v);r.url=u.toString();r.headers=(ev.headers||[]).filter(([k])=>!/^(host|content-length|connection|cf-|x-forwarded-)/i.test(k)).map(([k,v])=>({id:uid('row'),enabled:true,key:k,value:v,description:'Copied from webhook'}));if(!r.headers.length)r.headers=[blankRow()];if(!['GET','HEAD'].includes(r.method)&&ev.body){let mode=/json/i.test(headerValue(ev,'content-type'))?'json':'text';r.body={mode,content:ev.body};}state.requests.push(r);state.activeRequestId=r.id;state.draft=clone(r);saveState();switchWorkspace('requests');renderSidebar();renderDraft();toast('Webhook copied as a saved request.','success');}
     function postmanRequest(req){const safe=sanitizeRequestDraft(req),params=(safe.params||[]).filter(x=>x.enabled&&x.key),query=params.map(x=>({key:x.key,value:x.value,description:x.description||'',disabled:false})),suffix=params.map(x=>`${encodeURIComponent(x.key)}=${encodeURIComponent(x.value||'')}`).join('&'),url=safe.url+(suffix?(safe.url.includes('?')?'&':'?')+suffix:''),headers=(safe.headers||[]).filter(x=>x.enabled&&x.key).map(x=>({key:x.key,value:x.value,type:'text',description:x.description||''}));const out={method:safe.method,header:headers,url:{raw:url,query}};if(safe.body?.mode==='json'||safe.body?.mode==='text')out.body={mode:'raw',raw:safe.body.content||'',options:{raw:{language:safe.body.mode==='json'?'json':'text'}}};if(safe.body?.mode==='urlencoded')out.body={mode:'urlencoded',urlencoded:new URLSearchParams(safe.body.content||'').entries?Array.from(new URLSearchParams(safe.body.content||'').entries()).map(([key,value])=>({key,value,type:'text'})):[]};if(safe.auth?.type==='bearer')out.auth={type:'bearer',bearer:[{key:'token',value:'',type:'string'}]};if(safe.auth?.type==='basic')out.auth={type:'basic',basic:[{key:'username',value:safe.auth.username||'',type:'string'},{key:'password',value:'',type:'string'}]};if(safe.auth?.type==='apikey')out.auth={type:'apikey',apikey:[{key:'key',value:safe.auth.apiKeyName||'',type:'string'},{key:'value',value:'',type:'string'},{key:'in',value:safe.auth.apiKeyLocation||'header',type:'string'}]};return out;}
@@ -2020,11 +2373,24 @@
     $('#exportHarBtn').addEventListener('click',exportHar);
     $('#copyWebhookAsRequestBtn').addEventListener('click',copyWebhookAsRequest);
 
+    $('#runQualificationBtn').addEventListener('click',runQualification);
+    $('#stopQualificationBtn').addEventListener('click',()=>{qualificationAbort=true;toast('Qualification stop requested.');});
+    $('#qualificationSelectAllRequestsBtn').addEventListener('click',()=>{const q=qualificationSettings(),all=state.requests.filter(r=>r.qualification?.enabled!==false).map(r=>r.id);q.selectedRequestIds=q.selectedRequestIds.length===all.length?[]:all;scheduleSave();renderQualificationWorkspace();});
+    $('#qualificationSelectAllEnvironmentsBtn').addEventListener('click',()=>{const q=qualificationSettings(),all=state.environments.map(e=>e.id);q.selectedEnvironmentIds=q.selectedEnvironmentIds.length===all.length?[]:all;scheduleSave();renderQualificationWorkspace();});
+
+
     document.addEventListener('click', e => {
       if (!e.target.closest('.menu') && !e.target.closest('#moreBtn') && !e.target.closest('#requestMenuBtn')) closeMenus();
       const close = e.target.closest('[data-close-modal]'); if (close) closeModal(close.dataset.closeModal);
 
       const workspaceTab=e.target.closest('[data-workspace-tab]');if(workspaceTab)switchWorkspace(workspaceTab.dataset.workspaceTab);
+
+      const qualificationTab=e.target.closest('[data-qualification-tab]');if(qualificationTab){qualificationSettings().activeTab=qualificationTab.dataset.qualificationTab;scheduleSave();renderQualificationWorkspace();}
+      const qualificationRun=e.target.closest('[data-qualification-run-id]');if(qualificationRun){qualificationSettings().activeRunId=qualificationRun.dataset.qualificationRunId;scheduleSave();renderQualificationWorkspace();}
+      if(e.target.id==='useImportedSchemaBtn'){const req=state.requests.find(r=>r.id===qualificationSettings().activeProfileRequestId),contract=req?.contract,keys=Object.keys(contract?.responseSchemas||{}),schema=contract?.responseSchemas?.[keys.find(k=>/^2/.test(k))]||contract?.responseSchemas?.[keys[0]];if(schema){req.qualification.responseSchema=JSON.stringify(schema,null,2);if(state.draft.id===req.id)state.draft.qualification=clone(req.qualification);saveState();renderQualificationWorkspace();toast('Imported response schema loaded into the endpoint profile.','success');}else toast('The imported contract has no response schema.','error');}
+      if(e.target.id==='exportQualificationJsonBtn')exportQualificationRun();
+      if(e.target.id==='openQualificationReportBtn'){const run=activeQualificationRun();reportSettings().type='qualification';reportSettings().subjectId=run?.id||'';currentReport=null;scheduleSave();switchWorkspace('reports');renderReportWorkspace();generateReport();}
+
       const webhookItem=e.target.closest('[data-webhook-event-id]');if(webhookItem){state.selectedWebhookEventId=webhookItem.dataset.webhookEventId;scheduleSave();renderWebhookWorkspace();}
       const scenarioItem=e.target.closest('[data-scenario-id]');if(scenarioItem){state.activeScenarioId=scenarioItem.dataset.scenarioId;scheduleSave();renderScenarioWorkspace();}
       const fixtureItem=e.target.closest('[data-fixture-id]');if(fixtureItem){state.activeFixtureId=fixtureItem.dataset.fixtureId;scheduleSave();renderFixtureWorkspace();}
@@ -2062,6 +2428,7 @@
         const action = projectAction.dataset.projectAction;
         if (action === 'export') exportProject();
         if (action === 'import') { $('#importFileInput').value = ''; openModal('importModal'); }
+        if (action === 'qualification') switchWorkspace('qualification');
         if (action === 'reports') switchWorkspace('reports');
         if (action === 'interchange') switchWorkspace('interchange');
         if (action === 'load-demo' && confirm('Replace the current project with the RELAY demo project?')) { state = demoState(); saveState(); renderAll(); toast('Demo project restored.'); }
@@ -2083,6 +2450,9 @@
     document.addEventListener('input', e => {
 
       if(e.target.classList.contains('report-setting')){const key=e.target.dataset.reportSetting;reportSettings()[key]=e.target.type==='checkbox'?e.target.checked:e.target.value;currentReport=null;scheduleSave();}
+      if(e.target.classList.contains('qualification-setting')){const q=qualificationSettings(),key=e.target.dataset.qualificationSetting;q[key]=e.target.type==='number'?Number(e.target.value):e.target.type==='checkbox'?e.target.checked:e.target.value;scheduleSave();renderQualificationWorkspace();}
+      if(e.target.classList.contains('qualification-profile-field')){const req=state.requests.find(r=>r.id===qualificationSettings().activeProfileRequestId);if(req){const key=e.target.dataset.profileField;req.qualification[key]=e.target.type==='checkbox'?e.target.checked:e.target.type==='number'?Number(e.target.value):e.target.value;if(state.draft.id===req.id)state.draft.qualification=clone(req.qualification);scheduleSave();}}
+
       const ar=e.target.closest('[data-assertion-id]');if(ar){const a=state.draft.assertions.find(x=>x.id===ar.dataset.assertionId);if(a){if(e.target.classList.contains('assert-path'))a.path=e.target.value;if(e.target.classList.contains('assert-expected'))a.expected=e.target.value;scheduleSave();renderActiveStatus();}}
       if(e.target.classList.contains('webhook-setting')){state.webhookSettings[e.target.dataset.webhookSetting]=e.target.type==='number'?Number(e.target.value):e.target.value;scheduleSave();}
       if(e.target.id==='forwardUrlInput'){state.webhookSettings.forwardUrl=e.target.value;scheduleSave();}
@@ -2114,6 +2484,10 @@
     document.addEventListener('change', e => {
 
       if(e.target.classList.contains('report-setting')){const key=e.target.dataset.reportSetting;reportSettings()[key]=e.target.type==='checkbox'?e.target.checked:e.target.value;currentReport=null;scheduleSave();if(key==='type')renderReportWorkspace();}
+      if(e.target.classList.contains('qualification-request-check')){const q=qualificationSettings(),id=e.target.dataset.requestId;q.selectedRequestIds=e.target.checked?[...new Set([...q.selectedRequestIds,id])]:q.selectedRequestIds.filter(x=>x!==id);scheduleSave();renderQualificationWorkspace();}
+      if(e.target.classList.contains('qualification-environment-check')){const q=qualificationSettings(),id=e.target.dataset.environmentId;q.selectedEnvironmentIds=e.target.checked?[...new Set([...q.selectedEnvironmentIds,id])]:q.selectedEnvironmentIds.filter(x=>x!==id);scheduleSave();renderQualificationWorkspace();}
+      if(e.target.id==='qualificationProfileRequestSelect'){qualificationSettings().activeProfileRequestId=e.target.value;scheduleSave();renderQualificationWorkspace();}
+
       const ar=e.target.closest('[data-assertion-id]');if(ar){const a=state.draft.assertions.find(x=>x.id===ar.dataset.assertionId);if(a){if(e.target.classList.contains('assert-enabled'))a.enabled=e.target.checked;if(e.target.classList.contains('assert-type')){a.type=e.target.value;a.path=a.type==='matchesFixture'?(state.fixtures.find(f=>f.type==='response')?.id||''):'';a.expected=a.type==='status'?'200':'';}if(e.target.classList.contains('assert-operator'))a.operator=e.target.value;scheduleSave();renderAssertionsEditor();renderCounts();renderActiveStatus();}}
       if(e.target.classList.contains('webhook-setting')){state.webhookSettings[e.target.dataset.webhookSetting]=e.target.type==='number'?Number(e.target.value):e.target.value;scheduleSave();}
       const stepCard=e.target.closest('[data-step-id]');if(stepCard&&e.target.classList.contains('step-field')){const s=activeScenario(),st=s?.steps.find(x=>x.id===stepCard.dataset.stepId);if(st){const key=e.target.dataset.stepField;st[key]=key==='continueOnFail'?e.target.value==='true':e.target.type==='number'?Number(e.target.value):e.target.value;scheduleSave();}}

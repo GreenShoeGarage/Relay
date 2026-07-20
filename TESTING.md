@@ -1,120 +1,151 @@
-# RELAY v1.7 Test Notes
+# RELAY v2.0 Test Notes
 
 ## Automated release checks
 
-The v1.7 release was checked for:
-
-- Embedded browser JavaScript syntax through Node.
-- Worker JavaScript syntax through Node.
-- Duplicate HTML element IDs.
-- Required controls and feature markers across all six workspaces.
-- Absence of external browser runtime dependencies.
-- Browser DOM initialization in headless Chromium.
-- Navigation across Requests, Webhooks, Scenarios, Fixtures, Reports, and Interchange.
-- Project report generation and HTML, Markdown, and evidence JSON downloads.
-- cURL import.
-- Postman Collection v2 import and v2.1 export.
-- OpenAPI 3 JSON request generation.
-- HAR import and export.
-- Worker health, channel, webhook, event, authentication, deletion, fixture, and mock flows using an in-memory KV substitute.
-- ZIP archive integrity after packaging.
-
-Run the package verifier with:
+Run:
 
 ```bash
 python verify.py
 ```
 
-## Request bench acceptance
+The release verifier checks:
 
-1. Open `relay.html` and confirm the sample project appears.
-2. Send **Get sample todo** and confirm a `200` JSON response.
-3. Confirm both included assertions pass.
-4. Add a failing assertion and confirm the result explains the actual value.
-5. Save the response as a fixture.
-6. Generate cURL, fetch, Python, and PowerShell code.
-7. Save, duplicate, delete, and restore requests from History.
-8. Export and re-import the project.
-9. Confirm authentication values, secret variables, and sensitive headers are absent or redacted.
+- Embedded browser JavaScript syntax through Node.
+- Cloudflare Worker JavaScript syntax through Node.
+- Duplicate HTML element IDs.
+- Required controls and feature markers across all seven workspaces.
+- Absence of external browser runtime dependencies.
+- Worker health, channel, webhook, event, authentication, deletion, fixture, and mock flows through an in-memory KV substitute.
 
-## Gateway acceptance
+The release build was also exercised in headless Chromium with deterministic in-page HTTP responses. The browser acceptance pass covered:
 
-1. Deploy `gateway/worker.js` with a `RELAY_KV` binding.
-2. Run the gateway diagnostic from Webhooks.
-3. Create a webhook channel.
-4. Deliver a POST request containing JSON to the displayed URL.
-5. Refresh the inbox and inspect body, headers, source address, and query parameters.
-6. Forward the event to a controlled endpoint.
-7. Replay the event to the RELAY inbox.
-8. Delete the remote event.
-9. Enable proxy mode and test an API that blocks direct browser CORS requests.
+- Navigation through all seven workspaces.
+- Endpoint-matrix qualification.
+- Repeated sampling and execution counts.
+- Manual schema failure and blocking disposition.
+- Retry recovery and retry accounting.
+- Data-driven scenario qualification.
+- Verification that scenario response capture does not duplicate requests.
+- OpenAPI response-schema and local-reference retention.
+- OpenAPI webhook contract import.
+- Qualification report generation.
 
-## Signature acceptance
+## Qualification acceptance
 
-1. Deliver an event with a known HMAC signature.
-2. Configure its header, secret, prefix, algorithm, and encoding.
-3. Confirm RELAY reports a valid signature.
-4. Change the secret and confirm verification fails.
-5. Deliver the same signature twice and confirm duplicate detection.
-6. Configure a timestamp header and confirm an out-of-tolerance event fails.
+### Endpoint matrix
 
-Use HTTPS so Web Crypto is available.
+1. Open Qualification.
+2. Select one or more saved requests.
+3. Select at least one environment.
+4. Set Samples to `2` or more.
+5. Run qualification.
+6. Confirm the planned execution count equals requests × environments × rows × samples.
+7. Confirm every endpoint/environment combination appears in the matrix.
+8. Confirm status, assertion, contract, latency, retry, and disposition columns are populated.
 
-## Scenario acceptance
+### Data-driven rows
 
-1. Create a scenario with a saved request.
-2. Capture a JSON value as a runtime variable.
-3. Reference it as `{{variableName}}` in a later request.
-4. Add a webhook-wait step and deliver a matching event.
-5. Confirm the match and captured values appear in the run log.
-6. Add a delay step.
-7. Confirm a failed assertion stops the scenario when configured to stop.
-8. Confirm the same failure continues when configured to continue.
-9. Press Stop during a webhook wait.
+1. Import `examples/qualification-dataset.json` into the Data rows field.
+2. Reference a row property from a saved request as `{{widgetId}}`.
+3. Run qualification.
+4. Confirm every row executes.
+5. Add `{{__row}}`, `{{__iteration}}`, and `{{__environment}}` to controlled request headers and confirm substitution.
+6. Enter invalid JSON and confirm RELAY prevents the run with an explanatory error.
+7. Enter more than 200 planned executions and confirm RELAY blocks the plan.
 
-## Fixture and mock acceptance
+### Manual contract
 
-1. Create a response fixture and sync it to the gateway.
-2. Send the configured HTTP method to the public mock URL.
-3. Confirm status, headers, content type, body, and delay.
-4. Test server-error mode.
-5. Test rate-limit mode and inspect `Retry-After`.
-6. Test timeout mode.
-7. Create a webhook fixture and emit it to the active inbox.
-8. Select duplicate mode and confirm two deliveries.
-9. Create a fixture assertion and confirm matching and differing responses are explained.
+1. Open Qualification → Contracts.
+2. Select a request.
+3. Set allowed statuses and content types.
+4. Enter a JSON Schema requiring a known response property.
+5. Run against a compliant response and confirm Contract passes.
+6. Require a missing property and confirm the matrix shows a contract failure.
+7. Confirm a critical request produces NOT READY.
+8. Mark the same request noncritical and confirm the disposition becomes CONDITIONAL.
 
-## Report and evidence acceptance
+### OpenAPI contract
 
-1. Open Reports and generate a Project Test Summary.
-2. Enter prepared-by, reviewed-by, disposition, and unresolved-item values.
-3. Confirm recent request and scenario status appears.
-4. Generate a Request Evidence report and confirm assertions and the latest execution appear.
-5. Generate a Scenario Run report and confirm the flow diagram and run log appear.
-6. Select a webhook and generate a Webhook Delivery report.
-7. Toggle bodies, headers, and recent history off and confirm they are omitted.
-8. Export HTML, Markdown, and evidence JSON.
-9. Use Print / Save PDF and confirm the browser print preview is clean.
-10. Search exported files for known secret test values and confirm they are absent.
+1. Import `examples/qualification-openapi.json` through Interchange.
+2. Open Qualification → Contracts.
+3. Select **getWidget**.
+4. Confirm source title, method, path, operation ID, and response `200` are shown.
+5. Use **Load imported schema**.
+6. Confirm the dereferenced Widget schema appears.
+7. Run against a compliant endpoint and confirm schema compliance.
+8. Remove a required field from the controlled response and confirm the failure identifies its JSON path.
 
-## Interchange acceptance
+### Webhook compliance
 
-1. Import `examples/curl-example.txt` and confirm one POST request appears.
-2. Import `examples/postman-example.json` and confirm its folder, request, and variable appear.
-3. Import `examples/openapi-example.json` and confirm its operations become requests.
-4. Confirm OpenAPI path variables are added to the active environment.
-5. Import `examples/traffic-example.har` and confirm its entry becomes a request.
-6. Export Postman and confirm query values, folders, and requests are retained.
-7. Export HAR and confirm retained request history appears.
-8. Confirm authentication secrets are blanked or redacted in both exports.
-9. Select a webhook event and use **Copy selected webhook as request**.
-10. Send the resulting request to a controlled endpoint.
+1. Import `examples/qualification-openapi.json`.
+2. Open Qualification → Webhooks.
+3. Select **widgetChanged**.
+4. Deliver a matching compliant webhook and refresh the inbox.
+5. Confirm the event passes.
+6. Deliver a payload without `id` and confirm the event fails.
+7. Confirm an actual noncompliant matching delivery is a blocking release finding.
+8. Confirm a configured contract with no matching delivery is shown as incomplete evidence rather than as a schema violation.
+9. Clear the custom schema and confirm the webhook gate becomes optional.
+
+### Performance and reliability
+
+1. Run at least five samples against a controlled endpoint.
+2. Confirm median, p95, maximum, and payload totals are populated.
+3. Set a p95 limit below the observed value and confirm the performance gate fails.
+4. Configure a mock to return `500`, then recover.
+5. Enable one retry and confirm attempts, retry count, and recovery are recorded.
+6. Exhaust every retry and confirm the reliability gate fails.
+7. Configure a timeout shorter than the mock delay and confirm a timeout finding.
+
+### Environment comparison
+
+1. Create two environments with different base URLs.
+2. Select both for the same qualification plan.
+3. Confirm each environment receives a summary row.
+4. Return different status codes and confirm parity differs.
+5. Return different JSON structures and confirm response-shape parity differs.
+6. Confirm environment-specific p95 and readiness are shown.
+
+### Scenario qualification
+
+1. Create a scenario that sends one saved request and captures `$.id`.
+2. Set Qualification mode to Data-driven scenario.
+3. Run two samples.
+4. Confirm the endpoint is sent exactly twice, not four times.
+5. Use the captured variable in a later request.
+6. Add a webhook-wait step and confirm the scenario can qualify the complete request-to-webhook flow.
+
+### Release readiness and reports
+
+1. Complete a passing plan and confirm READY.
+2. Create a noncritical failure and confirm CONDITIONAL.
+3. Create a critical contract, assertion, performance, or reliability failure and confirm NOT READY.
+4. Open Readiness and inspect unresolved findings.
+5. Use **Open readiness report**.
+6. Confirm the executive determination, gates, endpoint matrix, environment comparison, and findings are included.
+7. Export HTML, Markdown, evidence JSON, and print/PDF output.
+8. Search exports for known secrets and confirm they are absent.
+
+## Existing-workspace regression checklist
+
+- Send the sample GET request and confirm both included assertions pass.
+- Save, duplicate, delete, and restore requests.
+- Generate cURL, fetch, Python, and PowerShell code.
+- Create a gateway channel and inspect a delivered webhook.
+- Verify a known HMAC signature and timestamp.
+- Run a standard scenario outside qualification.
+- Sync and exercise a mock fixture.
+- Generate project, request, scenario, and webhook reports.
+- Import cURL, Postman, OpenAPI, and HAR examples.
+- Export Postman and HAR with secrets redacted.
+- Export and re-import the RELAY project.
 
 ## Expected constraints
 
 - Direct browser mode remains subject to destination CORS rules.
-- Web Crypto signature verification requires a secure browser context.
+- Web Crypto requires a secure browser context.
 - Worker bodies are limited to 512 KiB.
 - Workers KV is eventually consistent.
-- OpenAPI YAML import focuses on server and operation discovery. Use JSON for detailed examples and schemas.
-- Postman scripts, tests, file uploads, GraphQL bodies, and multipart form-data are not executed or translated in v1.7.
+- Performance sampling is not high-concurrency load testing.
+- OpenAPI YAML mode focuses on operation discovery. Use JSON for response contracts and webhook schemas.
+- The built-in schema validator implements a practical subset rather than every JSON Schema draft feature.

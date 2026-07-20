@@ -1,4 +1,4 @@
-const VERSION = '1.7.0';
+const VERSION = '2.0.0';
 const MAX_BODY_BYTES = 512 * 1024;
 const DEFAULT_TTL_HOURS = 24;
 const MAX_TTL_HOURS = 168;

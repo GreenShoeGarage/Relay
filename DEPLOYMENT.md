@@ -1,34 +1,40 @@
 # RELAY Gateway Deployment
 
-The RELAY Gateway is an optional Cloudflare Worker. It provides public webhook channels, temporary event storage, CORS-safe API proxying, event forwarding, and mock endpoints.
+RELAY's browser instrument works without a server for APIs that allow browser CORS requests. Deploy the optional Cloudflare Worker when you need public webhook endpoints, temporary event storage, CORS-safe proxying, forwarding, or public mocks.
 
-## Required binding
+## Requirements
 
-The Worker expects one Workers KV binding:
+- A Cloudflare account
+- A Workers KV namespace
+- The files in `gateway/`
+
+The Worker expects a KV binding named exactly:
 
 ```text
-Binding name: RELAY_KV
+RELAY_KV
 ```
-
-The binding name must match exactly because `worker.js` reads `env.RELAY_KV`.
-
-## Dashboard deployment
-
-1. Sign in to the Cloudflare dashboard.
-2. Open **Workers & Pages** and create a Worker.
-3. Replace the generated Worker code with `gateway/worker.js`.
-4. Open the Worker’s **Settings → Bindings** area.
-5. Add a **KV namespace** binding named `RELAY_KV`.
-6. Create or select a KV namespace for RELAY.
-7. Deploy the Worker.
-8. Copy the Worker base URL, such as `https://relay-gateway.example.workers.dev`.
-9. Open RELAY and go to **Webhooks**.
-10. Paste the base URL into **Worker base URL** and press **Run diagnostics**.
-11. Press **Create channel**.
 
 ## Wrangler deployment
 
-The included `wrangler.toml` declares the Worker and KV binding:
+### Simplest deployment
+
+The included `wrangler.toml` declares the `RELAY_KV` binding without an ID. Current Wrangler releases can provision the resource during deployment and write the generated ID back to the configuration.
+
+From the `gateway` folder:
+
+```bash
+npx wrangler deploy
+```
+
+### Bind an existing namespace
+
+To create and bind the namespace explicitly:
+
+```bash
+npx wrangler kv namespace create RELAY_KV
+```
+
+Copy the returned ID into `gateway/wrangler.toml`:
 
 ```toml
 name = "relay-gateway"
@@ -37,62 +43,57 @@ compatibility_date = "2026-07-19"
 
 [[kv_namespaces]]
 binding = "RELAY_KV"
+id = "YOUR_NAMESPACE_ID"
 ```
 
-From the `gateway` folder:
+Then deploy:
 
 ```bash
 npx wrangler deploy
 ```
 
-Recent Wrangler versions can create the declared resource when the binding has no namespace ID. You may instead add an existing namespace ID or configure the binding through the Cloudflare dashboard.
+After deployment:
 
-## Health check
+1. Copy the resulting Worker URL.
+2. Open RELAY → Webhooks.
+3. Paste the URL into **Worker base URL**.
+4. Run **Diagnose**.
+5. Create a channel.
 
-Open this route on the deployed Worker:
+## Dashboard deployment
 
-```text
-/api/health
-```
-
-A configured gateway returns JSON similar to:
-
-```json
-{
-  "ok": true,
-  "service": "RELAY Gateway",
-  "version": "1.7.0",
-  "storage": "Workers KV"
-}
-```
-
-When the KV binding is absent, the gateway returns a `503` response explaining that `RELAY_KV` is not configured.
+You may also create a Worker in the Cloudflare dashboard, paste `worker.js`, create a Workers KV namespace, and bind it as `RELAY_KV` under the Worker's bindings.
 
 ## Gateway routes
 
-| Route | Purpose | Access |
-|---|---|---|
-| `GET /api/health` | Health and version information | Public |
-| `POST /api/channels` | Create a temporary channel | Public |
-| `ANY /hook/:channelId` | Receive a webhook delivery | Public |
-| `GET /api/channels/:id/events` | List channel events | Bearer channel token |
-| `DELETE /api/channels/:id/events/:eventId` | Delete an event | Bearer channel token |
-| `POST /api/channels/:id/replay` | Forward a stored event | Bearer channel token |
-| `POST /api/proxy/:channelId` | Proxy an API request | Bearer channel token |
-| `POST /api/channels/:id/mocks` | Save a mock fixture | Bearer channel token |
-| `ANY /mock/:channelId/:route` | Return a mock response | Public |
+- `GET /api/health` — health and version
+- `POST /api/channels` — create an expiring channel
+- `/hook/{channelId}` — public inbound webhook endpoint
+- `GET /api/channels/{channelId}/events` — authenticated event list
+- `DELETE /api/channels/{channelId}/events/{eventId}` — authenticated deletion
+- `POST /api/channels/{channelId}/replay` — authenticated replay/forward
+- `POST /api/channels/{channelId}/mocks` — authenticated mock synchronization
+- `/mock/{channelId}/{fixtureIdOrRoute}` — public mock endpoint
+- `POST /api/proxy/{channelId}` — authenticated CORS proxy
+
+Private gateway operations require the generated Bearer token. Public hook and mock URLs are intentionally unauthenticated.
 
 ## Security notes
 
-- Channel IDs and management tokens are generated with cryptographic randomness.
-- Only a SHA-256 hash of the channel token is stored in KV.
-- Webhook and mock URLs are public by design.
-- Event listing, deletion, replay, proxying, and mock management require the channel token.
-- The gateway refuses HTTP targets on localhost and common private-network ranges.
-- Channel metadata, events, and mocks expire with the channel.
-- The default channel lifetime is 24 hours. The Worker accepts one to 168 hours through its API.
-- Gateway proxy mode carries API credentials through the Worker. Deploy and use only a Worker you control.
+- Deploy and use only a Worker and KV namespace you control.
+- Gateway proxy mode can receive resolved API URLs, headers, credentials, and request bodies.
+- The Worker rejects localhost, loopback, link-local, and RFC1918 private-network targets.
+- Channel tokens are stored only as SHA-256 hashes in KV.
+- Channels expire after their configured TTL.
+- Event and response bodies are limited to 512 KiB.
+- Review Cloudflare account access, logs, retention, and jurisdiction requirements before using production secrets or regulated data.
 
-## Static-site deployment
+## Test the Worker locally
 
-`relay.html` can be uploaded unchanged to a normal static website. The browser instrument and Worker do not need to share a domain because the Worker returns permissive CORS headers for RELAY operations.
+The package includes an in-memory integration test:
+
+```bash
+node test-worker.mjs
+```
+
+It verifies health, channel creation, webhook receipt, event listing, mock publishing, mock delivery, event deletion, and invalid-token rejection.

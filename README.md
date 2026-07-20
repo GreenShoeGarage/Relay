@@ -1,229 +1,274 @@
-# RELAY v1.7.0
+# RELAY v2.0.0
 
-RELAY is a local-first Field Instrument for testing APIs and webhooks. It constructs and sends HTTP requests, inspects responses, receives and verifies webhook deliveries, runs end-to-end scenarios, publishes mock endpoints, generates test evidence, and imports or exports common API-tool formats.
+RELAY is a local-first Field Instrument for testing and qualifying APIs and webhooks. It builds HTTP requests, inspects responses, receives webhook deliveries, verifies signatures, runs end-to-end scenarios, publishes mocks, validates contracts, compares environments, measures reliability, and produces release-readiness evidence.
 
-The browser instrument is one self-contained HTML file with no runtime libraries. An optional Cloudflare Worker companion provides public webhook URLs, temporary event storage, CORS-safe request proxying, forwarding, and public mock endpoints.
+The browser instrument is one self-contained HTML file with no runtime libraries. An optional Cloudflare Worker companion provides public webhook URLs, temporary event storage, CORS-safe proxying, forwarding, and mock endpoints.
 
 ## Quick start
 
-### Request testing only
+### Browser-only API testing
 
-Open `relay.html` in a modern browser or upload it to any static website. No account, build process, package manager, or external JavaScript library is required.
+Open `relay.html` in a modern browser or upload it to any static website. No build process, package manager, account, or external JavaScript library is required.
 
-### Webhooks, proxying, and mocks
+Direct requests remain subject to the destination API's CORS policy.
 
-Deploy the files in `gateway/`, bind a Workers KV namespace as `RELAY_KV`, and paste the Worker URL into **Webhooks → RELAY Gateway**. See `DEPLOYMENT.md`.
+### Webhooks, proxying, and public mocks
+
+Deploy `gateway/worker.js`, bind a Workers KV namespace as `RELAY_KV`, and enter the Worker URL under **Webhooks → RELAY Gateway**. See `DEPLOYMENT.md`.
 
 ## Instrument workflow
 
-**Define → Send → Inspect → Receive → Replay → Verify → Document → Exchange**
+**Define → Send → Inspect → Receive → Replay → Verify → Qualify → Document → Exchange**
 
-RELAY v1.7 has six workspaces:
+RELAY v2.0 has seven workspaces:
 
 - **Requests** — construct requests, inspect responses, save collections, and define assertions.
 - **Webhooks** — receive public deliveries, inspect metadata, verify HMAC signatures, replay, and forward.
 - **Scenarios** — chain requests, delays, captured variables, and webhook expectations.
+- **Qualification** — execute controlled test plans and determine release readiness.
 - **Fixtures** — preserve baselines and publish configurable mock responses or webhook payloads.
-- **Reports** — produce redacted test summaries, evidence packages, diagrams, and sign-off records.
+- **Reports** — produce redacted evidence packages and sign-off records.
 - **Interchange** — import cURL, Postman, OpenAPI/Swagger, and HAR; export Postman and HAR.
 
-## Request bench
+## v2.0 — API qualification
+
+The Qualification workspace turns saved requests and scenarios into repeatable qualification plans.
+
+### Data-driven execution
+
+Provide a JSON array of data rows:
+
+```json
+[
+  { "widgetId": "alpha", "expectedState": "ready" },
+  { "widgetId": "beta", "expectedState": "paused" }
+]
+```
+
+Each property becomes a runtime variable, so requests can use `{{widgetId}}` or `{{expectedState}}`. RELAY also exposes:
+
+- `{{__row}}`
+- `{{__iteration}}`
+- `{{__environment}}`
+
+A plan can run selected endpoints or one saved scenario across selected environments, rows, and repeated samples. Plans are capped at 200 executions to prevent accidental browser overload.
+
+### Endpoint qualification profiles
+
+Each saved request can define:
+
+- Include/exclude from qualification
+- Critical or noncritical release-gate status
+- Allowed status codes, ranges, or classes such as `200`, `200-204`, and `2xx`
+- Allowed response content types
+- Maximum p95 latency
+- Manual response JSON Schema
+- Imported OpenAPI contract provenance
+
+### Contract validation
+
+RELAY validates response status, content type, assertions, and JSON structure. The built-in JSON Schema subset supports:
+
+- `type`, including arrays of types
+- `required` and `properties`
+- `items`, `minItems`, `maxItems`, and `uniqueItems`
+- `enum` and `const`
+- `minimum`, `maximum`, `exclusiveMinimum`, and `exclusiveMaximum`
+- `minLength`, `maxLength`, `pattern`, and basic `date-time` checks
+- `additionalProperties: false`
+- `allOf`, `anyOf`, `oneOf`, and `not`
+- OpenAPI `nullable`
+
+This validator is intended for practical browser-side qualification. It is not a complete implementation of every JSON Schema draft feature.
+
+### OpenAPI response compliance
+
+OpenAPI 3.x and Swagger 2.0 JSON import now retains:
+
+- Response status definitions
+- Declared response content types
+- Response schemas
+- Local `#/...` schema references
+- Source title, path, method, and operation ID
+- OpenAPI webhook request-body schemas
+
+Imported contracts remain attached to the generated request and are visible in Qualification → Contracts. JSON import provides the highest fidelity. YAML import remains a conservative operation-discovery mode without an external YAML parser.
+
+### Webhook schema compliance
+
+Qualification → Webhooks can evaluate stored webhook events against:
+
+- A manually entered JSON Schema, method, and path pattern
+- An OpenAPI webhook contract imported through Interchange
+
+Path patterns accept literal paths, `*`, and placeholders such as `/orders/{id}`. No configured webhook gate is treated as optional. A configured contract with no matching deliveries produces incomplete evidence rather than a false schema violation. Matching noncompliant deliveries are blocking findings.
+
+### Performance sampling
+
+RELAY reports:
+
+- Median latency
+- Overall and per-endpoint p95 latency
+- Slowest sample
+- Observed payload volume
+- Per-endpoint configured p95 limits
+
+Browser timing includes client-side networking and processing. It is useful for comparative qualification but is not a substitute for server-side load testing.
+
+### Reliability and retry analysis
+
+The runner can retry network failures, timeouts, HTTP `429`, and server errors. It records:
+
+- Total attempts
+- Retry attempts
+- Recovered samples
+- Exhausted failures
+- Per-endpoint reliability gates
+- Exponential retry backoff
+
+Scenario qualification reuses the original response for JSON capture; it does not resend side-effecting request steps merely to capture a value.
+
+### Environment comparison
+
+Run the same plan against multiple RELAY environments. The comparison view shows:
+
+- Sample count and success rate by environment
+- p95 latency by environment
+- Contract failures by environment
+- Readiness disposition by environment
+- Status-code parity
+- JSON response-shape parity
+
+### Endpoint qualification matrix
+
+The matrix summarizes every endpoint/environment combination with:
+
+- Samples passed and total
+- Success rate
+- Observed statuses
+- Assertion failures
+- Contract failures
+- p95 latency
+- Retry and recovery counts
+- READY or HOLD disposition
+
+### Release readiness
+
+RELAY calculates a transparent disposition instead of compressing the evidence into one opaque score:
+
+- **READY** — all configured gates pass.
+- **CONDITIONAL** — noncritical failures or incomplete evidence remain.
+- **NOT READY** — a critical endpoint gate or actual webhook schema gate fails.
+
+The readiness view lists every gate, its result, its basis, and unresolved findings.
+
+### Release-readiness reporting
+
+Reports adds a **Release-readiness report** containing:
+
+- Executive determination
+- Gate-by-gate rationale
+- Endpoint qualification matrix
+- Environment comparison
+- Retry recovery
+- Unresolved contract, assertion, performance, reliability, parity, and webhook findings
+- Prepared-by, reviewed-by, disposition, and notes fields
+
+Use the browser print dialog to save the report as PDF, or export standalone HTML, Markdown, or structured evidence JSON.
+
+## Existing capabilities
+
+### Request bench
 
 - GET, POST, PUT, PATCH, DELETE, HEAD, and OPTIONS
 - Query parameters and headers with enable controls
-- No Auth, Bearer Token, Basic Auth, and API Key authentication
+- Bearer Token, Basic Auth, and API Key authentication
 - JSON, text, and URL-encoded request bodies
 - Environment variables using `{{variableName}}`
-- Secret environment variables with masked editing
-- Pretty JSON, raw body, response headers, safe HTML preview, and generated code
-- Status, response time, payload size, redirect status, history, folders, and saved requests
-- Generated cURL, JavaScript `fetch`, Python `requests`, and PowerShell
+- Pretty JSON, raw body, headers, safe HTML preview, generated code, history, folders, and saved requests
+- cURL, JavaScript `fetch`, Python `requests`, and PowerShell generation
 - Local autosave, project import/export, dark/light themes, and resizable panes
 
-## v1.1 — Webhook gateway
+### Webhooks and signatures
 
-- Public webhook channels with a 24-hour default expiration
-- Incoming method, time, source address, headers, query values, and body
-- Manual refresh or three-second polling
-- Webhook replay, forwarding, remote deletion, and local clearing
-- Gateway health diagnostics
-- Optional CORS-safe API request proxy
-- Channel-token authentication for private gateway operations
+- Temporary public webhook channels
+- Incoming method, timestamp, source address, headers, query values, and body
+- Replay, forwarding, remote deletion, local clearing, and polling
+- HMAC SHA-256 and SHA-1 verification
+- Hex/Base64 signatures, configurable prefixes, timestamp tolerance, and duplicate detection
 
-The public hook URL is intentionally unauthenticated so third-party systems can deliver to it. Event listing, deletion, replay, proxying, and mock management require the generated channel token.
+### Scenarios
 
-## v1.2 — Assertions and comparisons
+- Saved request steps
+- JSON response capture into runtime variables
+- Webhook waits and webhook payload capture
+- Controlled delay steps
+- Stop/continue-on-failure behavior
+- Retained scenario run history
 
-Requests can contain visual assertions without custom scripts:
-
-- Status equality or inequality
-- Response-time thresholds
-- Header existence, equality, or containment
-- JSON path existence or equality
-- Body text containment
-- Response comparison with a saved fixture
-
-Supported JSON path syntax is intentionally compact, for example:
-
-```text
-$.data.id
-$.items[0].status
-```
-
-## v1.3 — Signatures and security
-
-- HMAC SHA-256 and SHA-1 verification through Web Crypto
-- Hex and Base64 signature encodings
-- Configurable signature header and prefix
-- Timestamp-header tolerance
-- Duplicate-signature detection
-- Masked signing-secret entry
-- Secret and sensitive-header redaction in project, report, evidence, Postman, and HAR exports
-- Confirmation before gateway proxy mode is enabled
-
-Signature verification requires a secure browser context such as HTTPS.
-
-## v1.4 — Scenario runner
-
-Scenario steps may:
-
-1. Send a saved request.
-2. Evaluate the request’s assertions.
-3. Capture a JSON response value as a runtime variable.
-4. Use the value in later requests as `{{variableName}}`.
-5. Wait for a matching webhook event.
-6. Capture a value from the webhook payload.
-7. Insert a controlled delay.
-8. Stop or continue after a failed request.
-
-Each scenario retains its 20 most recent run records.
-
-## v1.5 — Fixtures and mocking
+### Fixtures and mocks
 
 - Response baselines and webhook fixtures
-- Custom status, content type, headers, body, HTTP method, route, and delay
-- Simulated server errors
-- Simulated `429` rate limiting with `Retry-After`
-- Simulated timeout behavior
-- Duplicate webhook emission
+- Configurable status, headers, content type, body, method, route, and delay
+- Server-error, rate-limit, timeout, and duplicate-delivery simulation
 - Gateway synchronization and public mock URLs
 
-## v1.6 — Reports and evidence
-
-The Reports workspace creates four report types:
+### Reports and evidence
 
 - Project test summary
 - Request evidence report
 - Scenario run report
 - Webhook delivery report
+- Release-readiness report
+- Redacted HTML, Markdown, JSON, and print/PDF output
 
-Report features include:
+### Interchange
 
-- Executive result and qualification statistics
-- Request, response, webhook, assertion, and scenario evidence
-- Scenario-flow diagrams
-- Failure summaries
-- Prepared-by, reviewed-by, disposition, and unresolved-item fields
-- Optional body, header, and recent-history inclusion
-- Standalone HTML export
-- Markdown export
-- Structured RELAY evidence JSON
-- Print-ready output through **Print / Save PDF**
+- cURL command import
+- Postman Collection v2 import and redacted v2.1 export
+- OpenAPI 3.x and Swagger 2.0 JSON import
+- Conservative OpenAPI/Swagger YAML discovery
+- HAR 1.2 import and redacted export
+- Webhook-to-request conversion
 
-Print/PDF uses the browser’s native print dialog. Choose **Save as PDF** to create a PDF without adding a large PDF library to the standalone instrument.
+## Local data and migration
 
-## v1.7 — Interchange
-
-### cURL import
-
-Recognizes common cURL syntax including:
-
-- `-X` / `--request`
-- `-H` / `--header`
-- `-d`, `--data`, `--data-raw`, and related data flags
-- `-u` / `--user`
-- `-G` / `--get`
-- `-I` / `--head`
-- `--url`
-- Cookie headers
-- Common compact flags such as `-XPOST` and `-HContent-Type:...`
-
-### Postman Collection v2 import/export
-
-Imports:
-
-- Nested folders
-- Requests and query values
-- Headers
-- Raw and URL-encoded bodies
-- Bearer, Basic, and API Key authentication
-- Collection variables
-
-Exports saved RELAY requests as Postman Collection v2.1. Authentication secrets and secret environment values are blanked.
-
-### OpenAPI and Swagger import
-
-OpenAPI 3.x and Swagger 2.0 JSON import supports:
-
-- Server URL, host, scheme, and base path
-- Operations and tags
-- Path, query, and header parameters
-- Parameter examples and defaults
-- JSON request-body examples
-- Simple sample bodies generated from schemas
-- Server and path variables converted to RELAY environment variables
-
-Common YAML layouts are also recognized without an external YAML dependency. YAML mode focuses on server and operation discovery; JSON preserves more examples and schema detail.
-
-### HAR import/export
-
-HAR 1.2 import converts captured entries into saved requests. HAR export converts RELAY request history into a portable traffic archive with sensitive values redacted.
-
-### Webhook-to-request conversion
-
-A selected inbound webhook can be copied into the Requests workspace as a saved replay request, including its method, payload, query values, and permitted headers.
-
-## Gateway proxy warning
-
-Direct mode sends credentials from the browser straight to the selected API. Gateway proxy mode sends the resolved URL, headers, authentication values, and body through the configured Cloudflare Worker.
-
-Use proxy mode only with a Worker and KV namespace you control.
-
-## Local data
-
-The browser instrument stores project data under:
+Browser project data is stored under:
 
 ```text
 relay-fi-v1
 ```
 
-The storage key remains compatible with earlier releases. RELAY normalizes older projects and updates them to schema version 7 when saved.
+The storage key remains compatible with earlier releases. RELAY normalizes older projects and upgrades them to schema version 8 when saved.
 
-The Worker stores channel metadata, events, and mock fixtures in the bound `RELAY_KV` namespace. Channel data expires with the channel.
+The Worker stores channel metadata, events, and mock fixtures in `RELAY_KV`. Channel data expires with the channel.
 
-## Export redaction
+## Security and redaction
 
-RELAY removes or redacts:
+RELAY masks or removes known sensitive values from project, report, evidence, Postman, HAR, webhook, fixture, history, and qualification exports, including:
 
-- Secret environment-variable values
+- Secret environment values
 - Bearer tokens
 - Basic Auth passwords
 - API Key values
 - Gateway channel tokens
 - Webhook signing secrets
 - Common authentication, cookie, token, and API-key headers
-- Known stored secret values found in exported bodies, URLs, notes, history, fixtures, and event data
+- Known secret values found in URLs, bodies, notes, fixtures, events, qualification data sets, and retained evidence
 
-Domain payloads can still contain sensitive values RELAY does not recognize. Review evidence before sharing it.
+Review exports before sharing. Domain payloads may contain sensitive values RELAY cannot infer.
+
+Gateway proxy mode sends the resolved request through your Worker. Use it only with a Worker and KV namespace you control. The Worker rejects private and local network destinations.
 
 ## Browser constraints
 
-- Without the gateway, destination APIs must permit browser-origin requests through CORS.
+- Direct requests require destination CORS permission.
 - Browsers may hide protected response headers and cookies.
-- Web Crypto signature verification requires HTTPS or another secure browser context.
+- Web Crypto signature verification requires HTTPS or another secure context.
 - The gateway response body and stored webhook body are limited to 512 KiB.
-- Workers KV is eventually consistent, so a new event may occasionally appear on the next poll.
-- OpenAPI YAML import is intentionally conservative; use JSON for highest-fidelity translation.
+- Workers KV is eventually consistent.
+- Performance sampling is browser-oriented functional qualification, not high-concurrency load testing.
+- Multipart form-data, file uploads, GraphQL-specific editors, Postman scripts/tests, and full JSON Schema vocabulary are not executed in v2.0.
 
 ## Keyboard shortcuts
 
@@ -234,31 +279,30 @@ Domain payloads can still contain sensitive values RELAY does not recognize. Rev
 ## Package contents
 
 ```text
-relay.html                       Complete single-file browser instrument
-gateway/worker.js                Cloudflare Worker gateway
-gateway/wrangler.toml            Worker and KV binding configuration
-gateway/test-worker.mjs          Worker integration test with in-memory KV
-examples/curl-example.txt        Example cURL import
-examples/openapi-example.json    Example OpenAPI import
-examples/postman-example.json    Example Postman import
-examples/traffic-example.har     Example HAR import
-README.md                        Feature and operating guide
-DEPLOYMENT.md                    Gateway deployment instructions
-TESTING.md                       Acceptance and verification checklist
-CHANGELOG.md                     Release history
-verify.py                        Static and Worker package verification
+relay.html                              Complete single-file browser instrument
+gateway/worker.js                       Cloudflare Worker gateway
+gateway/wrangler.toml                   Worker and KV binding configuration
+gateway/test-worker.mjs                 Worker integration test with in-memory KV
+examples/qualification-openapi.json     OpenAPI response and webhook contract example
+examples/qualification-dataset.json     Data-driven qualification rows
+examples/curl-example.txt               cURL import example
+examples/postman-example.json           Postman import example
+examples/openapi-example.json           General OpenAPI import example
+examples/traffic-example.har            HAR import example
+README.md                               Product and operating guide
+DEPLOYMENT.md                           Gateway deployment guide
+TESTING.md                              Acceptance checklist
+CHANGELOG.md                            Release history
+verify.py                               Static and Worker release verifier
+SHA256SUMS.txt                          Package checksums
 ```
 
 ## Verification
 
-With Node installed:
+From the package directory:
 
 ```bash
 python verify.py
 ```
 
-The script checks HTML structure, unique element IDs, required feature markers, external runtime dependencies, browser JavaScript syntax, Worker JavaScript syntax, and the Worker integration suite.
-
-## Version
-
-FI-1XX · RELAY v1.7.0
+The verifier checks embedded JavaScript syntax, Worker syntax, duplicate IDs, required controls, feature markers, external runtime dependencies, and the Worker integration flow.

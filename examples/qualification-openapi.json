@@ -1,0 +1,130 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "RELAY Qualification Example API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.example.com/v1"
+    }
+  ],
+  "paths": {
+    "/widgets/{widgetId}": {
+      "get": {
+        "operationId": "getWidget",
+        "tags": ["Widgets"],
+        "parameters": [
+          {
+            "name": "widgetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "alpha"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Widget returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Widget"
+                },
+                "example": {
+                  "id": "alpha",
+                  "state": "ready",
+                  "updatedAt": "2026-07-19T20:00:00Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Widget not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {
+    "widgetChanged": {
+      "post": {
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WidgetChanged"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Delivery accepted"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Widget": {
+        "type": "object",
+        "required": ["id", "state", "updatedAt"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "type": "string",
+            "enum": ["ready", "paused", "faulted"]
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "WidgetChanged": {
+        "type": "object",
+        "required": ["eventId", "type", "widget"],
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string"
+          },
+          "type": {
+            "const": "widget.changed"
+          },
+          "widget": {
+            "$ref": "#/components/schemas/Widget"
+          }
+        }
+      },
+      "Problem": {
+        "type": "object",
+        "required": ["title", "status"],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}
