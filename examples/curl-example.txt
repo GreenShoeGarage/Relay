@@ -1,0 +1,4 @@
+curl -X POST 'https://api.example.com/widgets?dryRun=true' \
+  -H 'Content-Type: application/json' \
+  -H 'X-Client: RELAY-example' \
+  --data-raw '{"name":"Bench Widget","quantity":2}'

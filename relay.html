@@ -59,7 +59,8 @@
     }
     button, input, select, textarea { font: inherit; }
     button { color: inherit; }
-    .app { height: 100%; display: grid; grid-template-rows: 48px 1fr 26px; }
+    .app { height: 100%; display: grid; grid-template-rows: 48px 38px minmax(0, 1fr) 26px; }
+    .app > * { min-height: 0; }
 
     .topbar {
       display: flex;
@@ -287,6 +288,117 @@
     .menu button:hover { background: var(--panel-3); }
     .menu hr { border: 0; border-top: 1px solid var(--line); margin: 5px; }
 
+
+
+    /* RELAY v1.7 workspaces */
+    .modebar { height: 38px; display:flex; align-items:center; gap:4px; padding:0 12px; border-bottom:1px solid var(--line); background:var(--panel); }
+    .mode-tab { height:30px; padding:0 13px; border:1px solid transparent; border-radius:7px; background:transparent; color:var(--muted); cursor:pointer; font-weight:650; }
+    .mode-tab:hover { color:var(--text); background:var(--panel-2); }
+    .mode-tab.active { color:var(--text); background:var(--panel-3); border-color:var(--line); }
+    .mode-tab .count { margin-left:5px; }
+    .workspace-panel { display:none; min-height:0; }
+    .workspace-panel.active { display:grid; }
+    .feature-workspace { grid-template-columns:320px minmax(0,1fr); height:100%; background:var(--bg); }
+    .feature-sidebar { min-width:0; overflow:auto; border-right:1px solid var(--line); background:var(--panel); padding:14px; }
+    .feature-main { min-width:0; overflow:auto; padding:16px; }
+    .feature-title { margin:0 0 3px; font-size:18px; }
+    .feature-subtitle { margin:0 0 14px; color:var(--muted); font-size:12px; line-height:1.5; }
+    .section-card { background:var(--panel); border:1px solid var(--line); border-radius:10px; margin-bottom:12px; overflow:hidden; }
+    .section-card-head { display:flex; align-items:center; gap:8px; padding:11px 12px; border-bottom:1px solid var(--line); background:var(--panel-2); }
+    .section-card-head h3 { margin:0; font-size:13px; }
+    .section-card-body { padding:12px; }
+    .stack { display:flex; flex-direction:column; gap:8px; }
+    .row { display:flex; align-items:center; gap:8px; }
+    .row.wrap { flex-wrap:wrap; }
+    .row .grow { flex:1; min-width:0; }
+    .endpoint-box { padding:9px 10px; border:1px dashed var(--line-strong); border-radius:7px; background:var(--panel-2); font:11px var(--mono); overflow-wrap:anywhere; color:var(--accent-2); }
+    .status-pill { display:inline-flex; align-items:center; gap:5px; padding:3px 7px; border-radius:999px; background:var(--panel-3); color:var(--muted); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+    .status-pill.ok { color:var(--success); }
+    .status-pill.bad { color:var(--danger); }
+    .status-pill.warn { color:var(--warning); }
+    .event-list, .entity-list { display:flex; flex-direction:column; gap:5px; }
+    .event-item, .entity-item { width:100%; text-align:left; display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:8px; align-items:center; padding:8px; border:1px solid transparent; border-radius:7px; background:transparent; color:var(--text); cursor:pointer; }
+    .event-item:hover, .entity-item:hover { background:var(--panel-2); }
+    .event-item.active, .entity-item.active { background:var(--panel-3); border-color:var(--line-strong); }
+    .event-item strong, .entity-item strong { display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:12px; }
+    .event-item small, .entity-item small { display:block; color:var(--faint); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .detail-grid { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(280px,.7fr); gap:12px; }
+    .inspection-table { width:100%; border-collapse:collapse; font-size:12px; }
+    .inspection-table th, .inspection-table td { padding:7px 8px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; word-break:break-word; }
+    .inspection-table th { width:180px; color:var(--muted); font-weight:600; }
+    .mini-label { display:block; margin:0 0 4px; color:var(--muted); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+    .code-area { width:100%; min-height:190px; resize:vertical; font:12px/1.55 var(--mono); background:var(--panel-2); color:var(--text); border:1px solid var(--line); border-radius:7px; padding:10px; }
+    .assertion-list, .step-list { display:flex; flex-direction:column; gap:7px; }
+    .assertion-row { display:grid; grid-template-columns:24px minmax(120px,.8fr) minmax(90px,.7fr) minmax(100px,1fr) minmax(100px,1fr) 32px; gap:6px; align-items:center; }
+    .assertion-result { display:grid; grid-template-columns:auto minmax(0,1fr); gap:9px; padding:9px; border:1px solid var(--line); border-radius:7px; background:var(--panel-2); }
+    .assertion-result.pass { border-left:4px solid var(--success); }
+    .assertion-result.fail { border-left:4px solid var(--danger); }
+    .assertion-result strong { font-size:12px; }
+    .assertion-result p { margin:3px 0 0; color:var(--muted); font-size:11px; }
+    .step-card { border:1px solid var(--line); border-radius:8px; background:var(--panel-2); overflow:hidden; }
+    .step-head { display:flex; align-items:center; gap:8px; padding:8px 10px; border-bottom:1px solid var(--line); }
+    .step-body { padding:10px; display:grid; grid-template-columns:repeat(2,minmax(150px,1fr)); gap:8px; }
+    .run-log { min-height:260px; max-height:52vh; overflow:auto; background:var(--panel-2); border:1px solid var(--line); border-radius:8px; padding:10px; font:11px/1.55 var(--mono); }
+    .log-line { padding:3px 0; border-bottom:1px dotted var(--line); }
+    .log-line.pass { color:var(--success); } .log-line.fail { color:var(--danger); } .log-line.info { color:var(--muted); }
+    .fixture-preview { min-height:110px; max-height:220px; overflow:auto; white-space:pre-wrap; font:11px/1.5 var(--mono); padding:9px; border:1px solid var(--line); background:var(--panel-2); border-radius:7px; }
+    .empty-feature { min-height:320px; display:grid; place-items:center; color:var(--muted); text-align:center; }
+    .toggle-line { display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:12px; }
+    .toolbar-spacer { flex:1; }
+    .danger-text { color:var(--danger); }
+    .success-text { color:var(--success); }
+    .warning-text { color:var(--warning); }
+    .gateway-banner { padding:8px 11px; border:1px solid var(--line); border-radius:7px; background:var(--panel-2); color:var(--muted); font-size:11px; line-height:1.45; }
+    .gateway-banner strong { color:var(--text); }
+
+    /* v1.6 reports and v1.7 interchange */
+    .report-preview { max-width:980px; margin:0 auto; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:24px; box-shadow:var(--shadow); }
+    .report-preview.empty { min-height:420px; display:grid; place-items:center; text-align:center; color:var(--muted); }
+    .report-hero { display:flex; align-items:flex-start; gap:18px; padding-bottom:18px; border-bottom:2px solid var(--line-strong); margin-bottom:18px; }
+    .report-hero h1 { margin:0 0 4px; font-size:25px; letter-spacing:-.02em; }
+    .report-hero p { margin:0; color:var(--muted); }
+    .report-badge { min-width:72px; height:72px; display:grid; place-items:center; border:1px solid var(--line-strong); border-radius:16px; background:var(--panel-2); font:800 19px var(--mono); color:var(--accent-2); }
+    .report-stat-grid { display:grid; grid-template-columns:repeat(4,minmax(120px,1fr)); gap:9px; margin:14px 0 18px; }
+    .report-stat { padding:12px; border:1px solid var(--line); border-radius:9px; background:var(--panel-2); }
+    .report-stat strong { display:block; font-size:22px; }
+    .report-stat span { display:block; margin-top:3px; color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:.05em; }
+    .report-section { margin:20px 0; }
+    .report-section h2 { margin:0 0 9px; padding-bottom:6px; border-bottom:1px solid var(--line); font-size:15px; }
+    .report-table { width:100%; border-collapse:collapse; font-size:11px; }
+    .report-table th,.report-table td { padding:7px 8px; border:1px solid var(--line); text-align:left; vertical-align:top; word-break:break-word; }
+    .report-table th { background:var(--panel-2); color:var(--muted); font-weight:700; }
+    .report-code { max-height:320px; overflow:auto; white-space:pre-wrap; padding:10px; border:1px solid var(--line); border-radius:7px; background:var(--panel-2); font:11px/1.5 var(--mono); }
+    .report-signoff { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:22px; }
+    .report-signoff > div { min-height:70px; padding:10px; border:1px solid var(--line); border-radius:8px; }
+    .flow-diagram { display:flex; align-items:stretch; flex-wrap:wrap; gap:7px; margin:10px 0; }
+    .flow-node { flex:1 1 145px; min-width:130px; padding:10px; border:1px solid var(--line-strong); border-radius:8px; background:var(--panel-2); position:relative; }
+    .flow-node:not(:last-child)::after { content:'→'; position:absolute; right:-8px; top:50%; transform:translate(50%,-50%); color:var(--accent); font-weight:900; z-index:2; }
+    .flow-node small { display:block; color:var(--muted); margin-top:4px; }
+    .report-actions { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+    .interchange-grid { display:grid; grid-template-columns:repeat(2,minmax(240px,1fr)); gap:12px; }
+    .import-drop { padding:12px; border:1px dashed var(--line-strong); border-radius:9px; background:var(--panel-2); }
+    .import-summary { padding:12px; border-left:4px solid var(--accent); border-radius:7px; background:var(--panel-2); color:var(--muted); }
+    .import-summary strong { color:var(--text); }
+    .support-list { display:grid; grid-template-columns:repeat(2,minmax(180px,1fr)); gap:8px; }
+    .support-item { padding:10px; border:1px solid var(--line); border-radius:8px; background:var(--panel-2); }
+    .support-item strong { display:block; font-size:12px; }
+    .support-item span { display:block; margin-top:3px; color:var(--muted); font-size:11px; line-height:1.45; }
+    @media (max-width:900px) { .report-stat-grid { grid-template-columns:repeat(2,1fr); } .interchange-grid { grid-template-columns:1fr; } }
+    @media (max-width:680px) { .report-stat-grid,.report-signoff,.support-list { grid-template-columns:1fr; } .report-preview { padding:15px; } }
+
+    @media (max-width: 900px) {
+      .feature-workspace { grid-template-columns:260px minmax(0,1fr); }
+      .detail-grid { grid-template-columns:1fr; }
+      .assertion-row { grid-template-columns:24px 1fr 1fr 32px; }
+      .assertion-row .assert-path, .assertion-row .assert-expected { grid-column:span 1; }
+    }
+    @media (max-width: 680px) {
+      .modebar { overflow-x:auto; }
+      .feature-workspace { grid-template-columns:1fr; height:100%; }
+      .feature-sidebar { border-right:0; border-bottom:1px solid var(--line); max-height:44vh; }
+      .step-body { grid-template-columns:1fr; }
+    }
+
     @media (max-width: 900px) {
       :root { --sidebar-w: 240px; }
       .autosave span { display: none; }
@@ -296,7 +408,7 @@
     }
     @media (max-width: 680px) {
       .workspace { grid-template-columns: minmax(0, 1fr); }
-      .sidebar { position: fixed; left: 0; top: 48px; bottom: 26px; width: min(86vw, 320px); z-index: 50; box-shadow: var(--shadow); transform: translateX(-100%); }
+      .sidebar { position: fixed; left: 0; top: 86px; bottom: 26px; width: min(86vw, 320px); z-index: 50; box-shadow: var(--shadow); transform: translateX(-100%); }
       body.mobile-sidebar-open .sidebar { transform: translateX(0); }
       .request-top { grid-template-columns: 92px minmax(0, 1fr) auto; }
       .request-actions { display: none; }
@@ -329,7 +441,16 @@
       <button id="moreBtn" class="icon-btn" title="Project menu">⋯</button>
     </header>
 
-    <div class="workspace">
+    <nav class="modebar" aria-label="RELAY workspaces">
+      <button class="mode-tab active" data-workspace-tab="requests">Requests</button>
+      <button class="mode-tab" data-workspace-tab="webhooks">Webhooks <span class="count" id="webhookCount">0</span></button>
+      <button class="mode-tab" data-workspace-tab="scenarios">Scenarios</button>
+      <button class="mode-tab" data-workspace-tab="fixtures">Fixtures</button>
+      <button class="mode-tab" data-workspace-tab="reports">Reports</button>
+      <button class="mode-tab" data-workspace-tab="interchange">Interchange</button>
+    </nav>
+
+    <div class="workspace workspace-panel active" data-workspace="requests" id="requestsWorkspace">
       <aside class="sidebar" id="sidebar">
         <div class="side-tabs">
           <button class="side-tab active" data-side-tab="collections">Collections</button>
@@ -362,6 +483,7 @@
             <button class="tab" data-tab="auth">Auth</button>
             <button class="tab" data-tab="headers">Headers <span class="count" id="headersCount">0</span></button>
             <button class="tab" data-tab="body">Body</button>
+            <button class="tab" data-tab="tests">Tests <span class="count" id="testsCount">0</span></button>
           </div>
           <div class="tab-content">
             <div class="tab-panel active" data-panel="params">
@@ -409,6 +531,20 @@
               </div>
               <div id="bodyEditorWrap" style="height:100%; min-height:0"></div>
             </div>
+
+
+            <div class="tab-panel" data-panel="tests">
+              <div class="body-toolbar">
+                <strong style="font-size:12px">Response assertions</strong>
+                <span class="hint">Evaluated after every send and during scenarios</span>
+                <span class="spacer"></span>
+                <button id="addAssertionBtn" class="btn small">＋ Add assertion</button>
+              </div>
+              <div style="padding:10px 12px">
+                <div class="assertion-row" style="color:var(--faint);font-size:10px;text-transform:uppercase"><span></span><span>Source</span><span>Rule</span><span>Path / header</span><span>Expected</span><span></span></div>
+                <div id="assertionRows" class="assertion-list" style="margin-top:6px"></div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -422,6 +558,7 @@
               <button class="tab" data-response-tab="headers">Headers</button>
               <button class="tab" data-response-tab="preview">Preview</button>
               <button class="tab" data-response-tab="code">Code</button>
+              <button class="tab" data-response-tab="assertions">Assertions <span class="count" id="assertionResultCount">0</span></button>
             </div>
             <div class="response-meta" id="responseMeta">
               <span>Status <strong>—</strong></span><span>Time <strong>—</strong></span><span>Size <strong>—</strong></span>
@@ -433,15 +570,128 @@
             <div class="response-panel" data-response-panel="headers"></div>
             <div class="response-panel" data-response-panel="preview"></div>
             <div class="response-panel" data-response-panel="code"></div>
+            <div class="response-panel" data-response-panel="assertions"></div>
           </div>
         </section>
       </main>
     </div>
 
+    <section class="workspace-panel feature-workspace" data-workspace="webhooks" id="webhooksWorkspace">
+      <aside class="feature-sidebar">
+        <h2 class="feature-title">Webhook Inbox</h2>
+        <p class="feature-subtitle">Create a temporary public channel, inspect deliveries, verify signatures, replay events, and forward them to another endpoint.</p>
+        <div class="section-card">
+          <div class="section-card-head"><h3>RELAY Gateway</h3><span class="toolbar-spacer"></span><span id="gatewayStatusPill" class="status-pill">Not configured</span></div>
+          <div class="section-card-body stack">
+            <div><label class="mini-label">Worker base URL</label><input id="gatewayBaseUrl" class="input" style="width:100%" placeholder="https://relay-gateway.example.workers.dev" /></div>
+            <div class="row"><button id="gatewayDiagnoseBtn" class="btn small grow">Run diagnostics</button><button id="createChannelBtn" class="btn small primary grow">Create channel</button></div>
+            <label class="toggle-line"><span>Use gateway proxy for API requests</span><input id="gatewayProxyToggle" type="checkbox" class="check" /></label>
+            <div id="gatewayDiagnostic" class="gateway-banner">The companion Cloudflare Worker supplies public webhook URLs, CORS-safe proxying, event storage, and mock endpoints.</div>
+          </div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-head"><h3>Active channel</h3><span class="toolbar-spacer"></span><button id="copyHookUrlBtn" class="btn small">Copy URL</button></div>
+          <div class="section-card-body stack">
+            <div id="hookEndpoint" class="endpoint-box">Create a channel to receive webhook events.</div>
+            <div class="row wrap"><span id="channelExpiry" class="status-pill">No channel</span><label class="toggle-line grow"><span>Auto poll</span><input id="autoPollToggle" type="checkbox" class="check" /></label><button id="pollEventsBtn" class="btn small">Refresh</button></div>
+          </div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-head"><h3>Events</h3><span class="toolbar-spacer"></span><button id="clearLocalEventsBtn" class="btn small">Clear local</button></div>
+          <div class="section-card-body"><div id="webhookEventList" class="event-list"></div></div>
+        </div>
+      </aside>
+      <main class="feature-main" id="webhookDetail"></main>
+    </section>
+
+    <section class="workspace-panel feature-workspace" data-workspace="scenarios" id="scenariosWorkspace">
+      <aside class="feature-sidebar">
+        <h2 class="feature-title">Scenario Runner</h2>
+        <p class="feature-subtitle">Chain saved requests, delays, and webhook expectations into repeatable end-to-end tests.</p>
+        <div class="row" style="margin-bottom:10px"><button id="newScenarioBtn" class="btn primary grow">＋ New scenario</button></div>
+        <div id="scenarioList" class="entity-list"></div>
+      </aside>
+      <main class="feature-main" id="scenarioEditor"></main>
+    </section>
+
+    <section class="workspace-panel feature-workspace" data-workspace="fixtures" id="fixturesWorkspace">
+      <aside class="feature-sidebar">
+        <h2 class="feature-title">Fixtures & Mocks</h2>
+        <p class="feature-subtitle">Save known responses or webhook payloads, compare future runs, and publish configurable mock endpoints through the gateway.</p>
+        <div class="row" style="margin-bottom:10px"><button id="newFixtureBtn" class="btn primary grow">＋ New fixture</button></div>
+        <div id="fixtureList" class="entity-list"></div>
+      </aside>
+      <main class="feature-main" id="fixtureEditor"></main>
+    </section>
+
+
+    <section class="workspace-panel feature-workspace" data-workspace="reports" id="reportsWorkspace">
+      <aside class="feature-sidebar">
+        <h2 class="feature-title">Reports & Evidence</h2>
+        <p class="feature-subtitle">Turn requests, webhook deliveries, and scenario runs into redacted evidence that can be reviewed, signed, printed, or archived.</p>
+        <div class="section-card">
+          <div class="section-card-head"><h3>Report scope</h3></div>
+          <div class="section-card-body stack">
+            <div><label class="mini-label">Report type</label><select id="reportTypeSelect" class="select report-setting" data-report-setting="type" style="width:100%"><option value="project">Project test summary</option><option value="request">Request evidence</option><option value="scenario">Scenario run report</option><option value="webhook">Webhook delivery report</option></select></div>
+            <div><label class="mini-label">Subject</label><select id="reportSubjectSelect" class="select report-setting" data-report-setting="subjectId" style="width:100%"></select></div>
+          </div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-head"><h3>Review & sign-off</h3></div>
+          <div class="section-card-body stack">
+            <div><label class="mini-label">Prepared by</label><input id="reportAuthorInput" class="input report-setting" data-report-setting="author" style="width:100%"></div>
+            <div><label class="mini-label">Reviewed by</label><input id="reportReviewerInput" class="input report-setting" data-report-setting="reviewer" style="width:100%"></div>
+            <div><label class="mini-label">Disposition</label><select id="reportDispositionSelect" class="select report-setting" data-report-setting="disposition" style="width:100%"><option>Draft</option><option>Passed</option><option>Failed</option><option>Accepted with conditions</option><option>Approved</option></select></div>
+            <div><label class="mini-label">Notes / unresolved items</label><textarea id="reportNotesInput" class="code-area report-setting" data-report-setting="notes" style="min-height:105px"></textarea></div>
+          </div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-head"><h3>Evidence controls</h3></div>
+          <div class="section-card-body stack">
+            <label class="toggle-line"><span>Include bodies</span><input id="reportBodiesToggle" type="checkbox" class="check report-setting" data-report-setting="includeBodies"></label>
+            <label class="toggle-line"><span>Include headers</span><input id="reportHeadersToggle" type="checkbox" class="check report-setting" data-report-setting="includeHeaders"></label>
+            <label class="toggle-line"><span>Include recent history</span><input id="reportHistoryToggle" type="checkbox" class="check report-setting" data-report-setting="includeHistory"></label>
+          </div>
+        </div>
+        <button id="generateReportBtn" class="btn primary" style="width:100%;margin-bottom:8px">Generate / refresh report</button>
+        <div class="report-actions"><button id="exportReportHtmlBtn" class="btn">Export HTML</button><button id="exportReportMarkdownBtn" class="btn">Export Markdown</button><button id="printReportBtn" class="btn">Print / Save PDF</button><button id="exportEvidenceBtn" class="btn">Evidence JSON</button></div>
+      </aside>
+      <main class="feature-main"><div id="reportPreview" class="report-preview empty"><div><div class="large-icon">▤</div><strong>Generate a report to preview the evidence package</strong><p>Secrets and sensitive headers are redacted automatically.</p></div></div></main>
+    </section>
+
+    <section class="workspace-panel feature-workspace" data-workspace="interchange" id="interchangeWorkspace">
+      <aside class="feature-sidebar">
+        <h2 class="feature-title">Interchange</h2>
+        <p class="feature-subtitle">Bring existing API definitions and captured traffic into RELAY, or move this project into other tools.</p>
+        <div class="section-card">
+          <div class="section-card-head"><h3>Import source</h3></div>
+          <div class="section-card-body stack">
+            <div><label class="mini-label">Format</label><select id="interchangeFormat" class="select" style="width:100%"><option value="auto">Detect automatically</option><option value="curl">cURL command</option><option value="postman">Postman collection v2</option><option value="openapi">OpenAPI / Swagger</option><option value="har">HAR traffic archive</option></select></div>
+            <div class="import-drop"><label class="mini-label">Choose a file</label><input id="interchangeFile" type="file" accept=".json,.har,.yaml,.yml,.txt,application/json,text/yaml,text/plain" class="input" style="width:100%"></div>
+            <div><label class="mini-label">Or paste content</label><textarea id="interchangeText" class="code-area" style="min-height:180px" placeholder="curl https://api.example.com/status\n\n—or paste Postman, OpenAPI, Swagger, or HAR content"></textarea></div>
+            <label class="toggle-line"><span>Create import folders</span><input id="interchangeFoldersToggle" type="checkbox" class="check" checked></label>
+            <button id="runInterchangeImportBtn" class="btn primary">Import into project</button>
+            <button id="clearInterchangeBtn" class="btn">Clear source</button>
+          </div>
+        </div>
+        <div id="interchangeSummary" class="import-summary"><strong>No import has run.</strong><br>RELAY will preserve variables where possible and report anything it could not translate.</div>
+      </aside>
+      <main class="feature-main">
+        <div class="interchange-grid">
+          <div class="section-card"><div class="section-card-head"><h3>Postman collection</h3></div><div class="section-card-body stack"><p class="feature-subtitle">Export saved RELAY requests as a Postman Collection v2.1 file. Authentication secrets are blanked.</p><button id="exportPostmanBtn" class="btn primary">Export Postman collection</button></div></div>
+          <div class="section-card"><div class="section-card-head"><h3>HAR traffic</h3></div><div class="section-card-body stack"><p class="feature-subtitle">Export locally retained request history as a HAR 1.2 archive for browser and proxy tools.</p><button id="exportHarBtn" class="btn primary">Export history as HAR</button></div></div>
+          <div class="section-card"><div class="section-card-head"><h3>Webhook → request</h3></div><div class="section-card-body stack"><p id="copyWebhookDescription" class="feature-subtitle">Select an event in the Webhooks workspace to convert it into a reusable request.</p><button id="copyWebhookAsRequestBtn" class="btn">Copy selected webhook as request</button></div></div>
+          <div class="section-card"><div class="section-card-head"><h3>OpenAPI request generation</h3></div><div class="section-card-body stack"><p class="feature-subtitle">OpenAPI 3.x and Swagger 2.0 JSON are imported with operations, parameters, examples, request bodies, tags, and server URLs. Common YAML layouts are also recognized.</p><div class="gateway-banner"><strong>Tip:</strong> JSON preserves the most detail. YAML import focuses on server and operation discovery without an external parser dependency.</div></div></div>
+        </div>
+        <div class="section-card" style="margin-top:12px"><div class="section-card-head"><h3>Supported interchange</h3></div><div class="section-card-body"><div class="support-list"><div class="support-item"><strong>cURL</strong><span>Method, URL, headers, Basic Auth, data, cookies, and common long/short flags.</span></div><div class="support-item"><strong>Postman v2</strong><span>Nested folders, requests, query values, headers, raw and URL-encoded bodies, auth, and collection variables.</span></div><div class="support-item"><strong>OpenAPI / Swagger</strong><span>Operations, tags, parameters, examples, JSON request bodies, servers, host, and base path.</span></div><div class="support-item"><strong>HAR 1.2</strong><span>Captured methods, URLs, headers, query strings, and posted body content.</span></div></div></div></div>
+      </main>
+    </section>
+
+
     <footer class="statusbar">
       <span><i id="networkDot" class="status-dot"></i><span id="networkStatus">Browser direct mode</span></span>
       <span id="activeRequestStatus">Unsaved request</span>
-      <span class="right">FI-1XX · RELAY v1.0.0</span>
+      <span class="right">FI-1XX · RELAY v1.7.0</span>
     </footer>
   </div>
 
@@ -510,6 +760,8 @@
   <div class="menu" id="projectMenu">
     <button data-project-action="export">Export project JSON</button>
     <button data-project-action="import">Import project JSON</button>
+    <button data-project-action="reports">Open reports</button>
+    <button data-project-action="interchange">Open interchange</button>
     <hr />
     <button data-project-action="load-demo">Restore demo project</button>
     <button data-project-action="clear-history">Clear history</button>
@@ -531,7 +783,7 @@
   (() => {
     'use strict';
 
-    const VERSION = '1.0.0';
+    const VERSION = '1.7.0';
     const STORAGE_KEY = 'relay-fi-v1';
     const HISTORY_LIMIT = 100;
     const uid = (prefix = 'id') => `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
@@ -546,7 +798,7 @@
         id: uid('req'), name, folderId, method: 'GET', url: '',
         params: [blankRow()], headers: [blankRow()],
         auth: { type: 'none', bearer: '', username: '', password: '', apiKeyName: '', apiKeyValue: '', apiKeyLocation: 'header' },
-        body: { mode: 'none', content: '' }, createdAt: nowISO(), updatedAt: nowISO()
+        body: { mode: 'none', content: '' }, assertions: [], createdAt: nowISO(), updatedAt: nowISO()
       };
     }
 
@@ -555,7 +807,11 @@
       Object.assign(getTodo, {
         id: 'req_demo_get', method: 'GET', url: '{{baseUrl}}/todos/1',
         params: [{ id: uid('row'), enabled: false, key: 'expand', value: 'user', description: 'Example disabled parameter' }],
-        headers: [{ id: uid('row'), enabled: true, key: 'Accept', value: 'application/json', description: 'Preferred response format' }]
+        headers: [{ id: uid('row'), enabled: true, key: 'Accept', value: 'application/json', description: 'Preferred response format' }],
+        assertions: [
+          { id: uid('assert'), enabled: true, type: 'status', operator: 'equals', path: '', expected: '200' },
+          { id: uid('assert'), enabled: true, type: 'jsonPath', operator: 'equals', path: '$.id', expected: '1' }
+        ]
       });
       const createPost = blankRequest('Create sample post', 'folder_examples');
       Object.assign(createPost, {
@@ -564,7 +820,7 @@
         body: { mode: 'json', content: '{\n  "title": "RELAY test",\n  "body": "A sample API request",\n  "userId": 1\n}' }
       });
       return {
-        schemaVersion: 1,
+        schemaVersion: 7,
         appVersion: VERSION,
         project: { id: uid('project'), name: 'RELAY Sample Project', createdAt: nowISO(), updatedAt: nowISO() },
         theme: 'dark',
@@ -582,9 +838,24 @@
         ],
         requests: [getTodo, createPost],
         history: [],
+        gateway: { baseUrl: '', useProxy: false, autoPoll: false, channel: null, diagnostic: null },
+        webhookEvents: [], webhookVerification: {}, selectedWebhookEventId: null,
+        webhookSettings: { algorithm: 'SHA-256', header: 'x-signature', secret: '', encoding: 'hex', prefix: 'sha256=', timestampHeader: '', toleranceSec: 300, forwardUrl: '' },
+        fixtures: [
+          { id: 'fixture_demo_ok', name: 'Healthy JSON response', type: 'response', method: 'GET', route: 'healthy', status: 200, contentType: 'application/json', headersText: '{\n  "X-Relay-Mock": "true"\n}', body: '{\n  "status": "ok",\n  "source": "RELAY mock"\n}', delayMs: 0, failureMode: 'none', enabled: true }
+        ],
+        activeFixtureId: 'fixture_demo_ok',
+        reports: { type: 'project', subjectId: '', author: '', reviewer: '', disposition: 'Draft', notes: '', includeBodies: true, includeHeaders: true, includeHistory: true, lastGeneratedAt: null },
+        interchange: { lastSummary: null },
+        scenarios: [
+          { id: 'scenario_demo', name: 'Request smoke test', steps: [
+            { id: uid('step'), type: 'request', requestId: 'req_demo_get', capturePath: '$.id', captureVar: 'todoId', continueOnFail: false }
+          ], runs: [] }
+        ],
+        activeScenarioId: 'scenario_demo',
         activeRequestId: 'req_demo_get',
         draft: clone(getTodo),
-        ui: { sideTab: 'collections', requestTab: 'params', responseTab: 'pretty', sidebarCollapsed: false, requestPanePercent: 46 }
+        ui: { workspace: 'requests', sideTab: 'collections', requestTab: 'params', responseTab: 'pretty', sidebarCollapsed: false, requestPanePercent: 46 }
       };
     }
 
@@ -595,6 +866,11 @@
     let saveTimer = null;
     let activeEnvironmentEditorId = state.activeEnvironmentId;
     let isSending = false;
+    let currentAssertionResults = [];
+    let webhookPollTimer = null;
+    let scenarioAbort = false;
+    let scenarioRunLog = [];
+    let currentReport = null;
 
     function loadState() {
       try {
@@ -620,6 +896,16 @@
       merged.requests = Array.isArray(input.requests) ? input.requests : base.requests;
       merged.environments = Array.isArray(input.environments) && input.environments.length ? input.environments : base.environments;
       merged.history = Array.isArray(input.history) ? input.history.slice(0, HISTORY_LIMIT) : [];
+      merged.gateway = { ...base.gateway, ...(input.gateway || {}) };
+      merged.webhookSettings = { ...base.webhookSettings, ...(input.webhookSettings || {}) };
+      merged.webhookEvents = Array.isArray(input.webhookEvents) ? input.webhookEvents.slice(0, 250) : [];
+      merged.webhookVerification = input.webhookVerification && typeof input.webhookVerification === 'object' ? input.webhookVerification : {};
+      merged.reports = { ...base.reports, ...(input.reports || {}) };
+      merged.interchange = { ...base.interchange, ...(input.interchange || {}) };
+      merged.fixtures = Array.isArray(input.fixtures) ? input.fixtures : base.fixtures;
+      merged.scenarios = Array.isArray(input.scenarios) ? input.scenarios : base.scenarios;
+      if (!merged.fixtures.some(f => f.id === merged.activeFixtureId)) merged.activeFixtureId = merged.fixtures[0]?.id || null;
+      if (!merged.scenarios.some(s => s.id === merged.activeScenarioId)) merged.activeScenarioId = merged.scenarios[0]?.id || null;
       if (!merged.environments.some(e => e.id === merged.activeEnvironmentId)) merged.activeEnvironmentId = merged.environments[0].id;
       if (!merged.requests.some(r => r.id === merged.activeRequestId)) merged.activeRequestId = merged.requests[0]?.id || null;
       const active = merged.requests.find(r => r.id === merged.activeRequestId);
@@ -634,6 +920,7 @@
       out.body = { ...base.body, ...(req?.body || {}) };
       out.params = Array.isArray(req?.params) && req.params.length ? req.params : [blankRow()];
       out.headers = Array.isArray(req?.headers) && req.headers.length ? req.headers : [blankRow()];
+      out.assertions = Array.isArray(req?.assertions) ? req.assertions : [];
       return out;
     }
 
@@ -647,6 +934,7 @@
     function saveState() {
       try {
         state.project.updatedAt = nowISO();
+        state.schemaVersion = 7;
         state.appVersion = VERSION;
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
         $('#autosaveLed').className = 'led';
@@ -696,10 +984,11 @@
       return map;
     }
 
-    function resolveVariables(value, { maskSecrets = false } = {}) {
+    function resolveVariables(value, { maskSecrets = false, extraVariables = {} } = {}) {
       const env = getActiveEnvironment();
       const variables = new Map((env?.variables || []).filter(v => v.enabled && v.key).map(v => [v.key, v]));
       return String(value ?? '').replace(/{{\s*([^{}]+?)\s*}}/g, (whole, key) => {
+        if (Object.prototype.hasOwnProperty.call(extraVariables, key)) return extraVariables[key] ?? '';
         const variable = variables.get(key);
         if (!variable) return whole;
         if (maskSecrets && variable.secret && variable.value) return '••••••••';
@@ -707,9 +996,10 @@
       });
     }
 
-    function unresolvedVariables(value) {
+    function unresolvedVariables(value, extraVariables = {}) {
       const names = [];
-      String(value ?? '').replace(/{{\s*([^{}]+?)\s*}}/g, (_, key) => { if (!(key in environmentMap())) names.push(key); });
+      const map = environmentMap();
+      String(value ?? '').replace(/{{\s*([^{}]+?)\s*}}/g, (_, key) => { if (!(key in map) && !Object.prototype.hasOwnProperty.call(extraVariables, key)) names.push(key); });
       return [...new Set(names)];
     }
 
@@ -745,6 +1035,13 @@
       renderActiveStatus();
       applyPaneSize();
       renderEmptyResponse();
+      switchWorkspace(state.ui.workspace || 'requests', false);
+      renderWebhookWorkspace();
+      renderScenarioWorkspace();
+      renderFixtureWorkspace();
+      renderReportWorkspace();
+      renderInterchangeWorkspace();
+      configureWebhookPolling();
     }
 
     function renderEnvironmentsSelect() {
@@ -827,12 +1124,14 @@
       renderAuthFields();
       renderBodyEditor();
       renderCounts();
+      renderAssertionsEditor();
       renderActiveStatus();
     }
 
     function renderCounts() {
       $('#paramsCount').textContent = state.draft.params.filter(r => r.enabled && r.key).length;
       $('#headersCount').textContent = state.draft.headers.filter(r => r.enabled && r.key).length;
+      $('#testsCount').textContent = (state.draft.assertions || []).filter(a => a.enabled).length;
     }
 
     function renderKVRows(kind, rows) {
@@ -905,62 +1204,53 @@
       $$('#responseTabs .tab').forEach(t => t.classList.toggle('active', t.dataset.responseTab === name));
       $$('.response-panel').forEach(p => p.classList.toggle('active', p.dataset.responsePanel === name));
       if (name === 'code') renderResponseCodePanel();
+      if (name === 'assertions') renderAssertionResults();
       scheduleSave();
     }
 
-    function buildRequest({ masked = false } = {}) {
-      const d = state.draft;
-      const missing = [d.url, ...d.params.map(r => r.value), ...d.headers.map(r => r.value), d.body.content].flatMap(unresolvedVariables);
+    function buildRequest({ masked = false, extraVariables = {} } = {}) {
+      return buildRequestFrom(state.draft, { masked, extraVariables });
+    }
+
+    function buildRequestFrom(d, { masked = false, extraVariables = {} } = {}) {
+      const missing = [d.url, ...(d.params || []).map(r => r.value), ...(d.headers || []).map(r => r.value), d.body?.content || ''].flatMap(v => unresolvedVariables(v, extraVariables));
       if (missing.length) throw new Error(`Undefined environment variable${missing.length > 1 ? 's' : ''}: ${[...new Set(missing)].join(', ')}`);
-      let resolvedUrl = resolveVariables(d.url, { maskSecrets: masked }).trim();
+      let resolvedUrl = resolveVariables(d.url, { maskSecrets: masked, extraVariables }).trim();
       if (!resolvedUrl) throw new Error('Enter a request URL.');
       let url;
       try { url = new URL(resolvedUrl); }
       catch { throw new Error('The request URL is not valid. Include http:// or https://.'); }
-
-      for (const row of d.params) {
-        if (row.enabled && row.key) url.searchParams.append(resolveVariables(row.key, { maskSecrets: masked }), resolveVariables(row.value, { maskSecrets: masked }));
-      }
+      for (const row of d.params || []) if (row.enabled && row.key) url.searchParams.append(resolveVariables(row.key, { maskSecrets: masked, extraVariables }), resolveVariables(row.value, { maskSecrets: masked, extraVariables }));
       const headers = new Headers();
-      for (const row of d.headers) {
-        if (row.enabled && row.key) headers.set(resolveVariables(row.key, { maskSecrets: masked }), resolveVariables(row.value, { maskSecrets: masked }));
-      }
-      if (d.auth.type === 'bearer' && d.auth.bearer) {
-        let token = resolveVariables(d.auth.bearer, { maskSecrets: masked });
-        if (masked && !/{{\s*[^{}]+\s*}}/.test(d.auth.bearer)) token = '••••••••';
+      for (const row of d.headers || []) if (row.enabled && row.key) headers.set(resolveVariables(row.key, { maskSecrets: masked, extraVariables }), resolveVariables(row.value, { maskSecrets: masked, extraVariables }));
+      const auth = d.auth || {};
+      if (auth.type === 'bearer' && auth.bearer) {
+        let token = resolveVariables(auth.bearer, { maskSecrets: masked, extraVariables });
+        if (masked && !/{{\s*[^{}]+\s*}}/.test(auth.bearer)) token = '••••••••';
         headers.set('Authorization', `Bearer ${token}`);
       }
-      if (d.auth.type === 'basic') {
-        const username = resolveVariables(d.auth.username, { maskSecrets: masked });
-        const password = resolveVariables(d.auth.password, { maskSecrets: masked });
+      if (auth.type === 'basic') {
+        const username = resolveVariables(auth.username, { maskSecrets: masked, extraVariables });
+        const password = resolveVariables(auth.password, { maskSecrets: masked, extraVariables });
         if (username || password) headers.set('Authorization', `Basic ${masked ? '••••••••' : btoa(unescape(encodeURIComponent(`${username}:${password}`)))}`);
       }
-      if (d.auth.type === 'apikey' && d.auth.apiKeyName) {
-        const key = resolveVariables(d.auth.apiKeyName, { maskSecrets: masked });
-        let value = resolveVariables(d.auth.apiKeyValue, { maskSecrets: masked });
-        if (masked && d.auth.apiKeyValue && !/{{\s*[^{}]+\s*}}/.test(d.auth.apiKeyValue)) value = '••••••••';
-        if (d.auth.apiKeyLocation === 'query') url.searchParams.set(key, value);
-        else headers.set(key, value);
+      if (auth.type === 'apikey' && auth.apiKeyName) {
+        const key = resolveVariables(auth.apiKeyName, { maskSecrets: masked, extraVariables });
+        let value = resolveVariables(auth.apiKeyValue, { maskSecrets: masked, extraVariables });
+        if (masked && auth.apiKeyValue && !/{{\s*[^{}]+\s*}}/.test(auth.apiKeyValue)) value = '••••••••';
+        if (auth.apiKeyLocation === 'query') url.searchParams.set(key, value); else headers.set(key, value);
       }
-
       let body;
-      if (!['GET', 'HEAD'].includes(d.method) && d.body.mode !== 'none') {
-        const content = resolveVariables(d.body.content, { maskSecrets: masked });
-        if (d.body.mode === 'json') {
-          if (content.trim()) {
-            try { JSON.parse(content); } catch (error) { throw new Error(`Request body contains invalid JSON: ${error.message}`); }
-          }
-          body = content;
-          if (!headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
-        } else if (d.body.mode === 'urlencoded') {
-          body = content;
-          if (!headers.has('Content-Type')) headers.set('Content-Type', 'application/x-www-form-urlencoded');
-        } else {
-          body = content;
-          if (!headers.has('Content-Type')) headers.set('Content-Type', 'text/plain;charset=UTF-8');
-        }
+      const bodyDef = d.body || { mode:'none', content:'' };
+      if (!['GET','HEAD'].includes(d.method) && bodyDef.mode !== 'none') {
+        const content = resolveVariables(bodyDef.content, { maskSecrets: masked, extraVariables });
+        if (bodyDef.mode === 'json') {
+          if (content.trim()) { try { JSON.parse(content); } catch (error) { throw new Error(`Request body contains invalid JSON: ${error.message}`); } }
+          body = content; if (!headers.has('Content-Type')) headers.set('Content-Type','application/json');
+        } else if (bodyDef.mode === 'urlencoded') { body = content; if (!headers.has('Content-Type')) headers.set('Content-Type','application/x-www-form-urlencoded'); }
+        else { body = content; if (!headers.has('Content-Type')) headers.set('Content-Type','text/plain;charset=UTF-8'); }
       }
-      return { method: d.method, url: url.toString(), headers, body };
+      return { method:d.method, url:url.toString(), headers, body };
     }
 
     async function sendRequest() {
@@ -979,32 +1269,13 @@
       renderLoadingResponse();
 
       try {
-        const response = await fetch(request.url, {
-          method: request.method,
-          headers: request.headers,
-          body: request.body,
-          signal: controller.signal,
-          redirect: 'follow',
-          cache: 'no-store',
-          credentials: 'omit'
-        });
-        const durationMs = Math.round(performance.now() - started);
-        const raw = request.method === 'HEAD' ? '' : await response.text();
-        const headers = [...response.headers.entries()];
-        const contentType = response.headers.get('content-type') || '';
-        let json = null;
-        if (contentType.includes('json') || /^[\s\n]*[\[{]/.test(raw)) {
-          try { json = JSON.parse(raw); } catch { json = null; }
-        }
-        currentResponse = {
-          ok: response.ok, status: response.status, statusText: response.statusText,
-          url: response.url, redirected: response.redirected, type: response.type,
-          durationMs, raw, json, headers, contentType, size: byteSize(raw), timestamp: nowISO(), request: serializeBuiltRequest(request)
-        };
+        currentResponse = await performBuiltRequest(request, controller.signal);
+        currentResponse.request = serializeBuiltRequest(request);
+        currentAssertionResults = evaluateAssertions(state.draft.assertions || [], currentResponse);
         addHistory({ request, response: currentResponse });
         renderResponse();
         $('#networkDot').classList.add('online');
-        toast(`Response received: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+        toast(`Response received: ${currentResponse.status} ${currentResponse.statusText}`, currentResponse.ok ? 'success' : 'error');
       } catch (error) {
         const durationMs = Math.round(performance.now() - started);
         const message = error.name === 'AbortError' ? 'Request timed out after 30 seconds.' : error.message;
@@ -1029,7 +1300,7 @@
       state.history.unshift({
         id: uid('hist'), timestamp: nowISO(), method: request.method, url: request.url,
         status: response?.status ?? null, statusText: response?.statusText ?? '', durationMs: response?.durationMs ?? durationMs ?? 0,
-        size: response?.size ?? 0, error, requestDraft: clone(state.draft), response: response ? {
+        size: response?.size ?? 0, error, requestDraft: sanitizeRequestDraft(state.draft), response: response ? {
           status: response.status, statusText: response.statusText, durationMs: response.durationMs, raw: response.raw.slice(0, 200000),
           headers: response.headers, contentType: response.contentType, size: response.size, url: response.url
         } : null
@@ -1063,7 +1334,7 @@
       const html = `<div class="error-card"><h3>${likelyCors ? 'The browser blocked or could not reach this request' : 'Request failed'}</h3>
         <p><code>${escapeHtml(message)}</code></p>
         <p>Target: <code>${escapeHtml(url)}</code></p>
-        ${likelyCors ? '<p>The API may not permit browser requests through CORS. RELAY v1.1 will add an optional Cloudflare Worker gateway for CORS-safe testing and incoming webhooks.</p>' : ''}
+        ${likelyCors ? '<p>The API may not permit browser requests through CORS. Enable the RELAY Gateway proxy in the Webhooks workspace to test APIs that do not permit browser requests through CORS.</p>' : ''}
       </div>`;
       $$('.response-panel').forEach(panel => panel.innerHTML = html);
       selectResponseTab('pretty');
@@ -1080,6 +1351,7 @@
       $('[data-response-panel="headers"]').innerHTML = r.headers.length ? `<table class="headers-table"><tbody>${r.headers.map(([k,v]) => `<tr><th>${escapeHtml(k)}</th><td>${escapeHtml(v)}</td></tr>`).join('')}</tbody></table>` : '<div class="empty-response">No response headers were exposed to the browser.</div>';
       renderPreviewPanel();
       renderResponseCodePanel();
+      renderAssertionResults();
     }
 
     function syntaxHighlight(value) {
@@ -1317,15 +1589,15 @@
       const secretCount = exportState.environments.flatMap(e => e.variables).filter(v => v.secret && v.value).length;
       if (secretCount && !confirm(`This project contains ${secretCount} secret value${secretCount === 1 ? '' : 's'}.\n\nFor safety, secret values will be redacted from the export. Continue?`)) return;
       exportState.environments.forEach(env => env.variables.forEach(v => { if (v.secret) v.value = ''; }));
-      const redactRequestSecrets = request => {
-        if (!request?.auth) return;
-        request.auth.bearer = '';
-        request.auth.password = '';
-        request.auth.apiKeyValue = '';
-      };
-      exportState.requests.forEach(redactRequestSecrets);
-      redactRequestSecrets(exportState.draft);
-      exportState.history.forEach(entry => redactRequestSecrets(entry.requestDraft));
+      exportState.requests = exportState.requests.map(sanitizeRequestDraft);
+      exportState.draft = sanitizeRequestDraft(exportState.draft);
+      exportState.history = exportState.history.map(entry => ({ ...entry, requestDraft: sanitizeRequestDraft(entry.requestDraft), response: entry.response ? { ...entry.response, headers: redactHeaders(entry.response.headers || []), raw: redactedValue(entry.response.raw || '') } : null }));
+      exportState.webhookEvents = (exportState.webhookEvents || []).map(event => ({ ...event, headers: redactHeaders(event.headers || []), body: redactedValue(event.body || '') }));
+      exportState.fixtures = (exportState.fixtures || []).map(fixture => { const out = { ...fixture, body: redactedValue(fixture.body || '') }; try { const headers = JSON.parse(fixture.headersText || '{}'); out.headersText = JSON.stringify(Object.fromEntries(Object.entries(headers).map(([k,v]) => [k, sensitiveHeaderName(k) ? '[REDACTED]' : redactedValue(v)])), null, 2); } catch { out.headersText = '{}'; } return out; });
+      if (exportState.gateway?.channel) exportState.gateway.channel.token = '';
+      if (exportState.webhookSettings) exportState.webhookSettings.secret = '';
+      if (exportState.reports) exportState.reports.notes = redactedValue(exportState.reports.notes || '');
+      if (exportState.gateway) exportState.gateway.diagnostic = null;
       const blob = new Blob([JSON.stringify(exportState, null, 2)], { type: 'application/json' });
       downloadBlob(blob, `${safeFilename(state.project.name)}-relay-project.json`);
       toast('Project exported with secrets redacted.', 'success');
@@ -1370,7 +1642,7 @@
     function updateNetworkStatus() {
       const online = navigator.onLine;
       $('#networkDot').classList.toggle('online', online);
-      $('#networkStatus').textContent = online ? 'Browser direct mode' : 'Browser offline';
+      $('#networkStatus').textContent = !online ? 'Browser offline' : state.gateway.useProxy ? 'Gateway proxy mode' : 'Browser direct mode';
     }
 
     function applyPaneSize() {
@@ -1398,6 +1670,297 @@
         const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); toast(message, 'success');
       });
     }
+
+
+    function switchWorkspace(name, persist = true) {
+      const valid = ['requests','webhooks','scenarios','fixtures','reports','interchange'];
+      if (!valid.includes(name)) name = 'requests';
+      state.ui.workspace = name;
+      $$('[data-workspace]').forEach(el => el.classList.toggle('active', el.dataset.workspace === name));
+      $$('[data-workspace-tab]').forEach(el => el.classList.toggle('active', el.dataset.workspaceTab === name));
+      $('#sidebarToggle').style.visibility = name === 'requests' ? '' : 'hidden';
+      if (persist) scheduleSave();
+      if (name === 'webhooks') renderWebhookWorkspace();
+      if (name === 'scenarios') renderScenarioWorkspace();
+      if (name === 'fixtures') renderFixtureWorkspace();
+      if (name === 'reports') renderReportWorkspace();
+      if (name === 'interchange') renderInterchangeWorkspace();
+    }
+
+    function blankAssertion() { return { id:uid('assert'), enabled:true, type:'status', operator:'equals', path:'', expected:'200' }; }
+    function assertionTypeOptions(selected) {
+      return [['status','Status'],['responseTime','Response time (ms)'],['header','Header'],['jsonPath','JSON path'],['bodyContains','Body text'],['matchesFixture','Matches fixture']].map(([v,l]) => `<option value="${v}" ${v===selected?'selected':''}>${l}</option>`).join('');
+    }
+    function assertionOperatorOptions(selected) {
+      return [['equals','equals'],['notEquals','does not equal'],['contains','contains'],['exists','exists'],['lessThan','is below'],['greaterThan','is above']].map(([v,l]) => `<option value="${v}" ${v===selected?'selected':''}>${l}</option>`).join('');
+    }
+    function renderAssertionsEditor() {
+      const rows = state.draft.assertions || (state.draft.assertions=[]);
+      const el = $('#assertionRows'); if (!el) return;
+      if (!rows.length) { el.innerHTML = '<div class="body-none" style="min-height:130px"><div><strong>No assertions yet</strong><div style="color:var(--muted);margin-top:5px">Add checks for status, time, headers, JSON values, body text, or a saved fixture.</div></div></div>'; return; }
+      el.innerHTML = rows.map(a => `<div class="assertion-row" data-assertion-id="${escapeHtml(a.id)}">
+        <input type="checkbox" class="check assert-enabled" ${a.enabled?'checked':''} />
+        <select class="select assert-type">${assertionTypeOptions(a.type)}</select>
+        <select class="select assert-operator">${assertionOperatorOptions(a.operator)}</select>
+        ${a.type==='matchesFixture' ? `<select class="select assert-path">${state.fixtures.filter(f=>f.type==='response').map(f=>`<option value="${escapeHtml(f.id)}" ${f.id===a.path?'selected':''}>${escapeHtml(f.name)}</option>`).join('')}</select>` : `<input class="input assert-path" value="${escapeHtml(a.path||'')}" placeholder="${a.type==='header'?'Content-Type':a.type==='jsonPath'?'$.data.id':'Optional'}" />`}
+        <input class="input assert-expected" value="${escapeHtml(a.expected||'')}" placeholder="Expected value" ${a.operator==='exists'||a.type==='matchesFixture'?'disabled':''} />
+        <button class="icon-btn small assert-delete">×</button>
+      </div>`).join('');
+    }
+    function jsonPathGet(obj, path) {
+      if (!path || path === '$') return obj;
+      const normalized = path.replace(/^\$\.?/,'').replace(/\[(\d+)\]/g,'.$1');
+      if (!normalized) return obj;
+      return normalized.split('.').filter(Boolean).reduce((acc,key) => acc == null ? undefined : acc[key], obj);
+    }
+    function valuesEqual(actual, expected) {
+      if (actual === undefined) return false;
+      if (typeof actual === 'object') { try { return JSON.stringify(actual) === JSON.stringify(JSON.parse(expected)); } catch { return JSON.stringify(actual) === expected; } }
+      if (typeof actual === 'boolean') return String(actual) === String(expected).toLowerCase();
+      if (typeof actual === 'number' && expected !== '') return actual === Number(expected);
+      return String(actual) === String(expected);
+    }
+    function compareAssertion(actual, operator, expected) {
+      if (operator === 'exists') return actual !== undefined && actual !== null;
+      if (operator === 'equals') return valuesEqual(actual, expected);
+      if (operator === 'notEquals') return !valuesEqual(actual, expected);
+      if (operator === 'contains') return String(actual ?? '').includes(String(expected));
+      if (operator === 'lessThan') return Number(actual) < Number(expected);
+      if (operator === 'greaterThan') return Number(actual) > Number(expected);
+      return false;
+    }
+    function evaluateAssertions(assertions, response) {
+      return (assertions||[]).filter(a=>a.enabled).map(a => {
+        let actual, detail='';
+        if (a.type==='status') actual=response.status;
+        if (a.type==='responseTime') actual=response.durationMs;
+        if (a.type==='header') actual=(response.headers||[]).find(([k])=>k.toLowerCase()===String(a.path).toLowerCase())?.[1];
+        if (a.type==='jsonPath') actual=jsonPathGet(response.json,a.path);
+        if (a.type==='bodyContains') actual=response.raw;
+        if (a.type==='matchesFixture') {
+          const fixture=state.fixtures.find(f=>f.id===a.path);
+          if (!fixture) return {...a,pass:false,actual:'Missing fixture',detail:'The selected baseline fixture no longer exists.'};
+          const statusOk=Number(fixture.status)===Number(response.status);
+          let bodyOk=false;
+          try { bodyOk=JSON.stringify(JSON.parse(fixture.body||''))===JSON.stringify(response.json); } catch { bodyOk=String(fixture.body||'')===String(response.raw||''); }
+          return {...a,pass:statusOk&&bodyOk,actual:`status ${response.status}; ${bodyOk?'body matches':'body differs'}`,detail:`Baseline: ${fixture.name}`};
+        }
+        const pass=compareAssertion(actual,a.operator,a.expected);
+        return {...a,pass,actual:actual===undefined?'undefined':typeof actual==='object'?JSON.stringify(actual):String(actual),detail};
+      });
+    }
+    function assertionLabel(a) {
+      const src={status:'Status',responseTime:'Response time',header:`Header ${a.path}`,jsonPath:`JSON ${a.path}`,bodyContains:'Response body',matchesFixture:'Fixture comparison'}[a.type]||a.type;
+      return `${src} ${a.operator==='exists'?'exists':a.operator+' '+(a.expected||'')}`;
+    }
+    function renderAssertionResults() {
+      const panel=$('[data-response-panel="assertions"]'); if(!panel)return;
+      $('#assertionResultCount').textContent=currentAssertionResults.filter(r=>!r.pass).length ? `${currentAssertionResults.filter(r=>!r.pass).length} fail` : currentAssertionResults.length;
+      if(!currentResponse || currentResponse.error){panel.innerHTML='<div class="empty-response">Send a valid request to evaluate assertions.</div>';return;}
+      if(!currentAssertionResults.length){panel.innerHTML='<div class="empty-response"><div><strong>No enabled assertions</strong><div style="margin-top:7px">Add tests in the request pane.</div></div></div>';return;}
+      const passed=currentAssertionResults.filter(r=>r.pass).length;
+      panel.innerHTML=`<div class="body-toolbar"><strong>${passed}/${currentAssertionResults.length} passed</strong><span class="spacer"></span><button class="btn small" id="saveResponseFixtureBtn">Save response as fixture</button></div><div style="padding:10px" class="assertion-list">${currentAssertionResults.map(r=>`<div class="assertion-result ${r.pass?'pass':'fail'}"><span>${r.pass?'✓':'×'}</span><div><strong>${escapeHtml(assertionLabel(r))}</strong><p>Received: ${escapeHtml(r.actual)}${r.detail?` · ${escapeHtml(r.detail)}`:''}</p></div></div>`).join('')}</div>`;
+    }
+    function sanitizeRequestDraft(draft) {
+      const out=clone(draft); if(out.auth){out.auth.bearer='';out.auth.password='';out.auth.apiKeyValue='';}
+      out.headers=(out.headers||[]).map(h=>/authorization|api[-_]?key|token|secret|cookie/i.test(h.key||'')?{...h,value:'[REDACTED]'}:h);
+      return out;
+    }
+    async function performBuiltRequest(request, signal=null) {
+      const started=performance.now();
+      if(state.gateway.useProxy && state.gateway.channel?.id && state.gateway.channel?.token && state.gateway.baseUrl){
+        const response=await fetch(`${cleanBase(state.gateway.baseUrl)}/api/proxy/${encodeURIComponent(state.gateway.channel.id)}`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${state.gateway.channel.token}`},body:JSON.stringify(serializeBuiltRequest(request)),signal});
+        const payload=await response.json().catch(()=>null); if(!response.ok) throw new Error(payload?.error||`Gateway proxy failed with ${response.status}.`);
+        const raw=payload.body||''; let json=null; const contentType=(payload.headers||[]).find(([k])=>k.toLowerCase()==='content-type')?.[1]||'';
+        if(contentType.includes('json')||/^[\s\n]*[\[{]/.test(raw)){try{json=JSON.parse(raw)}catch{}}
+        return {ok:payload.status>=200&&payload.status<300,status:payload.status,statusText:payload.statusText||'',url:payload.url||request.url,redirected:!!payload.redirected,type:'gateway',durationMs:payload.durationMs??Math.round(performance.now()-started),raw,json,headers:payload.headers||[],contentType,size:byteSize(raw),timestamp:nowISO()};
+      }
+      const response=await fetch(request.url,{method:request.method,headers:request.headers,body:request.body,signal,redirect:'follow',cache:'no-store',credentials:'omit'});
+      const raw=request.method==='HEAD'?'':await response.text(); const headers=[...response.headers.entries()]; const contentType=response.headers.get('content-type')||''; let json=null;
+      if(contentType.includes('json')||/^[\s\n]*[\[{]/.test(raw)){try{json=JSON.parse(raw)}catch{}}
+      return {ok:response.ok,status:response.status,statusText:response.statusText,url:response.url,redirected:response.redirected,type:response.type,durationMs:Math.round(performance.now()-started),raw,json,headers,contentType,size:byteSize(raw),timestamp:nowISO()};
+    }
+
+    function cleanBase(v){return String(v||'').trim().replace(/\/+$/,'');}
+    function gatewayHeaders(){return {'Content-Type':'application/json','Authorization':`Bearer ${state.gateway.channel?.token||''}`};}
+    async function diagnoseGateway(){
+      const base=cleanBase($('#gatewayBaseUrl').value); if(!base){toast('Enter the Worker base URL.','error');return;}
+      state.gateway.baseUrl=base; $('#gatewayDiagnostic').textContent='Checking gateway…';
+      try{const started=performance.now();const r=await fetch(`${base}/api/health`,{cache:'no-store'});const data=await r.json();if(!r.ok)throw new Error(data.error||`HTTP ${r.status}`);state.gateway.diagnostic={ok:true,at:nowISO(),latency:Math.round(performance.now()-started),version:data.version};toast('Gateway is reachable.','success');}
+      catch(error){state.gateway.diagnostic={ok:false,at:nowISO(),error:error.message};toast(`Gateway diagnostic failed: ${error.message}`,'error');}
+      scheduleSave();renderWebhookWorkspace();
+    }
+    async function createGatewayChannel(){
+      const base=cleanBase($('#gatewayBaseUrl').value); if(!base){toast('Enter the Worker base URL.','error');return;}
+      state.gateway.baseUrl=base;
+      try{const r=await fetch(`${base}/api/channels`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ttlHours:24})});const data=await r.json();if(!r.ok)throw new Error(data.error||`HTTP ${r.status}`);state.gateway.channel=data;state.webhookEvents=[];state.selectedWebhookEventId=null;saveState();renderWebhookWorkspace();configureWebhookPolling();toast('Webhook channel created.','success');}
+      catch(error){toast(`Could not create channel: ${error.message}`,'error');}
+    }
+    async function pollWebhookEvents({silent=false}={}){
+      const c=state.gateway.channel,base=cleanBase(state.gateway.baseUrl);if(!c?.id||!c?.token||!base){if(!silent)toast('Create a gateway channel first.','error');return[];}
+      try{const r=await fetch(`${base}/api/channels/${encodeURIComponent(c.id)}/events`,{headers:{Authorization:`Bearer ${c.token}`},cache:'no-store'});const data=await r.json();if(!r.ok)throw new Error(data.error||`HTTP ${r.status}`);const byId=new Map(state.webhookEvents.map(e=>[e.id,e]));(data.events||[]).forEach(e=>byId.set(e.id,e));state.webhookEvents=[...byId.values()].sort((a,b)=>new Date(b.receivedAt)-new Date(a.receivedAt)).slice(0,250);if(!state.selectedWebhookEventId&&state.webhookEvents[0])state.selectedWebhookEventId=state.webhookEvents[0].id;scheduleSave();renderWebhookWorkspace();return data.events||[];}
+      catch(error){if(!silent)toast(`Webhook refresh failed: ${error.message}`,'error');return[];}
+    }
+    function configureWebhookPolling(){clearInterval(webhookPollTimer);webhookPollTimer=null;if(state.gateway.autoPoll&&state.gateway.channel?.id){webhookPollTimer=setInterval(()=>pollWebhookEvents({silent:true}),3000);}}
+    function headerValue(event,name){const h=event?.headers||[];return h.find(([k])=>k.toLowerCase()===String(name||'').toLowerCase())?.[1]||'';}
+    function bytesToHex(bytes){return [...new Uint8Array(bytes)].map(b=>b.toString(16).padStart(2,'0')).join('');}
+    function bytesToBase64(bytes){let s='';for(const b of new Uint8Array(bytes))s+=String.fromCharCode(b);return btoa(s);}
+    async function verifyWebhookEvent(event){
+      const s=state.webhookSettings;const supplied=headerValue(event,s.header);let result={ok:false,message:''};
+      if(!s.secret){result.message='Enter a signing secret.';}else if(!supplied){result.message=`Header ${s.header} was not present.`;}else{
+        try{const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(s.secret),{name:'HMAC',hash:s.algorithm},false,['sign']);const signed=await crypto.subtle.sign('HMAC',key,new TextEncoder().encode(event.body||''));const digest=s.encoding==='base64'?bytesToBase64(signed):bytesToHex(signed);const expected=(s.prefix||'')+digest;const signatureOk=timingSafeEqual(expected.trim(),supplied.trim());let timeOk=true,timeMessage='';if(s.timestampHeader){const raw=headerValue(event,s.timestampHeader);const ts=Number(raw);if(!raw||!Number.isFinite(ts)){timeOk=false;timeMessage=' Timestamp header missing or invalid.';}else{const age=Math.abs(Date.now()/1000-ts);timeOk=age<=Number(s.toleranceSec||300);timeMessage=` Timestamp age ${Math.round(age)}s.`;}}const duplicates=state.webhookEvents.filter(e=>e.id!==event.id&&headerValue(e,s.header)===supplied).length;result={ok:signatureOk&&timeOk,message:`${signatureOk?'Signature matches.':'Signature does not match.'}${timeMessage}${duplicates?` Duplicate signature seen ${duplicates} time(s).`:''}`,duplicate:duplicates>0};}
+        catch(error){result.message=error.message;}
+      }
+      state.webhookVerification[event.id]=result;scheduleSave();renderWebhookWorkspace();return result;
+    }
+    function timingSafeEqual(a,b){if(a.length!==b.length)return false;let out=0;for(let i=0;i<a.length;i++)out|=a.charCodeAt(i)^b.charCodeAt(i);return out===0;}
+    async function replayWebhookEvent(event,target){const c=state.gateway.channel,base=cleanBase(state.gateway.baseUrl);if(!target){toast('Enter a forwarding URL.','error');return;}try{const r=await fetch(`${base}/api/channels/${encodeURIComponent(c.id)}/replay`,{method:'POST',headers:gatewayHeaders(),body:JSON.stringify({eventId:event.id,targetUrl:target})});const data=await r.json();if(!r.ok)throw new Error(data.error||`HTTP ${r.status}`);toast(`Event forwarded: ${data.status} ${data.statusText||''}`,'success');}catch(error){toast(`Replay failed: ${error.message}`,'error');}}
+    function renderWebhookWorkspace(){
+      const baseInput=$('#gatewayBaseUrl');if(!baseInput)return;baseInput.value=state.gateway.baseUrl||'';$('#gatewayProxyToggle').checked=!!state.gateway.useProxy;$('#autoPollToggle').checked=!!state.gateway.autoPoll;
+      const diag=state.gateway.diagnostic,pill=$('#gatewayStatusPill');pill.className=`status-pill ${diag?.ok?'ok':diag?'bad':''}`;pill.textContent=diag?.ok?'Gateway online':diag?'Diagnostic failed':'Not configured';
+      $('#gatewayDiagnostic').innerHTML=diag?.ok?`<strong>Gateway ${escapeHtml(diag.version||'')}</strong> responded in ${escapeHtml(diag.latency)} ms.`:diag?`<strong>Connection failed.</strong> ${escapeHtml(diag.error)}`:'The companion Cloudflare Worker supplies public webhook URLs, CORS-safe proxying, event storage, and mock endpoints.';
+      const c=state.gateway.channel;$('#hookEndpoint').textContent=c?.hookUrl||'Create a channel to receive webhook events.';$('#channelExpiry').textContent=c?.expiresAt?`Expires ${new Date(c.expiresAt).toLocaleString()}`:'No channel';
+      $('#webhookCount').textContent=state.webhookEvents.length;const list=$('#webhookEventList');list.innerHTML=state.webhookEvents.length?state.webhookEvents.map(e=>`<button class="event-item ${e.id===state.selectedWebhookEventId?'active':''}" data-webhook-event-id="${escapeHtml(e.id)}"><span class="method-tag method-${escapeHtml(e.method)}">${escapeHtml(e.method)}</span><span><strong>${escapeHtml(e.path||'/')}</strong><small>${escapeHtml(new Date(e.receivedAt).toLocaleString())} · ${formatBytes(byteSize(e.body||''))}</small></span><span>${state.webhookVerification[e.id]?.ok?'✓':''}</span></button>`).join(''):'<div class="side-empty">No deliveries yet.</div>';
+      const event=state.webhookEvents.find(e=>e.id===state.selectedWebhookEventId);const detail=$('#webhookDetail');if(!event){detail.innerHTML='<div class="empty-feature"><div><div class="large-icon">↘</div><strong>Waiting for a webhook delivery</strong><div style="margin-top:7px">Send an HTTP request to the active channel URL.</div></div></div>';return;}
+      const verify=state.webhookVerification[event.id];let pretty=event.body||'';try{pretty=JSON.stringify(JSON.parse(pretty),null,2)}catch{}
+      detail.innerHTML=`<div class="row wrap" style="margin-bottom:12px"><div><h2 class="feature-title">${escapeHtml(event.method)} ${escapeHtml(event.path||'/')}</h2><p class="feature-subtitle" style="margin:0">Received ${escapeHtml(new Date(event.receivedAt).toLocaleString())} from ${escapeHtml(event.sourceIp||'unknown source')}</p></div><span class="toolbar-spacer"></span><button class="btn" id="deleteRemoteEventBtn">Delete</button><button class="btn primary" id="verifySignatureBtn">Verify signature</button></div>
+      <div class="detail-grid"><div><div class="section-card"><div class="section-card-head"><h3>Payload</h3><span class="toolbar-spacer"></span><button class="btn small" id="copyEventBodyBtn">Copy</button><button class="btn small" id="saveWebhookFixtureBtn">Save fixture</button></div><div class="section-card-body"><pre>${escapeHtml(pretty)}</pre></div></div><div class="section-card"><div class="section-card-head"><h3>Headers & query</h3></div><div class="section-card-body"><table class="inspection-table"><tbody>${(event.headers||[]).map(([k,v])=>`<tr><th>${escapeHtml(k)}</th><td>${escapeHtml(v)}</td></tr>`).join('')}${Object.entries(event.query||{}).map(([k,v])=>`<tr><th>query: ${escapeHtml(k)}</th><td>${escapeHtml(v)}</td></tr>`).join('')}</tbody></table></div></div></div>
+      <div><div class="section-card"><div class="section-card-head"><h3>Signature verification</h3><span class="toolbar-spacer"></span>${verify?`<span class="status-pill ${verify.ok?'ok':'bad'}">${verify.ok?'Valid':'Invalid'}</span>`:''}</div><div class="section-card-body stack"><div><label class="mini-label">Signature header</label><input class="input webhook-setting" data-webhook-setting="header" value="${escapeHtml(state.webhookSettings.header)}" style="width:100%"></div><div><label class="mini-label">Signing secret</label><input type="password" class="input webhook-setting" data-webhook-setting="secret" value="${escapeHtml(state.webhookSettings.secret)}" style="width:100%"></div><div class="row"><select class="select webhook-setting grow" data-webhook-setting="algorithm"><option value="SHA-256" ${state.webhookSettings.algorithm==='SHA-256'?'selected':''}>HMAC SHA-256</option><option value="SHA-1" ${state.webhookSettings.algorithm==='SHA-1'?'selected':''}>HMAC SHA-1</option></select><select class="select webhook-setting grow" data-webhook-setting="encoding"><option value="hex" ${state.webhookSettings.encoding==='hex'?'selected':''}>Hex</option><option value="base64" ${state.webhookSettings.encoding==='base64'?'selected':''}>Base64</option></select></div><div><label class="mini-label">Prefix</label><input class="input webhook-setting" data-webhook-setting="prefix" value="${escapeHtml(state.webhookSettings.prefix)}" style="width:100%"></div><div class="row"><input class="input webhook-setting grow" data-webhook-setting="timestampHeader" value="${escapeHtml(state.webhookSettings.timestampHeader)}" placeholder="Optional timestamp header"><input type="number" class="input webhook-setting" data-webhook-setting="toleranceSec" value="${escapeHtml(state.webhookSettings.toleranceSec)}" style="width:95px" title="Tolerance seconds"></div>${verify?`<div class="gateway-banner">${escapeHtml(verify.message)}</div>`:''}</div></div>
+      <div class="section-card"><div class="section-card-head"><h3>Replay / forward</h3></div><div class="section-card-body stack"><input id="forwardUrlInput" class="input" value="${escapeHtml(state.webhookSettings.forwardUrl||'')}" placeholder="https://destination.example/webhook"><div class="row"><button id="replayEventBtn" class="btn primary grow">Forward event</button><button id="replayToHookBtn" class="btn grow">Replay to inbox</button></div></div></div></div></div>`;
+    }
+
+    function newScenario(){const s={id:uid('scenario'),name:`Scenario ${state.scenarios.length+1}`,steps:[],runs:[]};state.scenarios.push(s);state.activeScenarioId=s.id;saveState();renderScenarioWorkspace();}
+    function activeScenario(){return state.scenarios.find(s=>s.id===state.activeScenarioId);}
+    function renderScenarioWorkspace(){const list=$('#scenarioList');if(!list)return;list.innerHTML=state.scenarios.map(s=>`<button class="entity-item ${s.id===state.activeScenarioId?'active':''}" data-scenario-id="${escapeHtml(s.id)}"><span>▶</span><span><strong>${escapeHtml(s.name)}</strong><small>${s.steps.length} step${s.steps.length===1?'':'s'}</small></span><span>${s.runs?.[0]?.passed===true?'✓':s.runs?.[0]?.passed===false?'×':''}</span></button>`).join('')||'<div class="side-empty">No scenarios.</div>';const s=activeScenario(),ed=$('#scenarioEditor');if(!s){ed.innerHTML='<div class="empty-feature">Create a scenario to begin.</div>';return;}ed.innerHTML=`<div class="row wrap" style="margin-bottom:12px"><input id="scenarioNameInput" class="input feature-title grow" value="${escapeHtml(s.name)}"><button id="deleteScenarioBtn" class="btn">Delete</button><button id="stopScenarioBtn" class="btn" ${scenarioAbort?'':'disabled'}>Stop</button><button id="runScenarioBtn" class="btn primary">Run scenario</button></div><div class="detail-grid"><div><div class="section-card"><div class="section-card-head"><h3>Steps</h3><span class="toolbar-spacer"></span><button class="btn small" data-add-step="request">＋ Request</button><button class="btn small" data-add-step="waitWebhook">＋ Wait webhook</button><button class="btn small" data-add-step="delay">＋ Delay</button></div><div class="section-card-body"><div class="step-list">${s.steps.map((st,i)=>renderScenarioStep(st,i)).join('')||'<div class="side-empty">Add a request or webhook expectation.</div>'}</div></div></div></div><div><div class="section-card"><div class="section-card-head"><h3>Run log</h3><span class="toolbar-spacer"></span><button id="clearScenarioLogBtn" class="btn small">Clear</button></div><div class="section-card-body"><div id="scenarioRunLog" class="run-log">${scenarioRunLog.length?scenarioRunLog.map(l=>`<div class="log-line ${l.type}">${escapeHtml(l.text)}</div>`).join(''):'No run has started.'}</div></div></div></div></div>`;}
+    function renderScenarioStep(st,i){let body='';if(st.type==='request')body=`<div><label class="mini-label">Saved request</label><select class="select step-field" data-step-field="requestId">${state.requests.map(r=>`<option value="${escapeHtml(r.id)}" ${r.id===st.requestId?'selected':''}>${escapeHtml(r.name)}</option>`).join('')}</select></div><div><label class="mini-label">On failure</label><select class="select step-field" data-step-field="continueOnFail"><option value="false" ${!st.continueOnFail?'selected':''}>Stop scenario</option><option value="true" ${st.continueOnFail?'selected':''}>Continue</option></select></div><div><label class="mini-label">Capture JSON path</label><input class="input step-field" data-step-field="capturePath" value="${escapeHtml(st.capturePath||'')}" placeholder="$.data.id"></div><div><label class="mini-label">Save as variable</label><input class="input step-field" data-step-field="captureVar" value="${escapeHtml(st.captureVar||'')}" placeholder="recordId"></div>`;if(st.type==='waitWebhook')body=`<div><label class="mini-label">Match JSON path</label><input class="input step-field" data-step-field="matchPath" value="${escapeHtml(st.matchPath||'$.type')}"></div><div><label class="mini-label">Expected value</label><input class="input step-field" data-step-field="matchValue" value="${escapeHtml(st.matchValue||'')}"></div><div><label class="mini-label">Timeout seconds</label><input type="number" class="input step-field" data-step-field="timeoutSec" value="${escapeHtml(st.timeoutSec||30)}"></div><div><label class="mini-label">Capture path → variable</label><div class="row"><input class="input step-field grow" data-step-field="capturePath" value="${escapeHtml(st.capturePath||'')}" placeholder="$.id"><input class="input step-field grow" data-step-field="captureVar" value="${escapeHtml(st.captureVar||'')}" placeholder="eventId"></div></div>`;if(st.type==='delay')body=`<div><label class="mini-label">Delay milliseconds</label><input type="number" class="input step-field" data-step-field="delayMs" value="${escapeHtml(st.delayMs||1000)}"></div>`;return `<div class="step-card" data-step-id="${escapeHtml(st.id)}"><div class="step-head"><span class="status-pill">${i+1}</span><strong>${st.type==='waitWebhook'?'Wait for webhook':st.type==='delay'?'Delay':'Send request'}</strong><span class="toolbar-spacer"></span><button class="icon-btn small step-delete">×</button></div><div class="step-body">${body}</div></div>`;}
+    function addScenarioStep(type){const s=activeScenario();if(!s)return;const st={id:uid('step'),type};if(type==='request'){st.requestId=state.requests[0]?.id||'';st.capturePath='';st.captureVar='';st.continueOnFail=false;}if(type==='waitWebhook'){st.matchPath='$.type';st.matchValue='';st.timeoutSec=30;st.capturePath='';st.captureVar='';}if(type==='delay')st.delayMs=1000;s.steps.push(st);scheduleSave();renderScenarioWorkspace();}
+    function logScenario(text,type='info'){scenarioRunLog.push({text:`${new Date().toLocaleTimeString()}  ${text}`,type});renderScenarioWorkspace();const log=$('#scenarioRunLog');if(log)log.scrollTop=log.scrollHeight;}
+    const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+    async function runScenario(){const s=activeScenario();if(!s||!s.steps.length){toast('Add at least one scenario step.','error');return;}scenarioAbort=false;scenarioRunLog=[];renderScenarioWorkspace();const vars={};let passed=true;const seen=new Set(state.webhookEvents.map(e=>e.id));logScenario(`Starting “${s.name}” with ${s.steps.length} step(s).`);for(let i=0;i<s.steps.length;i++){if(scenarioAbort){passed=false;logScenario('Run stopped by user.','fail');break;}const st=s.steps[i];try{if(st.type==='delay'){logScenario(`Step ${i+1}: waiting ${st.delayMs||1000} ms.`);await sleep(Number(st.delayMs||1000));continue;}if(st.type==='request'){const req=state.requests.find(r=>r.id===st.requestId);if(!req)throw new Error('Saved request not found.');logScenario(`Step ${i+1}: ${req.method} ${req.name}`);const built=buildRequestFrom(req,{extraVariables:vars});const resp=await performBuiltRequest(built);const results=evaluateAssertions(req.assertions||[],resp);const ok=resp.ok&&results.every(r=>r.pass);logScenario(`${resp.status} ${resp.statusText} in ${resp.durationMs} ms; ${results.filter(r=>r.pass).length}/${results.length} assertions passed.`,ok?'pass':'fail');if(st.capturePath&&st.captureVar){const v=jsonPathGet(resp.json,st.capturePath);if(v===undefined)throw new Error(`Capture path ${st.capturePath} was not found.`);vars[st.captureVar]=typeof v==='object'?JSON.stringify(v):v;logScenario(`Captured {{${st.captureVar}}} = ${vars[st.captureVar]}.`);}if(!ok&&!st.continueOnFail){passed=false;break;}}if(st.type==='waitWebhook'){logScenario(`Step ${i+1}: waiting for webhook ${st.matchPath||'$'} = ${st.matchValue||'(any)'}.`);const deadline=Date.now()+Number(st.timeoutSec||30)*1000;let found=null;while(Date.now()<deadline&&!scenarioAbort){await pollWebhookEvents({silent:true});found=state.webhookEvents.find(e=>!seen.has(e.id)&&(()=>{let parsed;try{parsed=JSON.parse(e.body||'')}catch{return false}const v=jsonPathGet(parsed,st.matchPath||'$');return st.matchValue===''||String(v)===String(st.matchValue)})());if(found)break;await sleep(1000);}if(!found)throw new Error('Webhook wait timed out.');seen.add(found.id);logScenario(`Matched webhook ${found.method} ${found.path}.`,'pass');if(st.capturePath&&st.captureVar){let parsed=JSON.parse(found.body||'{}');const v=jsonPathGet(parsed,st.capturePath);if(v===undefined)throw new Error(`Capture path ${st.capturePath} was not found.`);vars[st.captureVar]=typeof v==='object'?JSON.stringify(v):v;logScenario(`Captured {{${st.captureVar}}} = ${vars[st.captureVar]}.`);}}}catch(error){passed=false;logScenario(`Step ${i+1} failed: ${error.message}`,'fail');break;}}s.runs=s.runs||[];s.runs.unshift({id:uid('run'),at:nowISO(),passed,variables:vars,log:clone(scenarioRunLog)});s.runs=s.runs.slice(0,20);scenarioAbort=false;saveState();logScenario(passed?'Scenario passed.':'Scenario failed.',passed?'pass':'fail');toast(passed?'Scenario passed.':'Scenario failed.',passed?'success':'error');}
+
+    function blankFixture(type='response'){return{id:uid('fixture'),name:type==='webhook'?'Webhook fixture':'Response fixture',type,method:'GET',route:`fixture-${Date.now().toString(36)}`,status:200,contentType:'application/json',headersText:'{}',body:'{\n  "status": "ok"\n}',delayMs:0,failureMode:'none',enabled:true};}
+    function activeFixture(){return state.fixtures.find(f=>f.id===state.activeFixtureId);}
+    function renderFixtureWorkspace(){const list=$('#fixtureList');if(!list)return;list.innerHTML=state.fixtures.map(f=>`<button class="entity-item ${f.id===state.activeFixtureId?'active':''}" data-fixture-id="${escapeHtml(f.id)}"><span>${f.type==='webhook'?'↘':'◫'}</span><span><strong>${escapeHtml(f.name)}</strong><small>${escapeHtml(f.type)} · ${escapeHtml(f.failureMode||'none')}</small></span><span>${f.syncedAt?'✓':''}</span></button>`).join('')||'<div class="side-empty">No fixtures.</div>';const f=activeFixture(),ed=$('#fixtureEditor');if(!f){ed.innerHTML='<div class="empty-feature">Create a fixture to begin.</div>';return;}const mockUrl=state.gateway.channel?.id&&state.gateway.baseUrl?`${cleanBase(state.gateway.baseUrl)}/mock/${state.gateway.channel.id}/${f.id}`:'';ed.innerHTML=`<div class="row wrap" style="margin-bottom:12px"><input id="fixtureNameInput" class="input feature-title grow fixture-field" data-fixture-field="name" value="${escapeHtml(f.name)}"><button id="deleteFixtureBtn" class="btn">Delete</button><button id="duplicateFixtureBtn" class="btn">Duplicate</button><button id="syncFixtureBtn" class="btn primary">Sync to gateway</button></div><div class="detail-grid"><div><div class="section-card"><div class="section-card-head"><h3>Fixture definition</h3></div><div class="section-card-body stack"><div class="row"><div class="grow"><label class="mini-label">Type</label><select class="select fixture-field" data-fixture-field="type" style="width:100%"><option value="response" ${f.type==='response'?'selected':''}>Mock response / baseline</option><option value="webhook" ${f.type==='webhook'?'selected':''}>Webhook payload</option></select></div><div class="grow"><label class="mini-label">Failure simulation</label><select class="select fixture-field" data-fixture-field="failureMode" style="width:100%"><option value="none" ${f.failureMode==='none'?'selected':''}>None</option><option value="error" ${f.failureMode==='error'?'selected':''}>Server error</option><option value="rate-limit" ${f.failureMode==='rate-limit'?'selected':''}>Rate limit</option><option value="timeout" ${f.failureMode==='timeout'?'selected':''}>Timeout / long delay</option><option value="duplicate" ${f.failureMode==='duplicate'?'selected':''}>Duplicate webhook</option></select></div></div><div class="row"><div style="width:110px"><label class="mini-label">Method</label><select class="select fixture-field" data-fixture-field="method" style="width:100%">${['GET','POST','PUT','PATCH','DELETE'].map(m=>`<option ${m===f.method?'selected':''}>${m}</option>`).join('')}</select></div><div class="grow"><label class="mini-label">Public route label</label><input class="input fixture-field" data-fixture-field="route" value="${escapeHtml(f.route||'')}"></div><div style="width:100px"><label class="mini-label">Status</label><input type="number" class="input fixture-field" data-fixture-field="status" value="${escapeHtml(f.status)}"></div><div style="width:120px"><label class="mini-label">Delay ms</label><input type="number" class="input fixture-field" data-fixture-field="delayMs" value="${escapeHtml(f.delayMs||0)}"></div></div><div><label class="mini-label">Content type</label><input class="input fixture-field" data-fixture-field="contentType" value="${escapeHtml(f.contentType||'application/json')}" style="width:100%"></div><div><label class="mini-label">Headers as JSON object</label><textarea class="code-area fixture-field" data-fixture-field="headersText" style="min-height:90px">${escapeHtml(f.headersText||'{}')}</textarea></div><div><label class="mini-label">Body</label><textarea class="code-area fixture-field" data-fixture-field="body">${escapeHtml(f.body||'')}</textarea></div></div></div></div><div><div class="section-card"><div class="section-card-head"><h3>${f.type==='webhook'?'Webhook emission':'Mock endpoint'}</h3></div><div class="section-card-body stack"><div class="endpoint-box">${escapeHtml(mockUrl||'Create a gateway channel to publish this fixture.')}</div><div class="row"><button id="copyMockUrlBtn" class="btn grow" ${mockUrl?'':'disabled'}>Copy endpoint</button>${f.type==='webhook'?'<button id="emitWebhookFixtureBtn" class="btn primary grow">Emit to inbox</button>':'<button id="testMockFixtureBtn" class="btn primary grow">Test mock</button>'}</div>${f.syncedAt?`<div class="gateway-banner"><strong>Synced</strong> ${escapeHtml(new Date(f.syncedAt).toLocaleString())}</div>`:''}</div></div><div class="section-card"><div class="section-card-head"><h3>Preview</h3></div><div class="section-card-body"><div class="fixture-preview">${escapeHtml(f.body||'')}</div></div></div></div></div>`;}
+    function newFixtureFromResponse(){if(!currentResponse||currentResponse.error){toast('Send a request first.','error');return;}const f=blankFixture('response');f.name=`${state.draft.name||'Request'} baseline`;f.status=currentResponse.status;f.contentType=currentResponse.contentType||'text/plain';f.headersText=JSON.stringify(Object.fromEntries(currentResponse.headers||[]),null,2);f.body=currentResponse.raw;state.fixtures.push(f);state.activeFixtureId=f.id;saveState();switchWorkspace('fixtures');renderFixtureWorkspace();toast('Response saved as a fixture.','success');}
+    function newFixtureFromWebhook(event){const f=blankFixture('webhook');f.name=`Webhook ${event.method} ${event.path||'/'}`;f.method=event.method;f.contentType=headerValue(event,'content-type')||'application/json';f.headersText=JSON.stringify(Object.fromEntries(event.headers||[]),null,2);f.body=event.body||'';state.fixtures.push(f);state.activeFixtureId=f.id;saveState();switchWorkspace('fixtures');renderFixtureWorkspace();toast('Webhook saved as a fixture.','success');}
+    async function syncActiveFixture(){const f=activeFixture(),c=state.gateway.channel,base=cleanBase(state.gateway.baseUrl);if(!f||!c?.id){toast('Create a gateway channel first.','error');return;}try{JSON.parse(f.headersText||'{}');const r=await fetch(`${base}/api/channels/${encodeURIComponent(c.id)}/mocks`,{method:'POST',headers:gatewayHeaders(),body:JSON.stringify({fixture:f})});const data=await r.json();if(!r.ok)throw new Error(data.error||`HTTP ${r.status}`);f.syncedAt=nowISO();saveState();renderFixtureWorkspace();toast('Fixture synced to gateway.','success');}catch(error){toast(`Fixture sync failed: ${error.message}`,'error');}}
+    async function emitWebhookFixture(){const f=activeFixture(),url=state.gateway.channel?.hookUrl;if(!f||!url){toast('Create a gateway channel first.','error');return;}let headers={};try{headers=JSON.parse(f.headersText||'{}')}catch{toast('Fixture headers are not valid JSON.','error');return;}headers['Content-Type']=f.contentType||headers['Content-Type']||'application/json';const count=f.failureMode==='duplicate'?2:1;try{for(let i=0;i<count;i++)await fetch(url,{method:f.method||'POST',headers,body:['GET','HEAD'].includes(f.method)?undefined:f.body});await pollWebhookEvents({silent:true});toast(`${count} webhook delivery${count===1?'':'ies'} emitted.`,'success');}catch(error){toast(`Webhook emission failed: ${error.message}`,'error');}}
+
+
+    // v1.6 Reports and evidence
+    function sensitiveHeaderName(name){return /^(authorization|proxy-authorization|cookie|set-cookie|x-api-key|api-key|x-auth-token|x-access-token)$/i.test(String(name||''));}
+    function redactedValue(value){
+      let text=String(value??'');
+      const secrets=[];
+      state.environments.forEach(env=>(env.variables||[]).forEach(v=>{if(v.secret&&v.value)secrets.push(String(v.value));}));
+      [state.draft,...state.requests,...state.history.map(h=>h.requestDraft)].filter(Boolean).forEach(r=>[r.auth?.bearer,r.auth?.password,r.auth?.apiKeyValue].filter(Boolean).forEach(v=>secrets.push(String(v))));
+      [state.webhookSettings?.secret,state.gateway?.channel?.token].filter(Boolean).forEach(v=>secrets.push(String(v)));
+      secrets.sort((a,b)=>b.length-a.length).forEach(secret=>{if(secret.length>=3)text=text.split(secret).join('[REDACTED]');});
+      return text;
+    }
+    function redactHeaders(entries){return (entries||[]).map(([k,v])=>[k,sensitiveHeaderName(k)?'[REDACTED]':redactedValue(v)]);}
+    function reportSettings(){return state.reports||(state.reports={type:'project',subjectId:'',author:'',reviewer:'',disposition:'Draft',notes:'',includeBodies:true,includeHeaders:true,includeHistory:true,lastGeneratedAt:null});}
+    function reportSubjects(type){
+      if(type==='request')return state.requests.map(r=>({id:r.id,label:`${r.method} · ${r.name}`}));
+      if(type==='scenario')return state.scenarios.map(x=>({id:x.id,label:x.name}));
+      if(type==='webhook')return state.webhookEvents.map(e=>({id:e.id,label:`${e.method} ${e.path||'/'} · ${new Date(e.receivedAt).toLocaleString()}`}));
+      return [{id:'project',label:state.project.name||'Project'}];
+    }
+    function renderReportWorkspace(){
+      const cfg=reportSettings(), type=$('#reportTypeSelect'); if(!type)return;
+      type.value=cfg.type||'project';
+      const subjects=reportSubjects(cfg.type); if(!subjects.some(x=>x.id===cfg.subjectId))cfg.subjectId=subjects[0]?.id||'';
+      $('#reportSubjectSelect').innerHTML=subjects.length?subjects.map(x=>`<option value="${escapeHtml(x.id)}">${escapeHtml(x.label)}</option>`).join(''):'<option value="">No eligible subject</option>';
+      $('#reportSubjectSelect').value=cfg.subjectId;
+      $('#reportAuthorInput').value=cfg.author||''; $('#reportReviewerInput').value=cfg.reviewer||''; $('#reportDispositionSelect').value=cfg.disposition||'Draft'; $('#reportNotesInput').value=cfg.notes||'';
+      $('#reportBodiesToggle').checked=cfg.includeBodies!==false; $('#reportHeadersToggle').checked=cfg.includeHeaders!==false; $('#reportHistoryToggle').checked=cfg.includeHistory!==false;
+      if(currentReport)$('#reportPreview').className='report-preview', $('#reportPreview').innerHTML=currentReport.bodyHtml;
+    }
+    function reportTable(headers,rows){return `<table class="report-table"><thead><tr>${headers.map(h=>`<th>${escapeHtml(h)}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.map(row=>`<tr>${row.map(v=>`<td>${v===undefined||v===null?'':escapeHtml(v)}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${headers.length}">No records.</td></tr>`}</tbody></table>`;}
+    function reportStats(items){return `<div class="report-stat-grid">${items.map(([v,l])=>`<div class="report-stat"><strong>${escapeHtml(v)}</strong><span>${escapeHtml(l)}</span></div>`).join('')}</div>`;}
+    function reportFlow(steps){return `<div class="flow-diagram">${(steps||[]).map((st,i)=>{const label=st.type==='request'?(state.requests.find(r=>r.id===st.requestId)?.name||'Missing request'):st.type==='waitWebhook'?'Wait for webhook':`Delay ${st.delayMs||1000} ms`;return `<div class="flow-node"><strong>${i+1}. ${escapeHtml(label)}</strong><small>${escapeHtml(st.type)}</small></div>`}).join('')||'<div class="flow-node"><strong>No steps</strong></div>'}</div>`;}
+    function reportHeader(title,subtitle){const cfg=reportSettings();return `<div class="report-hero"><div class="report-badge">RLY</div><div><h1>${escapeHtml(title)}</h1><p>${escapeHtml(subtitle)}</p><p style="margin-top:5px">Generated ${escapeHtml(new Date().toLocaleString())} · RELAY v${VERSION}</p></div></div><div class="row wrap"><span class="status-pill">${escapeHtml(cfg.disposition||'Draft')}</span><span class="status-pill">Project: ${escapeHtml(state.project.name)}</span><span class="status-pill">Environment: ${escapeHtml(getActiveEnvironment()?.name||'None')}</span></div>`;}
+    function latestRequestHistory(req){return state.history.find(h=>h.requestDraft?.id===req.id||h.url===req.url)||null;}
+    function buildProjectReport(){
+      const cfg=reportSettings(), recent=cfg.includeHistory?state.history.slice(0,25):[];
+      const scenarioRuns=state.scenarios.map(s=>({scenario:s,run:s.runs?.[0]})).filter(x=>x.run);
+      const failures=[...recent.filter(h=>h.error||Number(h.status)>=400).map(h=>`${h.method} ${h.url}: ${h.error||h.status}`),...scenarioRuns.filter(x=>!x.run.passed).map(x=>`Scenario ${x.scenario.name} failed`)];
+      const assertionCount=state.requests.reduce((n,r)=>n+(r.assertions||[]).filter(a=>a.enabled).length,0);
+      const successCount=recent.filter(h=>h.status>=200&&h.status<400&&!h.error).length;
+      const body=`${reportHeader(`${state.project.name} — Test Summary`,'Project qualification evidence and recent execution record')}${reportStats([[state.requests.length,'Saved requests'],[assertionCount,'Enabled assertions'],[state.webhookEvents.length,'Webhook events'],[scenarioRuns.filter(x=>x.run.passed).length+'/'+scenarioRuns.length,'Latest scenarios passed']])}<section class="report-section"><h2>Executive result</h2><p>${failures.length?`${failures.length} unresolved failure${failures.length===1?'':'s'} were found in the retained evidence.`:'No unresolved failures were found in the retained evidence.'} ${recent.length?`${successCount} of ${recent.length} recent request executions completed without HTTP or network failure.`:'No request history was included.'}</p></section><section class="report-section"><h2>Inventory</h2>${reportTable(['Area','Count','Notes'],[['Requests',state.requests.length,`${assertionCount} enabled assertions`],['Environments',state.environments.length,'Secret values excluded'],['Scenarios',state.scenarios.length,`${scenarioRuns.length} with retained runs`],['Webhook events',state.webhookEvents.length,'Stored locally'],['Fixtures',state.fixtures.length,`${state.fixtures.filter(f=>f.syncedAt).length} synced`]])}</section>${cfg.includeHistory?`<section class="report-section"><h2>Recent request executions</h2>${reportTable(['Time','Method','Target','Status','Duration'],recent.map(h=>[new Date(h.timestamp).toLocaleString(),h.method,redactedValue(h.url),h.error||`${h.status||'—'} ${h.statusText||''}`,`${h.durationMs||0} ms`]))}</section>`:''}<section class="report-section"><h2>Scenario status</h2>${reportTable(['Scenario','Steps','Latest run','Result'],state.scenarios.map(s=>[s.name,s.steps.length,s.runs?.[0]?.at?new Date(s.runs[0].at).toLocaleString():'Not run',s.runs?.[0]?.passed===true?'Passed':s.runs?.[0]?.passed===false?'Failed':'Not run']))}</section><section class="report-section"><h2>Failure summary</h2>${failures.length?`<ul>${failures.map(x=>`<li>${escapeHtml(x)}</li>`).join('')}</ul>`:'<p>No retained failures.</p>'}</section>`;
+      return {title:`${state.project.name} Test Summary`,body,data:{type:'project',recentHistory:recent.map(h=>({...h,url:redactedValue(h.url),requestDraft:sanitizeRequestDraft(h.requestDraft),response:h.response?{...h.response,raw:cfg.includeBodies?redactedValue(h.response.raw||''):'[OMITTED]',headers:cfg.includeHeaders?redactHeaders(h.response.headers||[]):[]}:null})),failures}};
+    }
+    function buildRequestReport(){
+      const cfg=reportSettings(), req=state.requests.find(r=>r.id===cfg.subjectId)||state.draft, hist=latestRequestHistory(req), safe=sanitizeRequestDraft(req);
+      const headers=redactHeaders((req.headers||[]).filter(x=>x.enabled&&x.key).map(x=>[x.key,x.value]));
+      const assertions=(req.assertions||[]).filter(a=>a.enabled);
+      const body=`${reportHeader(`${req.name} — Request Evidence`,`${req.method} ${redactedValue(req.url)}`)}${reportStats([[req.method,'HTTP method'],[assertions.length,'Assertions'],[hist?.status||'—','Latest status'],[hist?`${hist.durationMs||0} ms`:'—','Latest duration']])}<section class="report-section"><h2>Request definition</h2>${reportTable(['Field','Value'],[['Method',req.method],['URL',redactedValue(req.url)],['Body mode',req.body?.mode||'none'],['Authentication',req.auth?.type||'none']])}</section>${cfg.includeHeaders?`<section class="report-section"><h2>Headers</h2>${reportTable(['Header','Value'],headers)}</section>`:''}${cfg.includeBodies&&req.body?.content?`<section class="report-section"><h2>Request body</h2><pre class="report-code">${escapeHtml(redactedValue(req.body.content))}</pre></section>`:''}<section class="report-section"><h2>Assertions</h2>${reportTable(['Source','Rule','Path','Expected'],assertions.map(a=>[a.type,a.operator,a.path||'',a.expected||'']))}</section>${hist?`<section class="report-section"><h2>Latest execution</h2>${reportTable(['Time','Status','Duration','Size'],[[new Date(hist.timestamp).toLocaleString(),hist.error||`${hist.status||'—'} ${hist.statusText||''}`,`${hist.durationMs||0} ms`,formatBytes(hist.size||0)]])}${cfg.includeBodies&&hist.response?.raw?`<pre class="report-code">${escapeHtml(redactedValue(hist.response.raw))}</pre>`:''}</section>`:'<section class="report-section"><h2>Latest execution</h2><p>This request has no retained execution history.</p></section>'}`;
+      return {title:`${req.name} Request Evidence`,body,data:{type:'request',request:safe,history:hist?{...hist,url:redactedValue(hist.url),requestDraft:sanitizeRequestDraft(hist.requestDraft),response:hist.response?{...hist.response,raw:cfg.includeBodies?redactedValue(hist.response.raw):'[OMITTED]',headers:cfg.includeHeaders?redactHeaders(hist.response.headers):[]}:null}:null}};
+    }
+    function buildScenarioReport(){
+      const cfg=reportSettings(), sc=state.scenarios.find(x=>x.id===cfg.subjectId)||state.scenarios[0], run=sc?.runs?.[0]; if(!sc)return {title:'Scenario report',body:`${reportHeader('Scenario Run Report','No scenario is available')}<p>No scenario selected.</p>`,data:{type:'scenario'}};
+      const failures=(run?.log||[]).filter(l=>l.type==='fail');
+      const body=`${reportHeader(`${sc.name} — Scenario Run`,`${sc.steps.length} step end-to-end test`)}${reportStats([[sc.steps.length,'Steps'],[sc.runs?.length||0,'Retained runs'],[run?.passed===true?'PASS':run?.passed===false?'FAIL':'NOT RUN','Latest result'],[Object.keys(run?.variables||{}).length,'Captured variables']])}<section class="report-section"><h2>Execution flow</h2>${reportFlow(sc.steps)}</section><section class="report-section"><h2>Step definition</h2>${reportTable(['#','Type','Definition'],sc.steps.map((st,i)=>[i+1,st.type,st.type==='request'?(state.requests.find(r=>r.id===st.requestId)?.name||'Missing request'):st.type==='waitWebhook'?`${st.matchPath||'$'} = ${st.matchValue||'(any)'}`:`${st.delayMs||1000} ms`]))}</section><section class="report-section"><h2>Latest run</h2>${run?`<p>${new Date(run.at).toLocaleString()} · <strong>${run.passed?'Passed':'Failed'}</strong></p><pre class="report-code">${escapeHtml((run.log||[]).map(l=>redactedValue(l.text)).join('\n'))}</pre>`:'<p>This scenario has not been run.</p>'}</section><section class="report-section"><h2>Failure summary</h2>${failures.length?`<ul>${failures.map(x=>`<li>${escapeHtml(redactedValue(x.text))}</li>`).join('')}</ul>`:'<p>No failure lines in the latest run.</p>'}</section>`;
+      return {title:`${sc.name} Scenario Run`,body,data:{type:'scenario',scenario:clone(sc),latestRun:run?{...run,variables:Object.fromEntries(Object.entries(run.variables||{}).map(([k,v])=>[k,redactedValue(v)])),log:(run.log||[]).map(l=>({...l,text:redactedValue(l.text)}))}:null}};
+    }
+    function buildWebhookReport(){
+      const cfg=reportSettings(), ev=state.webhookEvents.find(e=>e.id===cfg.subjectId)||state.webhookEvents[0]; if(!ev)return {title:'Webhook delivery report',body:`${reportHeader('Webhook Delivery Report','No webhook event is available')}<p>No event selected.</p>`,data:{type:'webhook'}};
+      const verify=state.webhookVerification[ev.id], headers=redactHeaders(ev.headers||[]);
+      let pretty=redactedValue(ev.body||'');try{pretty=JSON.stringify(JSON.parse(pretty),null,2)}catch{}
+      const body=`${reportHeader(`Webhook ${ev.method} ${ev.path||'/'}`,'Inbound delivery inspection and signature evidence')}${reportStats([[ev.method,'Method'],[formatBytes(byteSize(ev.body||'')),'Payload size'],[verify?verify.ok?'VALID':'INVALID':'NOT CHECKED','Signature'],[ev.sourceIp||'—','Source address']])}<section class="report-section"><h2>Delivery metadata</h2>${reportTable(['Field','Value'],[['Received',new Date(ev.receivedAt).toLocaleString()],['Path',ev.path||'/'],['Query',JSON.stringify(ev.query||{})],['Event ID',ev.id],['Signature result',verify?.message||'Not verified']])}</section>${cfg.includeHeaders?`<section class="report-section"><h2>Headers</h2>${reportTable(['Header','Value'],headers)}</section>`:''}${cfg.includeBodies?`<section class="report-section"><h2>Payload</h2><pre class="report-code">${escapeHtml(pretty)}</pre></section>`:''}`;
+      return {title:`Webhook ${ev.method} ${ev.path||'/'}`,body,data:{type:'webhook',event:{...ev,headers:cfg.includeHeaders?headers:[],body:cfg.includeBodies?pretty:'[OMITTED]',sourceIp:ev.sourceIp||''},verification:verify||null}};
+    }
+    function reportSignoffHtml(){const cfg=reportSettings();return `<section class="report-section"><h2>Review and sign-off</h2><div class="report-signoff"><div><span class="mini-label">Prepared by</span><strong>${escapeHtml(cfg.author||'Not specified')}</strong></div><div><span class="mini-label">Reviewed by</span><strong>${escapeHtml(cfg.reviewer||'Not specified')}</strong></div><div><span class="mini-label">Disposition</span><strong>${escapeHtml(cfg.disposition||'Draft')}</strong></div></div>${cfg.notes?`<div style="margin-top:10px"><span class="mini-label">Notes / unresolved items</span><p>${escapeHtml(cfg.notes).replace(/\n/g,'<br>')}</p></div>`:''}</section>`;}
+    function generateReport(){
+      const cfg=reportSettings(); let built=cfg.type==='request'?buildRequestReport():cfg.type==='scenario'?buildScenarioReport():cfg.type==='webhook'?buildWebhookReport():buildProjectReport();
+      cfg.lastGeneratedAt=nowISO(); built.bodyHtml=built.body+reportSignoffHtml()+`<p style="margin-top:24px;color:var(--faint);font-size:10px">Generated by FI-1XX RELAY v${VERSION}. Secret environment values and common sensitive headers were redacted.</p>`;
+      built.markdown=reportMarkdown(built); built.documentHtml=reportDocument(built); currentReport=built; scheduleSave(); renderReportWorkspace(); toast('Report generated.','success'); return built;
+    }
+    function stripHtml(html){const el=document.createElement('div');el.innerHTML=html;return el.textContent||'';}
+    function reportMarkdown(report){const cfg=reportSettings();return `# ${report.title}\n\nGenerated: ${new Date().toISOString()}\n\nProject: ${state.project.name}\nEnvironment: ${getActiveEnvironment()?.name||'None'}\nDisposition: ${cfg.disposition||'Draft'}\nPrepared by: ${cfg.author||'Not specified'}\nReviewed by: ${cfg.reviewer||'Not specified'}\n\n${stripHtml(report.body).replace(/\n{3,}/g,'\n\n')}\n\n## Notes / unresolved items\n\n${cfg.notes||'None recorded.'}\n`}
+    function reportDocument(report){return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${escapeHtml(report.title)}</title><style>body{font:14px/1.5 Arial,sans-serif;color:#17202a;max-width:1000px;margin:0 auto;padding:32px}.report-hero{display:flex;gap:18px;border-bottom:2px solid #222;padding-bottom:16px}.report-badge{border:2px solid #222;border-radius:12px;padding:20px;font-weight:800}.report-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0}.report-stat,.report-signoff>div{border:1px solid #bbb;padding:10px;border-radius:7px}.report-stat strong{display:block;font-size:22px}.report-stat span,.mini-label{font-size:10px;text-transform:uppercase;color:#555}.report-section{margin:20px 0}.report-section h2{border-bottom:1px solid #bbb;font-size:16px}.report-table{width:100%;border-collapse:collapse;font-size:11px}.report-table th,.report-table td{border:1px solid #bbb;padding:7px;text-align:left;vertical-align:top}.report-code{white-space:pre-wrap;border:1px solid #bbb;background:#f5f5f5;padding:10px}.report-signoff{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.flow-diagram{display:flex;flex-wrap:wrap;gap:8px}.flow-node{border:1px solid #999;padding:9px;border-radius:6px}.status-pill{display:inline-block;border:1px solid #999;border-radius:99px;padding:3px 7px;margin-right:5px;font-size:10px}@media print{body{padding:0}.report-section{break-inside:avoid}}</style></head><body>${report.bodyHtml}</body></html>`;}
+    function ensureReport(){return currentReport||generateReport();}
+    function exportReportHtml(){const r=ensureReport();downloadBlob(new Blob([r.documentHtml],{type:'text/html'}),`${safeFilename(r.title)}.html`);}
+    function exportReportMarkdown(){const r=ensureReport();downloadBlob(new Blob([r.markdown],{type:'text/markdown'}),`${safeFilename(r.title)}.md`);}
+    function exportEvidence(){const r=ensureReport(),cfg=reportSettings();const pkg={format:'RELAY Evidence Package',schemaVersion:1,relayVersion:VERSION,generatedAt:nowISO(),project:{...state.project,name:state.project.name},environment:getActiveEnvironment()?.name||'',report:{title:r.title,type:cfg.type,disposition:cfg.disposition,preparedBy:cfg.author,reviewedBy:cfg.reviewer,notes:cfg.notes,markdown:r.markdown},evidence:r.data};downloadBlob(new Blob([JSON.stringify(pkg,null,2)],{type:'application/json'}),`${safeFilename(r.title)}-evidence.json`);}
+    function printReport(){const r=ensureReport(),w=window.open('','_blank');if(!w){toast('The browser blocked the print window.','error');return;}try{w.opener=null}catch{}w.document.open();w.document.write(r.documentHtml);w.document.close();setTimeout(()=>w.print(),250);}
+
+    // v1.7 Interchange
+    function renderInterchangeWorkspace(){
+      const ev=state.webhookEvents.find(e=>e.id===state.selectedWebhookEventId), desc=$('#copyWebhookDescription');if(!desc)return;
+      desc.textContent=ev?`${ev.method} ${ev.path||'/'} received ${new Date(ev.receivedAt).toLocaleString()}.`:'Select an event in the Webhooks workspace to convert it into a reusable request.';
+      $('#copyWebhookAsRequestBtn').disabled=!ev;
+      const sum=state.interchange?.lastSummary;$('#interchangeSummary').innerHTML=sum?`<strong>${escapeHtml(sum.title)}</strong><br>${escapeHtml(sum.detail)}`:'<strong>No import has run.</strong><br>RELAY will preserve variables where possible and report anything it could not translate.';
+    }
+    function shellTokens(text){const out=[];let cur='',quote='',esc=false;for(const ch of String(text).trim()){if(esc){cur+=ch;esc=false;continue;}if(ch==='\\'&&quote!=="'"){esc=true;continue;}if(quote){if(ch===quote)quote='';else cur+=ch;continue;}if(ch==='"'||ch==="'"){quote=ch;continue;}if(/\s/.test(ch)){if(cur){out.push(cur);cur='';}}else cur+=ch;}if(cur)out.push(cur);return out;}
+    function requestFromCurl(text){
+      const t=shellTokens(text.replace(/\\\r?\n/g,' '));if((t[0]||'').toLowerCase()!=='curl')throw new Error('The pasted command does not begin with curl.');
+      let method='',url='',bodyParts=[],headers=[],basic='',forceGet=false;
+      for(let i=1;i<t.length;i++){let x=t[i],next=()=>t[++i]||'';if(x==='-X'||x==='--request')method=next().toUpperCase();else if(/^-X\w+/.test(x))method=x.slice(2).toUpperCase();else if(x.startsWith('--request='))method=x.split('=').slice(1).join('=').toUpperCase();else if(x==='-H'||x==='--header')headers.push(next());else if(x.startsWith('-H')&&x.length>2)headers.push(x.slice(2));else if(x.startsWith('--header='))headers.push(x.slice(9));else if(['-d','--data','--data-raw','--data-binary','--data-urlencode'].includes(x))bodyParts.push(next());else if(x.startsWith('-d')&&x.length>2)bodyParts.push(x.slice(2));else if(/^--data(?:-raw|-binary|-urlencode)?=/.test(x))bodyParts.push(x.slice(x.indexOf('=')+1));else if(x==='-u'||x==='--user')basic=next();else if(x.startsWith('--user='))basic=x.slice(7);else if(x==='-G'||x==='--get')forceGet=true;else if(x==='-I'||x==='--head')method='HEAD';else if(x==='--url')url=next();else if(x.startsWith('--url='))url=x.slice(6);else if(x==='-b'||x==='--cookie')headers.push(`Cookie: ${next()}`);else if(!x.startsWith('-')&&!url)url=x;}
+      if(!url)throw new Error('No URL was found in the cURL command.');const r=blankRequest('Imported cURL request');r.method=forceGet?'GET':method||(bodyParts.length?'POST':'GET');r.url=url;
+      r.headers=headers.map(h=>{const at=h.indexOf(':');return{id:uid('row'),enabled:true,key:at>=0?h.slice(0,at).trim():h.trim(),value:at>=0?h.slice(at+1).trim():'',description:'Imported from cURL'};});if(!r.headers.length)r.headers=[blankRow()];
+      if(basic){const at=basic.indexOf(':');r.auth={...r.auth,type:'basic',username:at>=0?basic.slice(0,at):basic,password:at>=0?basic.slice(at+1):''};}
+      if(bodyParts.length&&!forceGet){const content=bodyParts.join('&'),ct=r.headers.find(h=>h.key.toLowerCase()==='content-type')?.value||'';let mode=/json/i.test(ct)?'json':/x-www-form-urlencoded/i.test(ct)?'urlencoded':'text';if(mode==='text'){try{JSON.parse(content);mode='json'}catch{}}r.body={mode,content};}
+      if(forceGet&&bodyParts.length){const u=new URL(url);for(const p of bodyParts.join('&').split('&')){const [k,...v]=p.split('=');u.searchParams.append(k,v.join('='));}r.url=u.toString();}
+      return r;
+    }
+    function postmanUrl(raw){if(typeof raw==='string')return raw;if(raw?.raw)return raw.raw;const protocol=raw?.protocol?`${raw.protocol}://`:'';const host=Array.isArray(raw?.host)?raw.host.join('.'):raw?.host||'';const path=Array.isArray(raw?.path)?raw.path.join('/'):raw?.path||'';return `${protocol}${host}${path?'/'+path:''}`;}
+    function requestFromPostman(pm,name,folderName){const r=blankRequest(name||pm.name||'Imported request');const q=pm.request||pm;r.name=name||q.name||'Imported request';r.method=(q.method||'GET').toUpperCase();r.url=postmanUrl(q.url);if(q.url?.query?.length){try{const u=new URL(r.url);u.search='';r.url=u.toString()}catch{}}r.params=(q.url?.query||[]).map(x=>({id:uid('row'),enabled:x.disabled!==true,key:x.key||'',value:x.value||'',description:x.description||''}));if(!r.params.length)r.params=[blankRow()];r.headers=(q.header||[]).map(x=>({id:uid('row'),enabled:x.disabled!==true,key:x.key||'',value:x.value||'',description:typeof x.description==='string'?x.description:''}));if(!r.headers.length)r.headers=[blankRow()];const b=q.body;if(b?.mode==='raw')r.body={mode:/json/i.test(b.options?.raw?.language||'')?'json':'text',content:b.raw||''};if(b?.mode==='urlencoded')r.body={mode:'urlencoded',content:(b.urlencoded||[]).filter(x=>!x.disabled).map(x=>`${encodeURIComponent(x.key||'')}=${encodeURIComponent(x.value||'')}`).join('&')};const a=q.auth;if(a?.type==='bearer')r.auth={...r.auth,type:'bearer',bearer:a.bearer?.find(x=>x.key==='token')?.value||''};if(a?.type==='basic')r.auth={...r.auth,type:'basic',username:a.basic?.find(x=>x.key==='username')?.value||'',password:a.basic?.find(x=>x.key==='password')?.value||''};if(a?.type==='apikey')r.auth={...r.auth,type:'apikey',apiKeyName:a.apikey?.find(x=>x.key==='key')?.value||'',apiKeyValue:a.apikey?.find(x=>x.key==='value')?.value||'',apiKeyLocation:a.apikey?.find(x=>x.key==='in')?.value==='query'?'query':'header'};r._folderName=folderName||'Postman Import';return r;}
+    function parsePostman(obj){const requests=[],variables=(obj.variable||[]).map(v=>({key:v.key||v.id||'',value:v.value||'',secret:/secret|token|password|key/i.test(v.key||'')}));function walk(items,path=[]){for(const item of items||[]){if(item.request)requests.push(requestFromPostman(item,item.name,path.join(' / ')||obj.info?.name||'Postman Import'));if(item.item)walk(item.item,[...path,item.name||'Folder']);}}walk(obj.item||[]);return{requests,variables,label:obj.info?.name||'Postman Import',warnings:[]};}
+    function sampleFromSchema(schema,depth=0){if(!schema||depth>5)return null;if(schema.example!==undefined)return schema.example;if(schema.default!==undefined)return schema.default;if(schema.enum?.length)return schema.enum[0];if(schema.type==='array')return[sampleFromSchema(schema.items,depth+1)];if(schema.type==='object'||schema.properties){const o={};for(const[k,v]of Object.entries(schema.properties||{}))o[k]=sampleFromSchema(v,depth+1);return o;}if(schema.type==='integer'||schema.type==='number')return 0;if(schema.type==='boolean')return false;return schema.format==='date-time'?new Date(0).toISOString():'string';}
+    function openApiBase(obj,variables=[]){if(obj.servers?.[0]?.url){const server=obj.servers[0];return String(server.url).replace(/\{([^}]+)\}/g,(_,k)=>{const value=server.variables?.[k]?.default??'';if(!variables.some(v=>v.key===k))variables.push({key:k,value:String(value),secret:false});return `{{${k}}}`;});}const scheme=obj.schemes?.[0]||'https',host=obj.host||'api.example.com',base=obj.basePath||'';return `${scheme}://${host}${base}`;}
+    function parseOpenApiObject(obj){const requests=[],variables=[],base=openApiBase(obj,variables).replace(/\/$/,'');for(const[path,pi]of Object.entries(obj.paths||{})){for(const method of ['get','post','put','patch','delete','head','options']){const op=pi?.[method];if(!op)continue;const tags=op.tags?.length?op.tags:['OpenAPI'];const r=blankRequest(op.summary||op.operationId||`${method.toUpperCase()} ${path}`);r.method=method.toUpperCase();r.url=base+path.replace(/\{([^}]+)\}/g,(_,k)=>{if(!variables.some(v=>v.key===k))variables.push({key:k,value:'',secret:false});return `{{${k}}}`;});const params=[...(pi.parameters||[]),...(op.parameters||[])];r.params=[];r.headers=[];for(const prm of params){const val=prm.example??prm.schema?.example??prm.schema?.default??'';if(prm.in==='query')r.params.push({id:uid('row'),enabled:true,key:prm.name,value:String(val),description:prm.description||''});if(prm.in==='header')r.headers.push({id:uid('row'),enabled:true,key:prm.name,value:String(val),description:prm.description||''});}if(!r.params.length)r.params=[blankRow()];if(!r.headers.length)r.headers=[blankRow()];const rb=op.requestBody?.content;const json=rb?.['application/json']||rb?.[Object.keys(rb||{})[0]];if(json){const example=json.example??Object.values(json.examples||{})[0]?.value??sampleFromSchema(json.schema);if(example!==undefined&&example!==null)r.body={mode:'json',content:JSON.stringify(example,null,2)};}else{const bp=params.filter(x=>x.in==='body')[0];if(bp?.schema)r.body={mode:'json',content:JSON.stringify(sampleFromSchema(bp.schema),null,2)};}r._folderName=tags[0];requests.push(r);}}return{requests,variables,label:obj.info?.title||'OpenAPI Import',warnings:[]};}
+    function parseOpenApiYaml(text){const requests=[],variables=[],warnings=['YAML import used operation discovery mode; examples and complex schemas may require JSON.'];const lines=String(text).replace(/\t/g,'  ').split(/\r?\n/);let base='',pathsIndent=-1,currentPath='',pathIndent=-1;for(const raw of lines){const line=raw.replace(/\s+#.*$/,'');if(!line.trim())continue;const ind=line.match(/^\s*/)[0].length,trim=line.trim();if(/^\-?\s*url:\s*/.test(trim)&&!base)base=trim.replace(/^\-?\s*url:\s*/,'').replace(/^['"]|['"]$/g,'');if(/^host:\s*/.test(trim)&&!base)base='https://'+trim.slice(5).trim();if(trim==='paths:'){pathsIndent=ind;continue;}if(pathsIndent>=0&&ind>pathsIndent&&/^\/[^:]+:\s*$/.test(trim)){currentPath=trim.slice(0,-1);pathIndent=ind;continue;}const mm=trim.match(/^(get|post|put|patch|delete|head|options):\s*$/i);if(currentPath&&mm&&ind>pathIndent){const r=blankRequest(`${mm[1].toUpperCase()} ${currentPath}`);r.method=mm[1].toUpperCase();r.url=(base||'https://api.example.com').replace(/\/$/,'')+currentPath.replace(/\{([^}]+)\}/g,(_,k)=>{if(!variables.some(v=>v.key===k))variables.push({key:k,value:'',secret:false});return `{{${k}}}`;});r._folderName='OpenAPI';requests.push(r);}}return{requests,variables,label:'OpenAPI YAML Import',warnings};}
+    function requestFromHarEntry(entry){const q=entry.request||{},r=blankRequest(`${q.method||'GET'} ${(()=>{try{return new URL(q.url).pathname}catch{return q.url||'request'}})()}`);r.method=(q.method||'GET').toUpperCase();r.url=q.url||'';if(q.queryString?.length){try{const u=new URL(r.url);u.search='';r.url=u.toString()}catch{}}r.headers=(q.headers||[]).map(h=>({id:uid('row'),enabled:true,key:h.name||'',value:h.value||'',description:'HAR import'}));if(!r.headers.length)r.headers=[blankRow()];r.params=(q.queryString||[]).map(x=>({id:uid('row'),enabled:true,key:x.name||'',value:x.value||'',description:'HAR import'}));if(!r.params.length)r.params=[blankRow()];if(q.postData?.text!==undefined){let mode=/json/i.test(q.postData.mimeType||'')?'json':/x-www-form-urlencoded/i.test(q.postData.mimeType||'')?'urlencoded':'text';r.body={mode,content:q.postData.text};}r._folderName='HAR Import';return r;}
+    function parseHar(obj){const entries=obj.log?.entries||[];return{requests:entries.map(requestFromHarEntry),variables:[],label:'HAR Import',warnings:[]};}
+    function detectInterchange(text,selected,filename=''){if(selected!=='auto')return selected;const t=String(text).trim();if(/^curl\s/i.test(t))return'curl';if(/\.ya?ml$/i.test(filename)||/^\s*(openapi|swagger):/m.test(t))return'openapi';try{const o=JSON.parse(t);if(o.log?.entries)return'har';if(o.info?.schema||o.item)return'postman';if(o.openapi||o.swagger||o.paths)return'openapi';}catch{}throw new Error('Could not detect the source format. Choose a format explicitly.');}
+    function ensureImportFolder(name){let f=state.folders.find(x=>x.name===name);if(!f){f={id:uid('folder'),name};state.folders.push(f);}return f.id;}
+    function applyImported(result,createFolders=true){if(!result.requests?.length)throw new Error('No API operations or requests were found.');const created=[];for(const req of result.requests){const folderName=createFolders?(req._folderName||result.label||'Imported'):'General';req.folderId=ensureImportFolder(folderName);delete req._folderName;req.id=uid('req');req.createdAt=req.updatedAt=nowISO();state.requests.push(normalizeRequest(req));created.push(req.id);}if(result.variables?.length){const env=getActiveEnvironment();for(const v of result.variables){if(!v.key||env.variables.some(x=>x.key===v.key))continue;env.variables.push({id:uid('var'),enabled:true,key:v.key,value:String(v.value??''),secret:!!v.secret});}}state.activeRequestId=created[0];state.draft=clone(state.requests.find(r=>r.id===created[0]));state.interchange.lastSummary={title:`Imported ${created.length} request${created.length===1?'':'s'}`,detail:`${result.label||'Interchange source'}${result.warnings?.length?' · '+result.warnings.join(' '):''}`};saveState();renderAll();switchWorkspace('interchange');toast(`${created.length} request${created.length===1?'':'s'} imported.`,'success');}
+    async function runInterchangeImport(){try{const file=$('#interchangeFile').files[0],text=$('#interchangeText').value.trim()||(file?await file.text():'');if(!text)throw new Error('Choose a file or paste source content first.');const format=detectInterchange(text,$('#interchangeFormat').value,file?.name||'');let result;if(format==='curl')result={requests:[requestFromCurl(text)],variables:[],label:'cURL Import',warnings:[]};else{if(format==='openapi'&&!/^\s*[\[{]/.test(text))result=parseOpenApiYaml(text);else{const obj=JSON.parse(text);result=format==='postman'?parsePostman(obj):format==='har'?parseHar(obj):parseOpenApiObject(obj);}}applyImported(result,$('#interchangeFoldersToggle').checked);}catch(error){toast(`Import failed: ${error.message}`,'error');state.interchange.lastSummary={title:'Import failed',detail:error.message};scheduleSave();renderInterchangeWorkspace();}}
+    function copyWebhookAsRequest(){const ev=state.webhookEvents.find(e=>e.id===state.selectedWebhookEventId);if(!ev){toast('Select a webhook event first.','error');return;}const r=blankRequest(`Replay webhook ${ev.method} ${ev.path||'/'}`,ensureImportFolder('Webhook Replays'));r.method=ev.method||'POST';const base=state.gateway.channel?.hookUrl||'https://example.invalid/webhook';const u=new URL(base);for(const[k,v]of Object.entries(ev.query||{}))u.searchParams.set(k,v);r.url=u.toString();r.headers=(ev.headers||[]).filter(([k])=>!/^(host|content-length|connection|cf-|x-forwarded-)/i.test(k)).map(([k,v])=>({id:uid('row'),enabled:true,key:k,value:v,description:'Copied from webhook'}));if(!r.headers.length)r.headers=[blankRow()];if(!['GET','HEAD'].includes(r.method)&&ev.body){let mode=/json/i.test(headerValue(ev,'content-type'))?'json':'text';r.body={mode,content:ev.body};}state.requests.push(r);state.activeRequestId=r.id;state.draft=clone(r);saveState();switchWorkspace('requests');renderSidebar();renderDraft();toast('Webhook copied as a saved request.','success');}
+    function postmanRequest(req){const safe=sanitizeRequestDraft(req),params=(safe.params||[]).filter(x=>x.enabled&&x.key),query=params.map(x=>({key:x.key,value:x.value,description:x.description||'',disabled:false})),suffix=params.map(x=>`${encodeURIComponent(x.key)}=${encodeURIComponent(x.value||'')}`).join('&'),url=safe.url+(suffix?(safe.url.includes('?')?'&':'?')+suffix:''),headers=(safe.headers||[]).filter(x=>x.enabled&&x.key).map(x=>({key:x.key,value:x.value,type:'text',description:x.description||''}));const out={method:safe.method,header:headers,url:{raw:url,query}};if(safe.body?.mode==='json'||safe.body?.mode==='text')out.body={mode:'raw',raw:safe.body.content||'',options:{raw:{language:safe.body.mode==='json'?'json':'text'}}};if(safe.body?.mode==='urlencoded')out.body={mode:'urlencoded',urlencoded:new URLSearchParams(safe.body.content||'').entries?Array.from(new URLSearchParams(safe.body.content||'').entries()).map(([key,value])=>({key,value,type:'text'})):[]};if(safe.auth?.type==='bearer')out.auth={type:'bearer',bearer:[{key:'token',value:'',type:'string'}]};if(safe.auth?.type==='basic')out.auth={type:'basic',basic:[{key:'username',value:safe.auth.username||'',type:'string'},{key:'password',value:'',type:'string'}]};if(safe.auth?.type==='apikey')out.auth={type:'apikey',apikey:[{key:'key',value:safe.auth.apiKeyName||'',type:'string'},{key:'value',value:'',type:'string'},{key:'in',value:safe.auth.apiKeyLocation||'header',type:'string'}]};return out;}
+    function exportPostman(){const items=state.folders.map(f=>({name:f.name,item:state.requests.filter(r=>r.folderId===f.id).map(r=>({name:r.name,request:postmanRequest(r),response:[]}))})).filter(x=>x.item.length);const variables=(getActiveEnvironment()?.variables||[]).filter(v=>v.enabled&&v.key).map(v=>({key:v.key,value:v.secret?'':v.value,type:v.secret?'secret':'string'}));const obj={info:{_postman_id:uid('postman'),name:state.project.name,schema:'https://schema.getpostman.com/json/collection/v2.1.0/collection.json'},item:items,variable:variables};downloadBlob(new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}),`${safeFilename(state.project.name)}.postman_collection.json`);toast('Postman collection exported with secrets blanked.','success');}
+    function exportHar(){const entries=state.history.map(h=>{const req=h.requestDraft||{},builtHeaders=(req.headers||[]).filter(x=>x.enabled&&x.key).map(x=>({name:x.key,value:sensitiveHeaderName(x.key)?'[REDACTED]':redactedValue(x.value)}));return{startedDateTime:h.timestamp,time:h.durationMs||0,request:{method:h.method,url:redactedValue(h.url),httpVersion:'HTTP/1.1',headers:builtHeaders,queryString:(()=>{try{return[...new URL(h.url).searchParams].map(([name,value])=>({name,value}))}catch{return[]}})(),cookies:[],headersSize:-1,bodySize:req.body?.content?byteSize(req.body.content):-1,...(req.body?.mode&&req.body.mode!=='none'?{postData:{mimeType:req.body.mode==='json'?'application/json':req.body.mode==='urlencoded'?'application/x-www-form-urlencoded':'text/plain',text:redactedValue(req.body.content||'')}}:{})},response:{status:h.status||0,statusText:h.statusText||h.error||'',httpVersion:'HTTP/1.1',headers:redactHeaders(h.response?.headers||[]).map(([name,value])=>({name,value})),cookies:[],content:{size:h.size||0,mimeType:h.response?.contentType||'',text:h.response?.raw?redactedValue(h.response.raw):''},redirectURL:'',headersSize:-1,bodySize:h.size||-1},cache:{},timings:{send:0,wait:h.durationMs||0,receive:0}}});const har={log:{version:'1.2',creator:{name:'RELAY',version:VERSION},pages:[],entries}};downloadBlob(new Blob([JSON.stringify(har,null,2)],{type:'application/json'}),`${safeFilename(state.project.name)}-history.har`);toast('HAR history exported.','success');}
 
     // Static event bindings
     $('#projectName').addEventListener('input', e => { state.project.name = e.target.value; scheduleSave(); });
@@ -1435,9 +1998,55 @@
     });
     $('#copyCodeBtn').addEventListener('click', () => copyText($('#codeOutput').textContent, 'Code copied.'));
 
+    $('#addAssertionBtn').addEventListener('click',()=>{state.draft.assertions.push(blankAssertion());scheduleSave();renderAssertionsEditor();renderCounts();renderActiveStatus();});
+    $('#gatewayBaseUrl').addEventListener('input',e=>{state.gateway.baseUrl=e.target.value;scheduleSave();});
+    $('#gatewayDiagnoseBtn').addEventListener('click',diagnoseGateway);
+    $('#createChannelBtn').addEventListener('click',createGatewayChannel);
+    $('#gatewayProxyToggle').addEventListener('change',e=>{state.gateway.useProxy=e.target.checked;scheduleSave();updateNetworkStatus();});
+    $('#autoPollToggle').addEventListener('change',e=>{state.gateway.autoPoll=e.target.checked;scheduleSave();configureWebhookPolling();});
+    $('#pollEventsBtn').addEventListener('click',()=>pollWebhookEvents());
+    $('#copyHookUrlBtn').addEventListener('click',()=>state.gateway.channel?.hookUrl?copyText(state.gateway.channel.hookUrl,'Webhook URL copied.'):toast('Create a channel first.','error'));
+    $('#clearLocalEventsBtn').addEventListener('click',()=>{state.webhookEvents=[];state.selectedWebhookEventId=null;state.webhookVerification={};saveState();renderWebhookWorkspace();});
+    $('#newScenarioBtn').addEventListener('click',newScenario);
+    $('#newFixtureBtn').addEventListener('click',()=>{const f=blankFixture();state.fixtures.push(f);state.activeFixtureId=f.id;saveState();renderFixtureWorkspace();});
+    $('#generateReportBtn').addEventListener('click',generateReport);
+    $('#exportReportHtmlBtn').addEventListener('click',exportReportHtml);
+    $('#exportReportMarkdownBtn').addEventListener('click',exportReportMarkdown);
+    $('#printReportBtn').addEventListener('click',printReport);
+    $('#exportEvidenceBtn').addEventListener('click',exportEvidence);
+    $('#runInterchangeImportBtn').addEventListener('click',runInterchangeImport);
+    $('#clearInterchangeBtn').addEventListener('click',()=>{$('#interchangeText').value='';$('#interchangeFile').value='';state.interchange.lastSummary=null;scheduleSave();renderInterchangeWorkspace();});
+    $('#exportPostmanBtn').addEventListener('click',exportPostman);
+    $('#exportHarBtn').addEventListener('click',exportHar);
+    $('#copyWebhookAsRequestBtn').addEventListener('click',copyWebhookAsRequest);
+
     document.addEventListener('click', e => {
       if (!e.target.closest('.menu') && !e.target.closest('#moreBtn') && !e.target.closest('#requestMenuBtn')) closeMenus();
       const close = e.target.closest('[data-close-modal]'); if (close) closeModal(close.dataset.closeModal);
+
+      const workspaceTab=e.target.closest('[data-workspace-tab]');if(workspaceTab)switchWorkspace(workspaceTab.dataset.workspaceTab);
+      const webhookItem=e.target.closest('[data-webhook-event-id]');if(webhookItem){state.selectedWebhookEventId=webhookItem.dataset.webhookEventId;scheduleSave();renderWebhookWorkspace();}
+      const scenarioItem=e.target.closest('[data-scenario-id]');if(scenarioItem){state.activeScenarioId=scenarioItem.dataset.scenarioId;scheduleSave();renderScenarioWorkspace();}
+      const fixtureItem=e.target.closest('[data-fixture-id]');if(fixtureItem){state.activeFixtureId=fixtureItem.dataset.fixtureId;scheduleSave();renderFixtureWorkspace();}
+      const addStep=e.target.closest('[data-add-step]');if(addStep)addScenarioStep(addStep.dataset.addStep);
+      if(e.target.id==='saveResponseFixtureBtn')newFixtureFromResponse();
+      if(e.target.id==='copyEventBodyBtn'){const ev=state.webhookEvents.find(x=>x.id===state.selectedWebhookEventId);if(ev)copyText(ev.body||'','Payload copied.');}
+      if(e.target.id==='saveWebhookFixtureBtn'){const ev=state.webhookEvents.find(x=>x.id===state.selectedWebhookEventId);if(ev)newFixtureFromWebhook(ev);}
+      if(e.target.id==='verifySignatureBtn'){const ev=state.webhookEvents.find(x=>x.id===state.selectedWebhookEventId);if(ev)verifyWebhookEvent(ev);}
+      if(e.target.id==='replayEventBtn'){const ev=state.webhookEvents.find(x=>x.id===state.selectedWebhookEventId);if(ev)replayWebhookEvent(ev,$('#forwardUrlInput').value.trim());}
+      if(e.target.id==='replayToHookBtn'){const ev=state.webhookEvents.find(x=>x.id===state.selectedWebhookEventId);if(ev)replayWebhookEvent(ev,state.gateway.channel?.hookUrl);}
+      if(e.target.id==='deleteRemoteEventBtn'){const ev=state.webhookEvents.find(x=>x.id===state.selectedWebhookEventId),c=state.gateway.channel;if(ev&&c&&confirm('Delete this event from the gateway?'))fetch(`${cleanBase(state.gateway.baseUrl)}/api/channels/${c.id}/events/${ev.id}`,{method:'DELETE',headers:{Authorization:`Bearer ${c.token}`}}).then(()=>{state.webhookEvents=state.webhookEvents.filter(x=>x.id!==ev.id);state.selectedWebhookEventId=state.webhookEvents[0]?.id||null;saveState();renderWebhookWorkspace();});}
+      if(e.target.id==='deleteScenarioBtn'){const s=activeScenario();if(s&&confirm(`Delete “${s.name}”?`)){state.scenarios=state.scenarios.filter(x=>x.id!==s.id);state.activeScenarioId=state.scenarios[0]?.id||null;saveState();renderScenarioWorkspace();}}
+      if(e.target.id==='runScenarioBtn')runScenario();
+      if(e.target.id==='stopScenarioBtn'){scenarioAbort=true;logScenario('Stop requested.','fail');}
+      if(e.target.id==='clearScenarioLogBtn'){scenarioRunLog=[];renderScenarioWorkspace();}
+      if(e.target.classList.contains('step-delete')){const card=e.target.closest('[data-step-id]'),s=activeScenario();if(card&&s){s.steps=s.steps.filter(x=>x.id!==card.dataset.stepId);scheduleSave();renderScenarioWorkspace();}}
+      if(e.target.id==='deleteFixtureBtn'){const f=activeFixture();if(f&&confirm(`Delete “${f.name}”?`)){state.fixtures=state.fixtures.filter(x=>x.id!==f.id);state.activeFixtureId=state.fixtures[0]?.id||null;saveState();renderFixtureWorkspace();renderAssertionsEditor();}}
+      if(e.target.id==='duplicateFixtureBtn'){const f=activeFixture();if(f){const cp=clone(f);cp.id=uid('fixture');cp.name+= ' Copy';delete cp.syncedAt;state.fixtures.push(cp);state.activeFixtureId=cp.id;saveState();renderFixtureWorkspace();}}
+      if(e.target.id==='syncFixtureBtn')syncActiveFixture();
+      if(e.target.id==='copyMockUrlBtn'){const f=activeFixture();if(f)copyText(`${cleanBase(state.gateway.baseUrl)}/mock/${state.gateway.channel.id}/${f.id}`,'Mock URL copied.');}
+      if(e.target.id==='emitWebhookFixtureBtn')emitWebhookFixture();
+      if(e.target.id==='testMockFixtureBtn'){const f=activeFixture();if(f)window.open(`${cleanBase(state.gateway.baseUrl)}/mock/${state.gateway.channel.id}/${f.id}`,'_blank','noopener');}
       const sideTab = e.target.closest('[data-side-tab]'); if (sideTab) { state.ui.sideTab = sideTab.dataset.sideTab; $('#sideSearch').value = ''; scheduleSave(); renderSidebar(); }
       const requestTab = e.target.closest('[data-tab]'); if (requestTab) selectRequestTab(requestTab.dataset.tab);
       const responseTab = e.target.closest('[data-response-tab]'); if (responseTab) selectResponseTab(responseTab.dataset.responseTab);
@@ -1453,6 +2062,8 @@
         const action = projectAction.dataset.projectAction;
         if (action === 'export') exportProject();
         if (action === 'import') { $('#importFileInput').value = ''; openModal('importModal'); }
+        if (action === 'reports') switchWorkspace('reports');
+        if (action === 'interchange') switchWorkspace('interchange');
         if (action === 'load-demo' && confirm('Replace the current project with the RELAY demo project?')) { state = demoState(); saveState(); renderAll(); toast('Demo project restored.'); }
         if (action === 'clear-history') { state.history = []; saveState(); renderSidebar(); toast('History cleared.'); }
         if (action === 'reset' && confirm('Delete the local RELAY project and restore defaults?')) { localStorage.removeItem(STORAGE_KEY); state = demoState(); saveState(); renderAll(); toast('Local project reset.'); }
@@ -1470,6 +2081,14 @@
     });
 
     document.addEventListener('input', e => {
+
+      if(e.target.classList.contains('report-setting')){const key=e.target.dataset.reportSetting;reportSettings()[key]=e.target.type==='checkbox'?e.target.checked:e.target.value;currentReport=null;scheduleSave();}
+      const ar=e.target.closest('[data-assertion-id]');if(ar){const a=state.draft.assertions.find(x=>x.id===ar.dataset.assertionId);if(a){if(e.target.classList.contains('assert-path'))a.path=e.target.value;if(e.target.classList.contains('assert-expected'))a.expected=e.target.value;scheduleSave();renderActiveStatus();}}
+      if(e.target.classList.contains('webhook-setting')){state.webhookSettings[e.target.dataset.webhookSetting]=e.target.type==='number'?Number(e.target.value):e.target.value;scheduleSave();}
+      if(e.target.id==='forwardUrlInput'){state.webhookSettings.forwardUrl=e.target.value;scheduleSave();}
+      if(e.target.id==='scenarioNameInput'){const s=activeScenario();if(s){s.name=e.target.value;scheduleSave();const item=$(`[data-scenario-id="${CSS.escape(s.id)}"] strong`);if(item)item.textContent=s.name;}}
+      const stepCard=e.target.closest('[data-step-id]');if(stepCard&&e.target.classList.contains('step-field')){const s=activeScenario(),st=s?.steps.find(x=>x.id===stepCard.dataset.stepId);if(st){const key=e.target.dataset.stepField;st[key]=e.target.type==='number'?Number(e.target.value):e.target.value;scheduleSave();}}
+      if(e.target.classList.contains('fixture-field')){const f=activeFixture();if(f){const key=e.target.dataset.fixtureField;f[key]=e.target.type==='number'?Number(e.target.value):e.target.value;if(key!=='name')delete f.syncedAt;scheduleSave();}}
       const row = e.target.closest('.kv-row[data-kind]');
       if (row) {
         const kind = row.dataset.kind; const item = state.draft[kind].find(r => r.id === row.dataset.rowId); if (!item) return;
@@ -1493,6 +2112,12 @@
     });
 
     document.addEventListener('change', e => {
+
+      if(e.target.classList.contains('report-setting')){const key=e.target.dataset.reportSetting;reportSettings()[key]=e.target.type==='checkbox'?e.target.checked:e.target.value;currentReport=null;scheduleSave();if(key==='type')renderReportWorkspace();}
+      const ar=e.target.closest('[data-assertion-id]');if(ar){const a=state.draft.assertions.find(x=>x.id===ar.dataset.assertionId);if(a){if(e.target.classList.contains('assert-enabled'))a.enabled=e.target.checked;if(e.target.classList.contains('assert-type')){a.type=e.target.value;a.path=a.type==='matchesFixture'?(state.fixtures.find(f=>f.type==='response')?.id||''):'';a.expected=a.type==='status'?'200':'';}if(e.target.classList.contains('assert-operator'))a.operator=e.target.value;scheduleSave();renderAssertionsEditor();renderCounts();renderActiveStatus();}}
+      if(e.target.classList.contains('webhook-setting')){state.webhookSettings[e.target.dataset.webhookSetting]=e.target.type==='number'?Number(e.target.value):e.target.value;scheduleSave();}
+      const stepCard=e.target.closest('[data-step-id]');if(stepCard&&e.target.classList.contains('step-field')){const s=activeScenario(),st=s?.steps.find(x=>x.id===stepCard.dataset.stepId);if(st){const key=e.target.dataset.stepField;st[key]=key==='continueOnFail'?e.target.value==='true':e.target.type==='number'?Number(e.target.value):e.target.value;scheduleSave();}}
+      if(e.target.classList.contains('fixture-field')){const f=activeFixture();if(f){const key=e.target.dataset.fixtureField;f[key]=e.target.type==='number'?Number(e.target.value):e.target.value;delete f.syncedAt;scheduleSave();renderFixtureWorkspace();}}
       const row = e.target.closest('.kv-row[data-kind]');
       if (row && e.target.classList.contains('kv-enabled')) { const item = state.draft[row.dataset.kind].find(r => r.id === row.dataset.rowId); if (item) item.enabled = e.target.checked; scheduleSave(); renderCounts(); renderActiveStatus(); }
       if (e.target.classList.contains('auth-field')) { state.draft.auth[e.target.dataset.authKey] = e.target.value; scheduleSave(); }
@@ -1507,6 +2132,8 @@
     });
 
     document.addEventListener('click', e => {
+
+      if(e.target.classList.contains('assert-delete')){const ar=e.target.closest('[data-assertion-id]');state.draft.assertions=state.draft.assertions.filter(a=>a.id!==ar.dataset.assertionId);scheduleSave();renderAssertionsEditor();renderCounts();renderActiveStatus();}
       const rowDelete = e.target.closest('.row-delete');
       if (rowDelete && rowDelete.closest('.kv-row[data-kind]')) {
         const row = rowDelete.closest('.kv-row'); const kind = row.dataset.kind;

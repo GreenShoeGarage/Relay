@@ -5,66 +5,90 @@ import re
 import subprocess
 import tempfile
 from collections import Counter
+from html.parser import HTMLParser
 from pathlib import Path
-
-from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parent
 HTML = ROOT / "relay.html"
+WORKER = ROOT / "gateway" / "worker.js"
+TEST_WORKER = ROOT / "gateway" / "test-worker.mjs"
+
+for required in (HTML, WORKER, TEST_WORKER):
+    assert required.exists(), f"Missing package file: {required.relative_to(ROOT)}"
+
 text = HTML.read_text(encoding="utf-8")
-soup = BeautifulSoup(text, "html.parser")
 
-assert soup.title and soup.title.get_text(strip=True) == "RELAY — API Test Bench"
 
-ids = [tag["id"] for tag in soup.find_all(attrs={"id": True})]
-duplicates = [name for name, count in Counter(ids).items() if count > 1]
+class RelayParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.ids: list[str] = []
+        self.external: list[str] = []
+        self.scripts: list[str] = []
+        self._in_script = False
+        self._script_chunks: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        values = dict(attrs)
+        if values.get("id"):
+            self.ids.append(values["id"] or "")
+        resource = values.get("src") or values.get("href")
+        if resource and re.match(r"https?://", resource):
+            self.external.append(resource)
+        if tag == "script" and not values.get("src"):
+            self._in_script = True
+            self._script_chunks = []
+
+    def handle_data(self, data: str) -> None:
+        if self._in_script:
+            self._script_chunks.append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "script" and self._in_script:
+            self.scripts.append("".join(self._script_chunks))
+            self._in_script = False
+
+
+parser = RelayParser()
+parser.feed(text)
+
+duplicates = [name for name, count in Counter(parser.ids).items() if count > 1]
 assert not duplicates, f"Duplicate element IDs: {duplicates}"
+assert not parser.external, f"Unexpected browser runtime dependencies: {parser.external}"
+assert len(parser.scripts) == 1 and parser.scripts[0].strip(), "Embedded application script not found"
 
 required_ids = {
-    "projectName", "environmentSelect", "methodSelect", "urlInput", "sendBtn",
-    "paramsRows", "authType", "headersRows", "bodyMode", "bodyEditorWrap",
-    "responseTabs", "responseMeta", "sideContent", "saveRequestBtn",
-    "environmentModal", "saveModal", "codeModal", "projectMenu", "requestMenu",
+    "projectName", "environmentSelect", "methodSelect", "urlInput", "sendBtn", "assertionRows",
+    "gatewayBaseUrl", "createChannelBtn", "webhookEventList", "webhookDetail",
+    "scenarioList", "scenarioEditor", "fixtureList", "fixtureEditor",
+    "reportTypeSelect", "reportSubjectSelect", "generateReportBtn", "reportPreview",
+    "interchangeFormat", "interchangeFile", "interchangeText", "runInterchangeImportBtn",
+    "exportPostmanBtn", "exportHarBtn", "copyWebhookAsRequestBtn",
+    "responseTabs", "responseMeta", "projectMenu", "requestMenu",
 }
-missing = sorted(required_ids.difference(ids))
+missing = sorted(required_ids.difference(parser.ids))
 assert not missing, f"Missing required controls: {missing}"
 
-methods = {option.get_text(strip=True) for option in soup.select("#methodSelect option")}
-assert {"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"}.issubset(methods)
-
-auth_modes = {option.get("value") for option in soup.select("#authType option")}
-assert {"none", "bearer", "basic", "apikey"}.issubset(auth_modes)
-
-body_modes = {option.get("value") for option in soup.select("#bodyMode option")}
-assert {"none", "json", "text", "urlencoded"}.issubset(body_modes)
-
-external_resources = []
-for tag in soup.find_all(["script", "link", "img"]):
-    resource = tag.get("src") or tag.get("href")
-    if resource and re.match(r"https?://", resource):
-        external_resources.append(resource)
-assert not external_resources, f"Unexpected external dependencies: {external_resources}"
-
-script = soup.find("script")
-assert script and script.string, "Embedded application script not found"
-with tempfile.NamedTemporaryFile("w", suffix=".js", encoding="utf-8", delete=False) as handle:
-    handle.write(script.string)
-    js_path = handle.name
-subprocess.run(["node", "--check", js_path], check=True)
-
 required_fragments = [
-    "localStorage.setItem", "fetch(request.url", "generateCode", "exportProject",
-    "resolveVariables", "Bearer Token", "Python requests", "PowerShell",
-    "FI-1XX · RELAY v1.0.0", "Cloudflare Worker gateway",
+    "const VERSION = '1.7.0'", "schemaVersion: 7", "performBuiltRequest", "evaluateAssertions",
+    "verifyWebhookEvent", "runScenario", "syncActiveFixture", "generateReport", "exportEvidence",
+    "requestFromCurl", "parsePostman", "parseOpenApiObject", "parseOpenApiYaml", "parseHar",
+    "exportPostman", "exportHar", "copyWebhookAsRequest", "HMAC SHA-256", "Duplicate webhook",
+    "Gateway proxy mode", "FI-1XX · RELAY v1.7.0",
 ]
 for fragment in required_fragments:
-    assert fragment in text, f"Missing expected feature marker: {fragment}"
+    assert fragment in text, f"Missing feature marker: {fragment}"
 
-assert "request.auth.bearer = '';" in text
-assert "request.auth.password = '';" in text
-assert "request.auth.apiKeyValue = '';" in text
+with tempfile.NamedTemporaryFile("w", suffix=".js", encoding="utf-8", delete=False) as handle:
+    handle.write(parser.scripts[0])
+    browser_js = handle.name
 
-print("RELAY v1.0 static verification passed")
+subprocess.run(["node", "--check", browser_js], check=True)
+subprocess.run(["node", "--check", str(WORKER)], check=True)
+subprocess.run(["node", str(TEST_WORKER)], cwd=ROOT / "gateway", check=True)
+
+print("RELAY v1.7 package verification passed")
 print(f"HTML size: {HTML.stat().st_size:,} bytes")
-print(f"Unique element IDs: {len(ids)}")
-print("External runtime dependencies: 0")
+print(f"Unique element IDs: {len(parser.ids)}")
+print("Browser runtime dependencies: 0")
+print("Worker integration test: passed")

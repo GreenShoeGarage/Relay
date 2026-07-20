@@ -1,0 +1,6 @@
+name = "relay-gateway"
+main = "worker.js"
+compatibility_date = "2026-07-19"
+
+[[kv_namespaces]]
+binding = "RELAY_KV"

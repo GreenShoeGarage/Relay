@@ -1,0 +1,65 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "RELAY Widget API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://{region}.api.example.com/v1",
+      "variables": {
+        "region": {
+          "default": "us-east"
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/widgets/{widgetId}": {
+      "get": {
+        "summary": "Get widget",
+        "tags": ["Widgets"],
+        "parameters": [
+          {
+            "name": "widgetId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "includeHistory",
+            "in": "query",
+            "schema": { "type": "boolean", "default": false }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Widget" }
+        }
+      }
+    },
+    "/widgets": {
+      "post": {
+        "summary": "Create widget",
+        "tags": ["Widgets"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "Bench Widget" },
+                  "quantity": { "type": "integer", "default": 1 },
+                  "active": { "type": "boolean", "default": true }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Created" }
+        }
+      }
+    }
+  }
+}
