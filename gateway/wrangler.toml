@@ -4,3 +4,4 @@ compatibility_date = "2026-07-19"
 
 [[kv_namespaces]]
 binding = "RELAY_KV"
+id = "f61b0e6f2299402a8df7de961e6db05c"
